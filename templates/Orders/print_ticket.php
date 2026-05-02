@@ -153,7 +153,7 @@ $branch = $order->branch;
             <p>Vuelva pronto</p>
             <p>********************************</p>
             <p style="margin-top: 2mm; font-size: 8px; color: #666;">
-                Powered by STOCKMASTER SaaS
+                Powered by CERRAJERÍA MASTER PRO
             </p>
             <div class="no-print" style="margin-top: 5mm;">
                 <button onclick="window.close();" style="padding: 8px 15px; cursor:pointer; font-family: sans-serif; border-radius: 5px; border: 1px solid #ccc;">Cerrar Ventana</button>

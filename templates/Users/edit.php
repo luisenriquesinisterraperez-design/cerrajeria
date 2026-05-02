@@ -46,7 +46,7 @@
         </div>
 
         <div class="pt-10 mt-10 border-t border-slate-50 flex flex-col gap-4">
-            <?= $this->Form->button(__('Actualizar Perfil STOCKMASTER'), ['class' => 'w-full bg-slate-950 text-white font-black rounded-2xl py-6 uppercase shadow-xl hover:bg-blue-600 transition-all text-lg tracking-widest']) ?>
+            <?= $this->Form->button(__('Actualizar Perfil CERRAJERÍA MASTER'), ['class' => 'w-full bg-slate-950 text-white font-black rounded-2xl py-6 uppercase shadow-xl hover:bg-red-600 transition-all text-lg tracking-widest']) ?>
             <?= $this->Form->postLink(__('Eliminar Cuenta'), ['action' => 'delete', $user->id], ['confirm' => __('¿Estás seguro de que quieres eliminar esta cuenta? Esta acción no se puede deshacer.'), 'class' => 'w-full bg-red-50 text-red-500 font-bold rounded-2xl py-4 uppercase hover:bg-red-100 transition-all text-center text-xs']) ?>
         </div>
     <?= $this->Form->end() ?>

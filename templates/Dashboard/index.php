@@ -79,7 +79,7 @@ $isStaff = ($user && $user->role === 'staff');
     <header class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
         <div>
             <h1 class="text-3xl font-black text-slate-800 tracking-tight uppercase">Resumen de Operación</h1>
-            <p class="text-blue-600 font-bold uppercase text-xs tracking-widest">STOCKMASTER Professional Edition</p>
+            <p class="text-red-600 font-bold uppercase text-xs tracking-widest">CERRAJERÍA MASTER Professional Edition</p>
         </div>
         
         <div class="flex flex-col md:flex-row items-center gap-2">

@@ -3,7 +3,7 @@
 <head>
     <?= $this->Html->charset() ?>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>SISTEMA PRO - <?= $this->fetch('title') ?></title>
+    <title>CERRAJERÍA MASTER - <?= $this->fetch('title') ?></title>
     <?= $this->Html->meta('icon') ?>
     
     <script src="https://cdn.tailwindcss.com"></script>
@@ -160,9 +160,10 @@
                     </div>
                     <div>
                         <span class="font-extrabold text-lg tracking-tight text-slate-900 uppercase italic leading-none block">
-                            Cerra<span class="text-red-500">jería</span>
-                        </span>
-                        <span class="text-[9px] font-bold text-slate-400 tracking-[0.2em] uppercase">Professional Hub</span>
+                            CERRAJERÍA <span class="text-red-500">MASTER</span>
+                            </span>
+                            <span class="text-[9px] font-bold text-slate-400 tracking-[0.2em] uppercase">Control de Servicios</span>
+
                     </div>
                 </div>
             </div>
@@ -235,7 +236,7 @@
                     <div class="bg-red-500 text-white p-1.5 rounded-lg">
                         <i class="fa-solid fa-key text-sm"></i>
                     </div>
-                    <span class="font-extrabold text-sm text-slate-900 uppercase italic tracking-tighter">Cerra<span class="text-red-500">jería</span></span>
+                    <span class="font-extrabold text-sm text-slate-900 uppercase italic tracking-tighter">CERRAJERÍA <span class="text-red-500">MASTER</span></span>
                 </div>
                 <button id="drawer-toggle" class="p-2 text-slate-800 bg-slate-50 rounded-lg">
                     <i class="fa-solid fa-bars-staggered text-xl"></i>
@@ -293,8 +294,8 @@
                     <div class="bg-gradient-to-br from-red-500 to-red-600 text-white w-14 h-14 flex items-center justify-center rounded-2xl mx-auto shadow-2xl shadow-red-200 mb-6 transform -rotate-3">
                         <i class="fa-solid fa-key text-2xl"></i>
                     </div>
-                    <h1 class="text-3xl font-black text-slate-900 uppercase italic tracking-tighter leading-none">Cerra<span class="text-red-500">jería</span></h1>
-                    <p class="text-[10px] font-black text-slate-400 tracking-[0.4em] uppercase mt-3">Enterprise Access</p>
+                    <h1 class="text-3xl font-black text-slate-900 uppercase italic tracking-tighter leading-none">CERRAJERÍA <span class="text-red-500">MASTER</span></h1>
+                    <p class="text-[10px] font-black text-slate-400 tracking-[0.4em] uppercase mt-3">Acceso Master</p>
                 </div>
                 <div class="bg-white p-2 rounded-3xl shadow-2xl shadow-slate-200 border border-slate-100">
                     <div class="p-6">
