@@ -6,6 +6,7 @@ namespace App\Controller;
 /**
  * AccountsReceivable Controller
  *
+ * 
  * @property \App\Model\Table\AccountsReceivableTable $AccountsReceivable
  */
 class AccountsReceivableController extends AppController
