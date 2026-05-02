@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" class="h-full bg-[#0a0a0a]">
 <head>
     <?= $this->Html->charset() ?>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -15,71 +15,116 @@
     <?= $this->fetch('script') ?>
 
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Barlow+Condensed:wght@400;700;900&family=Inter:wght@400;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;700;900&family=Inter:wght@400;600;800&display=swap');
         
         :root {
-            --industrial-red: #D71920;
-            --industrial-yellow: #FFD200;
-            --carbon-black: #111111;
-            --steel-gray: #222222;
+            --industrial-red: #cc0000;
+            --industrial-yellow: #ffcc00;
         }
 
         body { 
             font-family: 'Inter', sans-serif; 
-            background-color: #0f0f0f;
-            color: #ffffff;
+            -webkit-font-smoothing: antialiased;
         }
         
         .industrial-font { font-family: 'Barlow Condensed', sans-serif; }
-        .logo-font { font-family: 'Archivo Black', sans-serif; }
 
-        ::-webkit-scrollbar { width: 6px; height: 6px; }
-        ::-webkit-scrollbar-track { background: var(--carbon-black); }
-        ::-webkit-scrollbar-thumb { background: var(--industrial-red); border-radius: 0; }
-
-        /* Estilo de Tarjetas Industrial */
-        .industrial-card {
-            background: var(--carbon-black);
-            border-left: 4px solid var(--industrial-red);
-            border-right: 1px solid rgba(255,255,255,0.05);
-            border-top: 1px solid rgba(255,255,255,0.05);
-            border-bottom: 1px solid rgba(255,255,255,0.05);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        /* Estructura para evitar deformaciones */
+        .app-wrapper {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
         }
 
-        .industrial-btn {
-            background: var(--industrial-red);
-            color: white;
-            font-family: 'Barlow Condensed', sans-serif;
-            font-weight: 900;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            clip-path: polygon(5% 0%, 100% 0%, 95% 100%, 0% 100%);
-            transition: all 0.2s;
-            padding: 10px 25px;
-        }
-
-        .industrial-btn:hover {
-            background: var(--industrial-yellow);
-            color: black;
-            transform: scale(1.05);
-        }
-
-        .nav-item-active {
-            background: linear-gradient(90deg, var(--industrial-red) 0%, transparent 100%);
-            border-left: 4px solid var(--industrial-yellow);
-            color: white !important;
-        }
-
-        @media (max-width: 768px) {
-            .mobile-nav-bottom {
-                background: var(--carbon-black);
-                border-top: 2px solid var(--industrial-red);
+        @media (min-width: 1024px) {
+            .app-wrapper {
+                flex-direction: row;
             }
+        }
+
+        /* Sidebar Desktop Fijo */
+        .sidebar {
+            width: 280px;
+            background: #000;
+            flex-shrink: 0;
+            display: none;
+            border-right: 1px solid #1a1a1a;
+        }
+
+        @media (min-width: 1024px) {
+            .sidebar {
+                display: flex;
+                flex-direction: column;
+                position: sticky;
+                top: 0;
+                height: 100vh;
+            }
+        }
+
+        /* Nav Items */
+        .nav-link {
+            display: flex;
+            items-center: center;
+            padding: 0.85rem 1.25rem;
+            color: #999;
+            font-weight: 600;
+            border-left: 4px solid transparent;
+            transition: all 0.2s;
+        }
+
+        .nav-link:hover {
+            color: #fff;
+            background: #111;
+        }
+
+        .nav-link.active {
+            color: #fff;
+            background: linear-gradient(90deg, #cc000033 0%, transparent 100%);
+            border-left-color: var(--industrial-red);
+        }
+
+        /* Contenido */
+        .main-content {
+            flex: 1;
+            min-width: 0;
+            background: #0a0a0a;
+        }
+
+        /* Mobile Nav Drawer */
+        #mobile-drawer {
+            position: fixed;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            width: 280px;
+            background: #000;
+            z-index: 200;
+            transform: translateX(-100%);
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        #mobile-drawer.open {
+            transform: translateX(0);
+        }
+
+        .drawer-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.7);
+            backdrop-blur: 4px;
+            z-index: 190;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+        }
+
+        .drawer-overlay.open {
+            opacity: 1;
+            pointer-events: auto;
         }
     </style>
 </head>
-<body class="min-h-screen">
+<body class="h-full text-gray-200 overflow-x-hidden">
 
     <?php 
     $identity = $this->request->getAttribute('identity');
@@ -89,103 +134,145 @@
     
     if ($user): 
     ?>
-    <!-- Sidebar para Desktop -->
-    <aside id="sidebar" class="fixed inset-y-0 left-0 w-64 bg-[#050505] flex flex-col z-[100] -translate-x-full md:translate-x-0 transition-transform duration-300 md:sticky md:top-0 md:h-screen border-r border-white/5">
-        <div class="p-6 border-b border-white/5 bg-black">
-            <div class="flex items-center gap-3">
-                <div class="bg-red-600 p-2 transform -skew-x-12">
-                    <i class="fa-solid fa-screwdriver-wrench text-white text-xl"></i>
-                </div>
-                <div class="logo-font leading-none uppercase tracking-tighter">
-                    <div class="text-xl text-white">CERRA<span class="text-red-600">JERÍA</span></div>
-                    <div class="text-[10px] text-yellow-400">Professional Service</div>
+    <div class="app-wrapper">
+        <!-- Sidebar Desktop -->
+        <aside class="sidebar overflow-y-auto">
+            <div class="p-6 bg-black border-b border-white/5">
+                <div class="flex items-center gap-3 transform -skew-x-12">
+                    <div class="bg-red-600 p-2">
+                        <i class="fa-solid fa-screwdriver-wrench text-white text-xl"></i>
+                    </div>
+                    <span class="industrial-font text-2xl font-black italic tracking-tighter text-white">
+                        CERRA<span class="text-red-600">JERÍA</span>
+                    </span>
                 </div>
             </div>
+
+            <nav class="flex-1 py-4 flex flex-col industrial-font text-lg">
+                <?php
+                $navItems = [
+                    ['Dashboard', 'index', 'fa-gauge-high', 'RESUMEN GENERAL', true],
+                    ['Orders', 'index', 'fa-cart-shopping', 'VENTAS / PEDIDOS', true],
+                    ['AccountsReceivable', 'index', 'fa-file-invoice-dollar', 'CUENTAS POR COBRAR', ($isAdmin || $isStaff)],
+                    ['DailyClosures', 'index', 'fa-cash-register', 'CIERRE DE CAJA', ($isAdmin || $isStaff)],
+                    ['Products', 'index', 'fa-box', 'PRODUCTOS', ($isAdmin || $isStaff)],
+                    ['DeliveryDrivers', 'index', 'fa-truck-pickup', 'REPARTIDORES', ($isAdmin || $isStaff)],
+                    ['Clients', 'index', 'fa-users', 'CLIENTES', ($isAdmin || $isStaff)],
+                    ['Ingredients', 'index', 'fa-warehouse', 'INVENTARIO', ($isAdmin || $isStaff)],
+                ];
+
+                foreach ($navItems as $item):
+                    if ($item[4]):
+                        $active = $this->request->getParam('controller') == $item[0];
+                ?>
+                    <?= $this->Html->link(
+                        '<i class="fa-solid ' . $item[2] . ' w-6 text-red-600"></i> ' . $item[3],
+                        ['controller' => $item[0], 'action' => $item[1]],
+                        ['escape' => false, 'class' => 'nav-link ' . ($active ? 'active' : '')]
+                    ) ?>
+                <?php 
+                    endif;
+                endforeach; 
+                ?>
+
+                <?php if ($isAdmin): ?>
+                    <div class="px-6 py-4 mt-4 text-[11px] font-black text-yellow-500 tracking-[0.3em] opacity-40 uppercase">Ajustes de Sistema</div>
+                    <?= $this->Html->link('<i class="fa-solid fa-user-shield w-6"></i> USUARIOS', ['controller' => 'Users', 'action' => 'index'], ['escape' => false, 'class' => 'nav-link ' . ($this->request->getParam('controller') == 'Users' ? 'active' : '')]) ?>
+                    <?= $this->Html->link('<i class="fa-solid fa-gears w-6"></i> AJUSTES STOCK', ['controller' => 'InventoryAdjustments', 'action' => 'index'], ['escape' => false, 'class' => 'nav-link ' . ($this->request->getParam('controller') == 'InventoryAdjustments' ? 'active' : '')]) ?>
+                <?php endif; ?>
+            </nav>
+
+            <div class="p-6 border-t border-white/5">
+                <?= $this->Html->link('<i class="fa-solid fa-power-off text-red-500 mr-2"></i> SALIR', ['controller' => 'Users', 'action' => 'logout'], ['escape' => false, 'class' => 'industrial-font font-black tracking-widest text-sm hover:text-red-500 transition-colors']) ?>
+            </div>
+        </aside>
+
+        <!-- Main Wrapper -->
+        <div class="main-content flex flex-col">
+            <!-- Mobile Top Header -->
+            <header class="lg:hidden bg-black border-b border-red-600/50 p-4 sticky top-0 z-[150] flex justify-between items-center shadow-lg">
+                <div class="flex items-center gap-2 transform -skew-x-12">
+                    <div class="bg-red-600 px-2 py-1">
+                        <i class="fa-solid fa-key text-white text-xs"></i>
+                    </div>
+                    <span class="industrial-font font-black text-lg text-white">CERRA<span class="text-red-600">JERÍA</span></span>
+                </div>
+                <button id="drawer-toggle" class="w-10 h-10 flex items-center justify-center bg-zinc-900 rounded-lg text-yellow-500">
+                    <i class="fa-solid fa-bars-staggered text-xl"></i>
+                </button>
+            </header>
+
+            <!-- Page Content -->
+            <div class="p-4 md:p-10 max-w-full">
+                <?= $this->Flash->render() ?>
+                <?= $this->fetch('content') ?>
+            </div>
         </div>
+    </div>
 
-        <nav class="flex-1 overflow-y-auto p-4 flex flex-col gap-1 industrial-font text-lg tracking-wide">
-            <?php
-            $navItems = [
-                ['Dashboard', 'index', 'fa-gauge-high', 'PANEL CONTROL', true],
-                ['Orders', 'index', 'fa-cart-flatbed', 'VENTAS / PEDIDOS', true],
-                ['AccountsReceivable', 'index', 'fa-file-invoice-dollar', 'CUENTAS X COBRAR', ($isAdmin || $isStaff)],
-                ['DailyClosures', 'index', 'fa-cash-register', 'CIERRES DIARIOS', ($isAdmin || $isStaff)],
-                ['Products', 'index', 'fa-boxes-stacked', 'CATÁLOGO PRODUCTOS', ($isAdmin || $isStaff)],
-                ['DeliveryDrivers', 'index', 'fa-truck-monster', 'REPARTIDORES', ($isAdmin || $isStaff)],
-                ['Clients', 'index', 'fa-users-gear', 'BASE CLIENTES', ($isAdmin || $isStaff)],
-                ['Ingredients', 'index', 'fa-warehouse', 'INVENTARIO / STOCK', ($isAdmin || $isStaff)],
-            ];
+    <!-- Mobile Drawer Overlay -->
+    <div id="drawer-overlay" class="drawer-overlay"></div>
 
-            foreach ($navItems as $item):
-                if ($item[4]):
-                    $active = $this->request->getParam('controller') == $item[0];
-            ?>
+    <!-- Mobile Drawer Menu -->
+    <div id="mobile-drawer" class="overflow-y-auto">
+        <div class="p-6 bg-black border-b border-white/5 flex justify-between items-center">
+            <span class="industrial-font font-black text-white">MENÚ</span>
+            <button id="drawer-close" class="text-gray-500"><i class="fa-solid fa-xmark text-2xl"></i></button>
+        </div>
+        <nav class="p-4 flex flex-col industrial-font text-xl">
+            <!-- Reusing Nav Items logic for mobile -->
+            <?php foreach ($navItems as $item): if ($item[4]): ?>
                 <?= $this->Html->link(
                     '<i class="fa-solid ' . $item[2] . ' w-6 text-red-600"></i> ' . $item[3],
                     ['controller' => $item[0], 'action' => $item[1]],
-                    ['escape' => false, 'class' => 'flex items-center gap-3 px-4 py-3 border-b border-white/5 transition-all hover:bg-white/5 ' . ($active ? 'nav-item-active' : 'text-slate-400')]
+                    ['escape' => false, 'class' => 'nav-link ' . ($this->request->getParam('controller') == $item[0] ? 'active' : '')]
                 ) ?>
-            <?php 
-                endif;
-            endforeach; 
-            ?>
-
+            <?php endif; endforeach; ?>
+            
             <?php if ($isAdmin): ?>
-                <div class="px-4 py-4 mt-4 text-[11px] font-black uppercase text-yellow-500 tracking-[0.3em] opacity-50 industrial-font">SYSTEM ADMIN</div>
-                <?= $this->Html->link('<i class="fa-solid fa-user-shield w-6"></i> USUARIOS', ['controller' => 'Users', 'action' => 'index'], ['escape' => false, 'class' => 'flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-white border-b border-white/5']) ?>
-                <?= $this->Html->link('<i class="fa-solid fa-gears w-6"></i> AJUSTES STOCK', ['controller' => 'InventoryAdjustments', 'action' => 'index'], ['escape' => false, 'class' => 'flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-white border-b border-white/5']) ?>
+                <div class="px-5 py-4 mt-4 text-[10px] font-black text-yellow-500 tracking-[0.3em] uppercase opacity-40">Administración</div>
+                <?= $this->Html->link('<i class="fa-solid fa-user-shield w-6 text-red-600"></i> USUARIOS', ['controller' => 'Users', 'action' => 'index'], ['escape' => false, 'class' => 'nav-link']) ?>
+                <?= $this->Html->link('<i class="fa-solid fa-gears w-6 text-red-600"></i> AJUSTES', ['controller' => 'InventoryAdjustments', 'action' => 'index'], ['escape' => false, 'class' => 'nav-link']) ?>
             <?php endif; ?>
-        </nav>
 
-        <div class="p-4 bg-black border-t border-white/5">
-            <?= $this->Html->link('<i class="fa-solid fa-power-off mr-2"></i> CERRAR SESIÓN', ['controller' => 'Users', 'action' => 'logout'], ['escape' => false, 'class' => 'w-full block text-center py-3 bg-zinc-900 text-red-500 font-black industrial-font tracking-widest hover:bg-red-600 hover:text-white transition-all']) ?>
-        </div>
-    </aside>
-
-    <!-- Mobile Header -->
-    <header class="md:hidden bg-black border-b-2 border-red-600 p-4 sticky top-0 z-[110] flex justify-between items-center">
-        <div class="flex items-center gap-2">
-            <div class="bg-red-600 p-1 transform -skew-x-12">
-                <i class="fa-solid fa-screwdriver-wrench text-white text-sm"></i>
+            <div class="mt-8 border-t border-white/5 pt-4">
+                <?= $this->Html->link('<i class="fa-solid fa-power-off text-red-500 mr-2"></i> CERRAR SESIÓN', ['controller' => 'Users', 'action' => 'logout'], ['escape' => false, 'class' => 'nav-link text-red-500']) ?>
             </div>
-            <span class="logo-font text-white text-sm uppercase">CERRA<span class="text-red-600">JERÍA</span></span>
-        </div>
-        <button id="mobile-menu-toggle" class="text-yellow-400 text-2xl">
-            <i class="fa-solid fa-bars-staggered"></i>
-        </button>
-    </header>
+        </nav>
+    </div>
+
+    <?php else: ?>
+        <!-- No User Layout (Login) -->
+        <main class="min-h-screen flex items-center justify-center p-4">
+            <div class="w-full max-w-md">
+                <?= $this->Flash->render() ?>
+                <?= $this->fetch('content') ?>
+            </div>
+        </main>
     <?php endif; ?>
-
-    <!-- Main Content Area -->
-    <main class="flex-1 md:ml-0">
-        <div class="p-4 md:p-8">
-            <?= $this->Flash->render() ?>
-            <?= $this->fetch('content') ?>
-        </div>
-    </main>
-
-    <!-- Overlay para móvil -->
-    <div id="mobile-overlay" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-[90] hidden"></div>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const toggle = document.getElementById('mobile-menu-toggle');
-            const sidebar = document.getElementById('sidebar');
-            const overlay = document.getElementById('mobile-overlay');
+            const toggle = document.getElementById('drawer-toggle');
+            const close = document.getElementById('drawer-close');
+            const drawer = document.getElementById('mobile-drawer');
+            const overlay = document.getElementById('drawer-overlay');
 
-            if (toggle) {
-                toggle.addEventListener('click', () => {
-                    sidebar.classList.toggle('-translate-x-full');
-                    overlay.classList.toggle('hidden');
-                });
+            function openDrawer() {
+                drawer.classList.add('open');
+                overlay.classList.add('open');
+                document.body.style.overflow = 'hidden';
             }
 
-            if (overlay) {
-                overlay.addEventListener('click', () => {
-                    sidebar.classList.add('-translate-x-full');
-                    overlay.classList.add('hidden');
-                });
+            function closeDrawer() {
+                drawer.classList.remove('open');
+                overlay.classList.remove('open');
+                document.body.style.overflow = '';
             }
+
+            if(toggle) toggle.addEventListener('click', openDrawer);
+            if(close) close.addEventListener('click', closeDrawer);
+            if(overlay) overlay.addEventListener('click', closeDrawer);
         });
     </script>
 </body>
