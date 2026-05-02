@@ -3,7 +3,7 @@
 <head>
     <?= $this->Html->charset() ?>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>SISTEMA GESTIÓN - <?= $this->fetch('title') ?></title>
+    <title>SISTEMA PRO - <?= $this->fetch('title') ?></title>
     <?= $this->Html->meta('icon') ?>
     
     <script src="https://cdn.tailwindcss.com"></script>
@@ -15,12 +15,12 @@
     <?= $this->fetch('script') ?>
 
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
         
         body { 
-            font-family: 'Inter', sans-serif; 
+            font-family: 'Plus Jakarta Sans', sans-serif; 
             -webkit-font-smoothing: antialiased;
-            color: #1e293b;
+            color: #0f172a;
         }
         
         /* Layout Structure */
@@ -36,10 +36,10 @@
             }
         }
 
-        /* Sidebar - Ultra Professional Light */
+        /* Sidebar - Modern Enterprise */
         .sidebar {
-            width: 260px;
-            background: #ffffff;
+            width: 280px;
+            background: #f8fafc;
             border-right: 1px solid #e2e8f0;
             flex-shrink: 0;
             display: none;
@@ -52,109 +52,95 @@
                 position: sticky;
                 top: 0;
                 height: 100vh;
+                overflow-y: auto; /* Fix: Sidebar scrollable if many items */
             }
         }
 
-        /* Modern Nav Links */
+        /* Nav Links Refined */
         .nav-link {
             display: flex;
             align-items: center;
             gap: 12px;
-            padding: 12px 24px;
-            color: #64748b;
+            padding: 10px 16px;
+            margin: 2px 16px;
+            color: #475569;
             font-size: 0.875rem;
             font-weight: 500;
+            border-radius: 8px;
             transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-            border-right: 3px solid transparent;
         }
 
         .nav-link:hover {
             color: #ef4444;
-            background: #fef2f2;
+            background: #ffffff;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
         }
 
         .nav-link.active {
-            color: #ef4444;
-            background: #fef2f2;
-            font-weight: 700;
-            border-right-color: #ef4444;
+            color: #ffffff;
+            background: #ef4444;
+            box-shadow: 0 10px 15px -3px rgba(239, 68, 68, 0.25);
+            font-weight: 600;
         }
 
         .nav-link i {
             font-size: 1.1rem;
-            width: 20px;
+            width: 24px;
             text-align: center;
+            opacity: 0.8;
         }
 
-        /* Main Content */
+        .nav-link.active i {
+            opacity: 1;
+        }
+
+        /* Main Content Styling */
         .main-content {
             flex: 1;
             min-width: 0;
+            background: #ffffff;
         }
 
-        /* Mobile Components */
+        /* Glass Header for Content */
+        .content-header {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid #f1f5f9;
+            position: sticky;
+            top: 0;
+            z-index: 40;
+        }
+
+        /* Mobile Header */
         .mobile-header {
             background: #ffffff;
             border-bottom: 1px solid #e2e8f0;
-            padding: 12px 20px;
+            padding: 16px 20px;
             position: sticky;
             top: 0;
             z-index: 50;
         }
 
-        /* Drawer for Mobile */
-        #mobile-drawer {
-            position: fixed;
-            top: 0;
-            left: 0;
-            bottom: 0;
-            width: 280px;
-            background: #ffffff;
-            z-index: 100;
-            transform: translateX(-100%);
-            transition: transform 0.3s ease-in-out;
-            box-shadow: 20px 0 50px rgba(0,0,0,0.1);
-        }
-
-        #mobile-drawer.open {
-            transform: translateX(0);
-        }
-
-        .drawer-overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(15, 23, 42, 0.4);
-            backdrop-filter: blur(4px);
-            z-index: 90;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.3s;
-        }
-
-        .drawer-overlay.open {
-            opacity: 1;
-            pointer-events: auto;
-        }
-
-        /* Professional Cards */
-        .pro-card {
-            background: #ffffff;
-            border-radius: 12px;
-            border: 1px solid #e2e8f0;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.02), 0 1px 2px rgba(0,0,0,0.04);
-        }
-
-        .section-label {
-            padding: 24px 24px 8px 24px;
-            font-size: 10px;
+        /* Professional Details */
+        .section-tag {
+            padding: 24px 24px 8px 32px;
+            font-size: 0.65rem;
             font-weight: 800;
             text-transform: uppercase;
-            letter-spacing: 0.1em;
+            letter-spacing: 0.15em;
             color: #94a3b8;
+        }
+
+        .user-profile {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            margin: 16px;
+            padding: 12px;
         }
     </style>
 </head>
-<body class="h-full">
+<body class="h-full overflow-x-hidden">
 
     <?php 
     $identity = $this->request->getAttribute('identity');
@@ -167,28 +153,28 @@
     <div class="app-container">
         <!-- Sidebar Desktop -->
         <aside class="sidebar">
-            <div class="p-8 border-b border-slate-100 mb-4">
+            <div class="p-8 mb-4">
                 <div class="flex items-center gap-3">
-                    <div class="bg-red-500 text-white p-2 rounded-lg shadow-sm shadow-red-200">
-                        <i class="fa-solid fa-screwdriver-wrench"></i>
+                    <div class="bg-gradient-to-br from-red-500 to-red-600 text-white p-2.5 rounded-xl shadow-lg shadow-red-200">
+                        <i class="fa-solid fa-key text-lg"></i>
                     </div>
-                    <span class="font-extrabold text-xl tracking-tight text-slate-900 uppercase italic">
-                        Cerra<span class="text-red-500">jería</span>
-                    </span>
+                    <div>
+                        <span class="font-extrabold text-lg tracking-tight text-slate-900 uppercase italic leading-none block">
+                            Cerra<span class="text-red-500">jería</span>
+                        </span>
+                        <span class="text-[9px] font-bold text-slate-400 tracking-[0.2em] uppercase">Professional Hub</span>
+                    </div>
                 </div>
             </div>
 
-            <nav class="flex-1 flex flex-col">
+            <nav class="flex-1 flex flex-col pb-8">
+                <div class="section-tag text-red-500/60 font-black">Operaciones</div>
                 <?php
                 $navItems = [
-                    ['Dashboard', 'index', 'fa-chart-pie', 'Resumen'],
-                    ['Orders', 'index', 'fa-shopping-cart', 'Ventas'],
-                    ['AccountsReceivable', 'index', 'fa-file-invoice-dollar', 'Cuentas x Cobrar', ($isAdmin || $isStaff)],
-                    ['DailyClosures', 'index', 'fa-cash-register', 'Cierres de Caja', ($isAdmin || $isStaff)],
-                    ['Products', 'index', 'fa-tag', 'Productos', ($isAdmin || $isStaff)],
-                    ['DeliveryDrivers', 'index', 'fa-truck', 'Repartidores', ($isAdmin || $isStaff)],
-                    ['Clients', 'index', 'fa-users', 'Clientes', ($isAdmin || $isStaff)],
-                    ['Ingredients', 'index', 'fa-box-open', 'Inventario', ($isAdmin || $isStaff)],
+                    ['Dashboard', 'index', 'fa-grip', 'Panel General'],
+                    ['Orders', 'index', 'fa-receipt', 'Ventas & Pedidos'],
+                    ['AccountsReceivable', 'index', 'fa-money-check-dollar', 'Cuentas x Cobrar', ($isAdmin || $isStaff)],
+                    ['DailyClosures', 'index', 'fa-cash-register', 'Control de Caja', ($isAdmin || $isStaff)],
                 ];
 
                 foreach ($navItems as $item):
@@ -200,42 +186,72 @@
                         ['controller' => $item[0], 'action' => $item[1]],
                         ['escape' => false, 'class' => 'nav-link ' . ($active ? 'active' : '')]
                     ) ?>
-                <?php 
-                    endif;
-                endforeach; 
+                <?php endif; endforeach; ?>
+
+                <div class="section-tag">Administración</div>
+                <?php
+                $adminItems = [
+                    ['Products', 'index', 'fa-shapes', 'Catálogo Pro'],
+                    ['DeliveryDrivers', 'index', 'fa-motorcycle', 'Repartidores'],
+                    ['Clients', 'index', 'fa-address-card', 'Clientes'],
+                    ['Ingredients', 'index', 'fa-boxes-stacked', 'Inventario'],
+                ];
+                foreach ($adminItems as $item):
+                    $active = $this->request->getParam('controller') == $item[0];
                 ?>
+                    <?= $this->Html->link(
+                        '<i class="fa-solid ' . $item[2] . '"></i> ' . $item[3],
+                        ['controller' => $item[0], 'action' => $item[1]],
+                        ['escape' => false, 'class' => 'nav-link ' . ($active ? 'active' : '')]
+                    ) ?>
+                <?php endforeach; ?>
 
                 <?php if ($isAdmin): ?>
-                    <div class="section-label">Configuración</div>
-                    <?= $this->Html->link('<i class="fa-solid fa-user-gear"></i> Usuarios', ['controller' => 'Users', 'action' => 'index'], ['escape' => false, 'class' => 'nav-link ' . ($this->request->getParam('controller') == 'Users' ? 'active' : '')]) ?>
-                    <?= $this->Html->link('<i class="fa-solid fa-sliders"></i> Ajustes Stock', ['controller' => 'InventoryAdjustments', 'action' => 'index'], ['escape' => false, 'class' => 'nav-link ' . ($this->request->getParam('controller') == 'InventoryAdjustments' ? 'active' : '')]) ?>
+                    <div class="section-tag">Sistema</div>
+                    <?= $this->Html->link('<i class="fa-solid fa-shield-user"></i> Gestión Usuarios', ['controller' => 'Users', 'action' => 'index'], ['escape' => false, 'class' => 'nav-link ' . ($this->request->getParam('controller') == 'Users' ? 'active' : '')]) ?>
+                    <?= $this->Html->link('<i class="fa-solid fa-gears"></i> Ajustes Stock', ['controller' => 'InventoryAdjustments', 'action' => 'index'], ['escape' => false, 'class' => 'nav-link ' . ($this->request->getParam('controller') == 'InventoryAdjustments' ? 'active' : '')]) ?>
                 <?php endif; ?>
             </nav>
 
-            <div class="p-6 border-t border-slate-100">
-                <?= $this->Html->link('<i class="fa-solid fa-sign-out-alt"></i> Cerrar Sesión', ['controller' => 'Users', 'action' => 'logout'], ['escape' => false, 'class' => 'flex items-center gap-2 text-sm font-semibold text-slate-400 hover:text-red-500 transition-colors px-4']) ?>
+            <div class="mt-auto border-t border-slate-100 bg-slate-50/50 p-4">
+                <div class="flex items-center gap-3 px-4 py-2">
+                    <div class="w-8 h-8 rounded-full bg-slate-200 flex items-center justify-center text-slate-500 font-bold text-xs uppercase">
+                        <?= substr($user->username, 0, 1) ?>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <p class="text-xs font-bold text-slate-900 truncate"><?= h($user->username) ?></p>
+                        <p class="text-[10px] text-slate-500 truncate italic"><?= h($user->role) ?></p>
+                    </div>
+                    <?= $this->Html->link('<i class="fa-solid fa-arrow-right-from-bracket"></i>', ['controller' => 'Users', 'action' => 'logout'], ['escape' => false, 'class' => 'text-slate-400 hover:text-red-500 transition-colors', 'title' => 'Salir']) ?>
+                </div>
             </div>
         </aside>
 
         <!-- Main Wrapper -->
         <div class="main-content flex flex-col">
-            <!-- Mobile Top Header -->
+            <!-- Mobile Header -->
             <header class="lg:hidden mobile-header shadow-sm flex justify-between items-center">
                 <div class="flex items-center gap-2">
-                    <div class="bg-red-500 text-white p-1.5 rounded-md text-xs">
-                        <i class="fa-solid fa-key"></i>
+                    <div class="bg-red-500 text-white p-1.5 rounded-lg">
+                        <i class="fa-solid fa-key text-sm"></i>
                     </div>
-                    <span class="font-extrabold text-sm text-slate-900 uppercase italic">Cerra<span class="text-red-500">jería</span></span>
+                    <span class="font-extrabold text-sm text-slate-900 uppercase italic tracking-tighter">Cerra<span class="text-red-500">jería</span></span>
                 </div>
-                <button id="drawer-toggle" class="p-2 text-slate-600 hover:bg-slate-50 rounded-lg">
+                <button id="drawer-toggle" class="p-2 text-slate-800 bg-slate-50 rounded-lg">
                     <i class="fa-solid fa-bars-staggered text-xl"></i>
                 </button>
             </header>
 
             <!-- Page Content -->
-            <div class="p-4 md:p-10 max-w-full">
-                <div class="mb-6 lg:hidden">
-                    <h2 class="text-xs font-bold text-slate-400 uppercase tracking-widest"><?= h($this->fetch('title')) ?></h2>
+            <div class="p-6 md:p-12 max-w-full min-h-screen">
+                <div class="mb-10 flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-slate-100 pb-8">
+                    <div>
+                        <h2 class="text-[10px] font-black text-red-500 uppercase tracking-[0.3em] mb-2">Sección Activa</h2>
+                        <h1 class="text-3xl md:text-4xl font-extrabold text-slate-900 tracking-tight"><?= h($this->fetch('title')) ?></h1>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <span class="text-xs font-bold text-slate-400 italic"><?= date('l, d M Y') ?></span>
+                    </div>
                 </div>
                 <?= $this->Flash->render() ?>
                 <?= $this->fetch('content') ?>
@@ -243,50 +259,49 @@
         </div>
     </div>
 
-    <!-- Mobile Drawer Overlay -->
-    <div id="drawer-overlay" class="drawer-overlay"></div>
-
-    <!-- Mobile Drawer Menu -->
-    <div id="mobile-drawer" class="flex flex-col">
-        <div class="p-6 border-b border-slate-100 flex justify-between items-center">
-            <span class="font-bold text-slate-900 uppercase text-xs">Menú Principal</span>
-            <button id="drawer-close" class="text-slate-400"><i class="fa-solid fa-xmark text-xl"></i></button>
+    <!-- Mobile Drawer -->
+    <div id="drawer-overlay" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-[90] opacity-0 pointer-events-none transition-opacity"></div>
+    <div id="mobile-drawer" class="fixed inset-y-0 left-0 w-80 bg-white z-[100] transform -translate-x-full transition-transform ease-in-out duration-300 shadow-2xl flex flex-col">
+        <div class="p-8 border-b border-slate-50 flex justify-between items-center">
+            <span class="font-black text-slate-900 uppercase text-xs tracking-widest">Navegación</span>
+            <button id="drawer-close" class="text-slate-400"><i class="fa-solid fa-xmark text-2xl"></i></button>
         </div>
-        <nav class="flex-1 py-4 flex flex-col">
-            <!-- Re-rendering items for drawer -->
+        <div class="flex-1 overflow-y-auto pt-4">
+            <!-- Reuse Links in Drawer -->
+            <div class="section-tag text-red-500/60 font-black pt-2">Operaciones</div>
             <?php foreach ($navItems as $item): if (!isset($item[4]) || $item[4]): ?>
-                <?= $this->Html->link(
-                    '<i class="fa-solid ' . $item[2] . '"></i> ' . $item[3],
-                    ['controller' => $item[0], 'action' => $item[1]],
-                    ['escape' => false, 'class' => 'nav-link ' . ($this->request->getParam('controller') == $item[0] ? 'active' : '')]
-                ) ?>
+                <?= $this->Html->link('<i class="fa-solid ' . $item[2] . '"></i> ' . $item[3], ['controller' => $item[0], 'action' => $item[1]], ['escape' => false, 'class' => 'nav-link ' . ($this->request->getParam('controller') == $item[0] ? 'active' : '')]) ?>
             <?php endif; endforeach; ?>
             
-            <?php if ($isAdmin): ?>
-                <div class="section-label">Configuración</div>
-                <?= $this->Html->link('<i class="fa-solid fa-user-gear"></i> Usuarios', ['controller' => 'Users', 'action' => 'index'], ['escape' => false, 'class' => 'nav-link']) ?>
-                <?= $this->Html->link('<i class="fa-solid fa-sliders"></i> Ajustes', ['controller' => 'InventoryAdjustments', 'action' => 'index'], ['escape' => false, 'class' => 'nav-link']) ?>
-            <?php endif; ?>
+            <div class="section-tag pt-6">Administración</div>
+            <?php foreach ($adminItems as $item): ?>
+                <?= $this->Html->link('<i class="fa-solid ' . $item[2] . '"></i> ' . $item[3], ['controller' => $item[0], 'action' => $item[1]], ['escape' => false, 'class' => 'nav-link ' . ($this->request->getParam('controller') == $item[0] ? 'active' : '')]) ?>
+            <?php endforeach; ?>
 
-            <div class="mt-auto p-6 border-t border-slate-100">
-                <?= $this->Html->link('<i class="fa-solid fa-sign-out-alt"></i> Salir', ['controller' => 'Users', 'action' => 'logout'], ['escape' => false, 'class' => 'text-red-500 font-bold text-sm']) ?>
+            <div class="mt-8 p-6">
+                <?= $this->Html->link('<i class="fa-solid fa-power-off mr-2"></i> Cerrar Sesión', ['controller' => 'Users', 'action' => 'logout'], ['escape' => false, 'class' => 'w-full block bg-red-50 text-red-600 text-center py-4 rounded-xl font-bold text-sm']) ?>
             </div>
-        </nav>
+        </div>
     </div>
 
     <?php else: ?>
-        <!-- No User Layout (Login) -->
-        <main class="min-h-screen flex items-center justify-center p-6 bg-slate-50">
-            <div class="w-full max-w-sm">
-                <div class="text-center mb-8">
-                    <div class="bg-red-500 text-white w-12 h-12 flex items-center justify-center rounded-xl mx-auto shadow-lg mb-4">
-                        <i class="fa-solid fa-key text-xl"></i>
+        <!-- Login Layout Refined -->
+        <main class="min-h-screen flex items-center justify-center p-8 bg-slate-50 relative overflow-hidden">
+            <div class="absolute top-0 left-0 w-full h-1 bg-red-500"></div>
+            <div class="w-full max-w-sm relative z-10">
+                <div class="text-center mb-10">
+                    <div class="bg-gradient-to-br from-red-500 to-red-600 text-white w-14 h-14 flex items-center justify-center rounded-2xl mx-auto shadow-2xl shadow-red-200 mb-6 transform -rotate-3">
+                        <i class="fa-solid fa-key text-2xl"></i>
                     </div>
-                    <h1 class="text-2xl font-extrabold text-slate-900 uppercase italic">Cerra<span class="text-red-500">jería</span></h1>
-                    <p class="text-slate-400 text-xs font-medium mt-1">SISTEMA PROFESIONAL DE GESTIÓN</p>
+                    <h1 class="text-3xl font-black text-slate-900 uppercase italic tracking-tighter leading-none">Cerra<span class="text-red-500">jería</span></h1>
+                    <p class="text-[10px] font-black text-slate-400 tracking-[0.4em] uppercase mt-3">Enterprise Access</p>
                 </div>
-                <?= $this->Flash->render() ?>
-                <?= $this->fetch('content') ?>
+                <div class="bg-white p-2 rounded-3xl shadow-2xl shadow-slate-200 border border-slate-100">
+                    <div class="p-6">
+                        <?= $this->Flash->render() ?>
+                        <?= $this->fetch('content') ?>
+                    </div>
+                </div>
             </div>
         </main>
     <?php endif; ?>
@@ -299,14 +314,14 @@
             const overlay = document.getElementById('drawer-overlay');
 
             function openDrawer() {
-                drawer.classList.add('open');
-                overlay.classList.add('open');
+                drawer.classList.remove('-translate-x-full');
+                overlay.classList.remove('opacity-0', 'pointer-events-none');
                 document.body.style.overflow = 'hidden';
             }
 
             function closeDrawer() {
-                drawer.classList.remove('open');
-                overlay.classList.remove('open');
+                drawer.classList.add('-translate-x-full');
+                overlay.classList.add('opacity-0', 'pointer-events-none');
                 document.body.style.overflow = '';
             }
 
