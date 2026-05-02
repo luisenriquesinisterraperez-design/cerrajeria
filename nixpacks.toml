@@ -1,8 +1,11 @@
 [variables]
-    NIXPACKS_PHP_ROOT = 'webroot'
+    NIXPACKS_PHP_ROOT = "webroot"
+
+[phases.setup]
+    nixPkgs = ["php82", "php82Packages.composer"]
 
 [phases.install]
-    cmds = ['composer install --no-dev --optimize-autoloader']
+    cmds = ["composer install --no-dev --no-interaction --optimize-autoloader"]
 
 [start]
-    cmd = 'php -S 0.0.0.0:$PORT -t webroot'
+    cmd = "php -S 0.0.0.0:$PORT -t webroot"
