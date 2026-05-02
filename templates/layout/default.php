@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="es" class="h-full bg-[#0a0a0a]">
+<html lang="es" class="h-full bg-slate-50">
 <head>
     <?= $this->Html->charset() ?>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>CERRAJERÍA PRO - <?= $this->fetch('title') ?></title>
+    <title>SISTEMA GESTIÓN - <?= $this->fetch('title') ?></title>
     <?= $this->Html->meta('icon') ?>
     
     <script src="https://cdn.tailwindcss.com"></script>
@@ -15,40 +15,34 @@
     <?= $this->fetch('script') ?>
 
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;700;900&family=Inter:wght@400;600;800&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
         
-        :root {
-            --industrial-red: #cc0000;
-            --industrial-yellow: #ffcc00;
-        }
-
         body { 
             font-family: 'Inter', sans-serif; 
             -webkit-font-smoothing: antialiased;
+            color: #1e293b;
         }
         
-        .industrial-font { font-family: 'Barlow Condensed', sans-serif; }
-
-        /* Estructura para evitar deformaciones */
-        .app-wrapper {
+        /* Layout Structure */
+        .app-container {
             display: flex;
             flex-direction: column;
             min-height: 100vh;
         }
 
         @media (min-width: 1024px) {
-            .app-wrapper {
+            .app-container {
                 flex-direction: row;
             }
         }
 
-        /* Sidebar Desktop Fijo */
+        /* Sidebar - Ultra Professional Light */
         .sidebar {
-            width: 280px;
-            background: #000;
+            width: 260px;
+            background: #ffffff;
+            border-right: 1px solid #e2e8f0;
             flex-shrink: 0;
             display: none;
-            border-right: 1px solid #1a1a1a;
         }
 
         @media (min-width: 1024px) {
@@ -61,46 +55,65 @@
             }
         }
 
-        /* Nav Items */
+        /* Modern Nav Links */
         .nav-link {
             display: flex;
-            items-center: center;
-            padding: 0.85rem 1.25rem;
-            color: #999;
-            font-weight: 600;
-            border-left: 4px solid transparent;
-            transition: all 0.2s;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 24px;
+            color: #64748b;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            border-right: 3px solid transparent;
         }
 
         .nav-link:hover {
-            color: #fff;
-            background: #111;
+            color: #ef4444;
+            background: #fef2f2;
         }
 
         .nav-link.active {
-            color: #fff;
-            background: linear-gradient(90deg, #cc000033 0%, transparent 100%);
-            border-left-color: var(--industrial-red);
+            color: #ef4444;
+            background: #fef2f2;
+            font-weight: 700;
+            border-right-color: #ef4444;
         }
 
-        /* Contenido */
+        .nav-link i {
+            font-size: 1.1rem;
+            width: 20px;
+            text-align: center;
+        }
+
+        /* Main Content */
         .main-content {
             flex: 1;
             min-width: 0;
-            background: #0a0a0a;
         }
 
-        /* Mobile Nav Drawer */
+        /* Mobile Components */
+        .mobile-header {
+            background: #ffffff;
+            border-bottom: 1px solid #e2e8f0;
+            padding: 12px 20px;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+
+        /* Drawer for Mobile */
         #mobile-drawer {
             position: fixed;
             top: 0;
             left: 0;
             bottom: 0;
             width: 280px;
-            background: #000;
-            z-index: 200;
+            background: #ffffff;
+            z-index: 100;
             transform: translateX(-100%);
-            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: transform 0.3s ease-in-out;
+            box-shadow: 20px 0 50px rgba(0,0,0,0.1);
         }
 
         #mobile-drawer.open {
@@ -110,9 +123,9 @@
         .drawer-overlay {
             position: fixed;
             inset: 0;
-            background: rgba(0,0,0,0.7);
-            backdrop-blur: 4px;
-            z-index: 190;
+            background: rgba(15, 23, 42, 0.4);
+            backdrop-filter: blur(4px);
+            z-index: 90;
             opacity: 0;
             pointer-events: none;
             transition: opacity 0.3s;
@@ -122,9 +135,26 @@
             opacity: 1;
             pointer-events: auto;
         }
+
+        /* Professional Cards */
+        .pro-card {
+            background: #ffffff;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.02), 0 1px 2px rgba(0,0,0,0.04);
+        }
+
+        .section-label {
+            padding: 24px 24px 8px 24px;
+            font-size: 10px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: #94a3b8;
+        }
     </style>
 </head>
-<body class="h-full text-gray-200 overflow-x-hidden">
+<body class="h-full">
 
     <?php 
     $identity = $this->request->getAttribute('identity');
@@ -134,39 +164,39 @@
     
     if ($user): 
     ?>
-    <div class="app-wrapper">
+    <div class="app-container">
         <!-- Sidebar Desktop -->
-        <aside class="sidebar overflow-y-auto">
-            <div class="p-6 bg-black border-b border-white/5">
-                <div class="flex items-center gap-3 transform -skew-x-12">
-                    <div class="bg-red-600 p-2">
-                        <i class="fa-solid fa-screwdriver-wrench text-white text-xl"></i>
+        <aside class="sidebar">
+            <div class="p-8 border-b border-slate-100 mb-4">
+                <div class="flex items-center gap-3">
+                    <div class="bg-red-500 text-white p-2 rounded-lg shadow-sm shadow-red-200">
+                        <i class="fa-solid fa-screwdriver-wrench"></i>
                     </div>
-                    <span class="industrial-font text-2xl font-black italic tracking-tighter text-white">
-                        CERRA<span class="text-red-600">JERÍA</span>
+                    <span class="font-extrabold text-xl tracking-tight text-slate-900 uppercase italic">
+                        Cerra<span class="text-red-500">jería</span>
                     </span>
                 </div>
             </div>
 
-            <nav class="flex-1 py-4 flex flex-col industrial-font text-lg">
+            <nav class="flex-1 flex flex-col">
                 <?php
                 $navItems = [
-                    ['Dashboard', 'index', 'fa-gauge-high', 'RESUMEN GENERAL', true],
-                    ['Orders', 'index', 'fa-cart-shopping', 'VENTAS / PEDIDOS', true],
-                    ['AccountsReceivable', 'index', 'fa-file-invoice-dollar', 'CUENTAS POR COBRAR', ($isAdmin || $isStaff)],
-                    ['DailyClosures', 'index', 'fa-cash-register', 'CIERRE DE CAJA', ($isAdmin || $isStaff)],
-                    ['Products', 'index', 'fa-box', 'PRODUCTOS', ($isAdmin || $isStaff)],
-                    ['DeliveryDrivers', 'index', 'fa-truck-pickup', 'REPARTIDORES', ($isAdmin || $isStaff)],
-                    ['Clients', 'index', 'fa-users', 'CLIENTES', ($isAdmin || $isStaff)],
-                    ['Ingredients', 'index', 'fa-warehouse', 'INVENTARIO', ($isAdmin || $isStaff)],
+                    ['Dashboard', 'index', 'fa-chart-pie', 'Resumen'],
+                    ['Orders', 'index', 'fa-shopping-cart', 'Ventas'],
+                    ['AccountsReceivable', 'index', 'fa-file-invoice-dollar', 'Cuentas x Cobrar', ($isAdmin || $isStaff)],
+                    ['DailyClosures', 'index', 'fa-cash-register', 'Cierres de Caja', ($isAdmin || $isStaff)],
+                    ['Products', 'index', 'fa-tag', 'Productos', ($isAdmin || $isStaff)],
+                    ['DeliveryDrivers', 'index', 'fa-truck', 'Repartidores', ($isAdmin || $isStaff)],
+                    ['Clients', 'index', 'fa-users', 'Clientes', ($isAdmin || $isStaff)],
+                    ['Ingredients', 'index', 'fa-box-open', 'Inventario', ($isAdmin || $isStaff)],
                 ];
 
                 foreach ($navItems as $item):
-                    if ($item[4]):
+                    if (!isset($item[4]) || $item[4]):
                         $active = $this->request->getParam('controller') == $item[0];
                 ?>
                     <?= $this->Html->link(
-                        '<i class="fa-solid ' . $item[2] . ' w-6 text-red-600"></i> ' . $item[3],
+                        '<i class="fa-solid ' . $item[2] . '"></i> ' . $item[3],
                         ['controller' => $item[0], 'action' => $item[1]],
                         ['escape' => false, 'class' => 'nav-link ' . ($active ? 'active' : '')]
                     ) ?>
@@ -176,34 +206,37 @@
                 ?>
 
                 <?php if ($isAdmin): ?>
-                    <div class="px-6 py-4 mt-4 text-[11px] font-black text-yellow-500 tracking-[0.3em] opacity-40 uppercase">Ajustes de Sistema</div>
-                    <?= $this->Html->link('<i class="fa-solid fa-user-shield w-6"></i> USUARIOS', ['controller' => 'Users', 'action' => 'index'], ['escape' => false, 'class' => 'nav-link ' . ($this->request->getParam('controller') == 'Users' ? 'active' : '')]) ?>
-                    <?= $this->Html->link('<i class="fa-solid fa-gears w-6"></i> AJUSTES STOCK', ['controller' => 'InventoryAdjustments', 'action' => 'index'], ['escape' => false, 'class' => 'nav-link ' . ($this->request->getParam('controller') == 'InventoryAdjustments' ? 'active' : '')]) ?>
+                    <div class="section-label">Configuración</div>
+                    <?= $this->Html->link('<i class="fa-solid fa-user-gear"></i> Usuarios', ['controller' => 'Users', 'action' => 'index'], ['escape' => false, 'class' => 'nav-link ' . ($this->request->getParam('controller') == 'Users' ? 'active' : '')]) ?>
+                    <?= $this->Html->link('<i class="fa-solid fa-sliders"></i> Ajustes Stock', ['controller' => 'InventoryAdjustments', 'action' => 'index'], ['escape' => false, 'class' => 'nav-link ' . ($this->request->getParam('controller') == 'InventoryAdjustments' ? 'active' : '')]) ?>
                 <?php endif; ?>
             </nav>
 
-            <div class="p-6 border-t border-white/5">
-                <?= $this->Html->link('<i class="fa-solid fa-power-off text-red-500 mr-2"></i> SALIR', ['controller' => 'Users', 'action' => 'logout'], ['escape' => false, 'class' => 'industrial-font font-black tracking-widest text-sm hover:text-red-500 transition-colors']) ?>
+            <div class="p-6 border-t border-slate-100">
+                <?= $this->Html->link('<i class="fa-solid fa-sign-out-alt"></i> Cerrar Sesión', ['controller' => 'Users', 'action' => 'logout'], ['escape' => false, 'class' => 'flex items-center gap-2 text-sm font-semibold text-slate-400 hover:text-red-500 transition-colors px-4']) ?>
             </div>
         </aside>
 
         <!-- Main Wrapper -->
         <div class="main-content flex flex-col">
             <!-- Mobile Top Header -->
-            <header class="lg:hidden bg-black border-b border-red-600/50 p-4 sticky top-0 z-[150] flex justify-between items-center shadow-lg">
-                <div class="flex items-center gap-2 transform -skew-x-12">
-                    <div class="bg-red-600 px-2 py-1">
-                        <i class="fa-solid fa-key text-white text-xs"></i>
+            <header class="lg:hidden mobile-header shadow-sm flex justify-between items-center">
+                <div class="flex items-center gap-2">
+                    <div class="bg-red-500 text-white p-1.5 rounded-md text-xs">
+                        <i class="fa-solid fa-key"></i>
                     </div>
-                    <span class="industrial-font font-black text-lg text-white">CERRA<span class="text-red-600">JERÍA</span></span>
+                    <span class="font-extrabold text-sm text-slate-900 uppercase italic">Cerra<span class="text-red-500">jería</span></span>
                 </div>
-                <button id="drawer-toggle" class="w-10 h-10 flex items-center justify-center bg-zinc-900 rounded-lg text-yellow-500">
+                <button id="drawer-toggle" class="p-2 text-slate-600 hover:bg-slate-50 rounded-lg">
                     <i class="fa-solid fa-bars-staggered text-xl"></i>
                 </button>
             </header>
 
             <!-- Page Content -->
             <div class="p-4 md:p-10 max-w-full">
+                <div class="mb-6 lg:hidden">
+                    <h2 class="text-xs font-bold text-slate-400 uppercase tracking-widest"><?= h($this->fetch('title')) ?></h2>
+                </div>
                 <?= $this->Flash->render() ?>
                 <?= $this->fetch('content') ?>
             </div>
@@ -214,37 +247,44 @@
     <div id="drawer-overlay" class="drawer-overlay"></div>
 
     <!-- Mobile Drawer Menu -->
-    <div id="mobile-drawer" class="overflow-y-auto">
-        <div class="p-6 bg-black border-b border-white/5 flex justify-between items-center">
-            <span class="industrial-font font-black text-white">MENÚ</span>
-            <button id="drawer-close" class="text-gray-500"><i class="fa-solid fa-xmark text-2xl"></i></button>
+    <div id="mobile-drawer" class="flex flex-col">
+        <div class="p-6 border-b border-slate-100 flex justify-between items-center">
+            <span class="font-bold text-slate-900 uppercase text-xs">Menú Principal</span>
+            <button id="drawer-close" class="text-slate-400"><i class="fa-solid fa-xmark text-xl"></i></button>
         </div>
-        <nav class="p-4 flex flex-col industrial-font text-xl">
-            <!-- Reusing Nav Items logic for mobile -->
-            <?php foreach ($navItems as $item): if ($item[4]): ?>
+        <nav class="flex-1 py-4 flex flex-col">
+            <!-- Re-rendering items for drawer -->
+            <?php foreach ($navItems as $item): if (!isset($item[4]) || $item[4]): ?>
                 <?= $this->Html->link(
-                    '<i class="fa-solid ' . $item[2] . ' w-6 text-red-600"></i> ' . $item[3],
+                    '<i class="fa-solid ' . $item[2] . '"></i> ' . $item[3],
                     ['controller' => $item[0], 'action' => $item[1]],
                     ['escape' => false, 'class' => 'nav-link ' . ($this->request->getParam('controller') == $item[0] ? 'active' : '')]
                 ) ?>
             <?php endif; endforeach; ?>
             
             <?php if ($isAdmin): ?>
-                <div class="px-5 py-4 mt-4 text-[10px] font-black text-yellow-500 tracking-[0.3em] uppercase opacity-40">Administración</div>
-                <?= $this->Html->link('<i class="fa-solid fa-user-shield w-6 text-red-600"></i> USUARIOS', ['controller' => 'Users', 'action' => 'index'], ['escape' => false, 'class' => 'nav-link']) ?>
-                <?= $this->Html->link('<i class="fa-solid fa-gears w-6 text-red-600"></i> AJUSTES', ['controller' => 'InventoryAdjustments', 'action' => 'index'], ['escape' => false, 'class' => 'nav-link']) ?>
+                <div class="section-label">Configuración</div>
+                <?= $this->Html->link('<i class="fa-solid fa-user-gear"></i> Usuarios', ['controller' => 'Users', 'action' => 'index'], ['escape' => false, 'class' => 'nav-link']) ?>
+                <?= $this->Html->link('<i class="fa-solid fa-sliders"></i> Ajustes', ['controller' => 'InventoryAdjustments', 'action' => 'index'], ['escape' => false, 'class' => 'nav-link']) ?>
             <?php endif; ?>
 
-            <div class="mt-8 border-t border-white/5 pt-4">
-                <?= $this->Html->link('<i class="fa-solid fa-power-off text-red-500 mr-2"></i> CERRAR SESIÓN', ['controller' => 'Users', 'action' => 'logout'], ['escape' => false, 'class' => 'nav-link text-red-500']) ?>
+            <div class="mt-auto p-6 border-t border-slate-100">
+                <?= $this->Html->link('<i class="fa-solid fa-sign-out-alt"></i> Salir', ['controller' => 'Users', 'action' => 'logout'], ['escape' => false, 'class' => 'text-red-500 font-bold text-sm']) ?>
             </div>
         </nav>
     </div>
 
     <?php else: ?>
         <!-- No User Layout (Login) -->
-        <main class="min-h-screen flex items-center justify-center p-4">
-            <div class="w-full max-w-md">
+        <main class="min-h-screen flex items-center justify-center p-6 bg-slate-50">
+            <div class="w-full max-w-sm">
+                <div class="text-center mb-8">
+                    <div class="bg-red-500 text-white w-12 h-12 flex items-center justify-center rounded-xl mx-auto shadow-lg mb-4">
+                        <i class="fa-solid fa-key text-xl"></i>
+                    </div>
+                    <h1 class="text-2xl font-extrabold text-slate-900 uppercase italic">Cerra<span class="text-red-500">jería</span></h1>
+                    <p class="text-slate-400 text-xs font-medium mt-1">SISTEMA PROFESIONAL DE GESTIÓN</p>
+                </div>
                 <?= $this->Flash->render() ?>
                 <?= $this->fetch('content') ?>
             </div>
