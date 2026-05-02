@@ -19,12 +19,6 @@ class DashboardController extends AppController
 
         $ordersTable = $this->fetchTable('Orders');
         
-        // Cargar sucursales para el filtro si es admin
-        $branches = [];
-        if ($isAdmin || $isAdminEmpresa) {
-            $branches = $this->fetchTable('Branches')->find('list')->all();
-        }
-
         if ($isRepartidor) {
             $driverId = $user->delivery_driver_id;
             
@@ -251,8 +245,7 @@ class DashboardController extends AppController
             'startDate' => $startDate,
             'endDate' => $endDate,
             'paymentTotals' => $formattedPaymentTotals,
-            'isRepartidor' => $isRepartidor,
-            'branches' => $branches
+            'isRepartidor' => $isRepartidor
         ]);
     }
 }

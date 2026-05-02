@@ -30,12 +30,6 @@ class OrdersTable extends Table
         $this->belongsTo('DeliveryDrivers', [
             'foreignKey' => 'delivery_driver_id',
         ]);
-        $this->belongsTo('Companies', [
-            'foreignKey' => 'company_id',
-        ]);
-        $this->belongsTo('Branches', [
-            'foreignKey' => 'branch_id',
-        ]);
         $this->hasMany('OrderLogs', [
             'foreignKey' => 'order_id',
             'dependent' => false,

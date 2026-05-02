@@ -34,8 +34,6 @@ class User extends Entity
         'role' => true,
         'is_superadmin' => true,
         'delivery_driver_id' => true,
-        'company_id' => true,
-        'branch_id' => true,
         'created' => true,
         'modified' => true,
     ];

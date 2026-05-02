@@ -18,7 +18,7 @@ class UsersController extends AppController
 
     public function index()
     {
-        $query = $this->Users->find()->contain(['Companies', 'Branches']);
+        $query = $this->Users->find();
         $users = $this->paginate($query);
         $this->set(compact('users'));
     }
@@ -32,14 +32,8 @@ class UsersController extends AppController
             // Si el rol es admin (Global), lo marcamos como superadmin
             if (($data['role'] ?? '') === 'admin') {
                 $data['is_superadmin'] = 1;
-                $data['company_id'] = null; // Los globales no pertenecen a una empresa específica
             } else {
                 $data['is_superadmin'] = 0;
-                // Si NO es global, DEBE tener una empresa
-                if (empty($data['company_id'])) {
-                    $this->Flash->error(__('Para este rol debe seleccionar una Empresa.'));
-                    return $this->redirect(['action' => 'add']);
-                }
             }
             
             $user = $this->Users->patchEntity($user, $data);
@@ -50,11 +44,9 @@ class UsersController extends AppController
             $this->Flash->error(__('No se pudo crear el usuario.'));
         }
         
-        $companies = $this->fetchTable('Companies')->find('list')->all();
-        $branches = $this->fetchTable('Branches')->find('all', contain: ['Companies'])->all();
         $deliveryDrivers = $this->fetchTable('DeliveryDrivers')->find('list', ['keyField' => 'id', 'valueField' => 'name'])->all();
         
-        $this->set(compact('user', 'companies', 'branches', 'deliveryDrivers'));
+        $this->set(compact('user', 'deliveryDrivers'));
     }
 
     public function edit($id = null)
@@ -65,7 +57,6 @@ class UsersController extends AppController
             
             if (($data['role'] ?? '') === 'admin') {
                 $data['is_superadmin'] = 1;
-                $data['company_id'] = null;
             } else {
                 $identity = $this->request->getAttribute('identity');
                 if ($identity && $identity->getOriginalData()->is_superadmin) {
@@ -81,11 +72,9 @@ class UsersController extends AppController
             $this->Flash->error(__('No se pudo actualizar el perfil.'));
         }
 
-        $companies = $this->fetchTable('Companies')->find('list')->all();
-        $branches = $this->fetchTable('Branches')->find('all', contain: ['Companies'])->all();
         $deliveryDrivers = $this->fetchTable('DeliveryDrivers')->find('list', ['keyField' => 'id', 'valueField' => 'name'])->all();
 
-        $this->set(compact('user', 'companies', 'branches', 'deliveryDrivers'));
+        $this->set(compact('user', 'deliveryDrivers'));
     }
 
     public function login()

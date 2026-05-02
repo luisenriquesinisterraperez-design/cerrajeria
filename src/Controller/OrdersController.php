@@ -280,27 +280,13 @@ class OrdersController extends AppController
 
     public function printTicketGroup($groupId = null)
     {
-        $query = $this->Orders->find()->contain(['Products', 'Companies'])->where(['order_group_id' => $groupId]);
+        $query = $this->Orders->find()->contain(['Products'])->where(['order_group_id' => $groupId]);
         $orders = $query->toArray();
 
         if (empty($orders) && str_starts_with($groupId, 'SINGLE-')) {
             $id = str_replace('SINGLE-', '', $groupId);
-            $order = $this->Orders->get($id, contain: ['Products', 'Companies']);
+            $order = $this->Orders->get($id, contain: ['Products']);
             $orders = [$order];
-        }
-
-        // Obtener la empresa de respaldo (del usuario actual)
-        $identity = $this->request->getAttribute('identity');
-        $user = $identity ? $identity->getOriginalData() : null;
-        $backupCompany = null;
-        if ($user && $user->company_id) {
-            $backupCompany = $this->fetchTable('Companies')->get($user->company_id);
-        }
-
-        foreach ($orders as $order) {
-            if ($backupCompany) {
-                $order->company = $backupCompany;
-            }
         }
 
         $this->viewBuilder()->setLayout('ajax');
@@ -318,8 +304,6 @@ class OrdersController extends AppController
 
         // Capturamos los datos necesarios antes de que el objeto desaparezca
         $orderId = $order->id;
-        $companyId = $order->company_id;
-        $branchId = $order->branch_id;
         $details = "ELIMINACIÓN DEFINITIVA: El usuario " . ($user ? $user->username : 'Sistema') . " borró el pedido #" . $orderId . " de " . $order->product->name . " (Cliente: " . $order->customer_name . ")";
 
         // 1. Intentamos eliminar el pedido primero
@@ -329,8 +313,6 @@ class OrdersController extends AppController
             $log = $logsTable->newEntity([
                 'order_id' => $orderId,
                 'user_id' => $userId,
-                'company_id' => $companyId,
-                'branch_id' => $branchId,
                 'modification_details' => $details,
                 'created' => new \Cake\I18n\DateTime()
             ]);
@@ -338,7 +320,6 @@ class OrdersController extends AppController
             if (!$logsTable->save($log)) {
                 $errs = json_encode($log->getErrors());
                 \Cake\Log\Log::error("AUDIT SAVE FAILED FOR ORDER #$orderId: " . $errs);
-                // No mostramos el error al usuario para no confundirlo, pero queda en el log técnico
             }
 
             $this->Flash->success(__('Pedido eliminado exitosamente y huella registrada.'));
@@ -351,7 +332,7 @@ class OrdersController extends AppController
 
     public function printTicket($id = null)
     {
-        $order = $this->Orders->get($id, contain: ['Products', 'Companies']);
+        $order = $this->Orders->get($id, contain: ['Products']);
         $this->viewBuilder()->setLayout('ajax');
         $this->set(compact('order'));
     }

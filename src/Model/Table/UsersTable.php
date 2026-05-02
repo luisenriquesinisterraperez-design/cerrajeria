@@ -45,13 +45,6 @@ class UsersTable extends Table
 
         $this->addBehavior('Timestamp');
 
-        $this->belongsTo('Companies', [
-            'foreignKey' => 'company_id',
-        ]);
-        $this->belongsTo('Branches', [
-            'foreignKey' => 'branch_id',
-        ]);
-
         // $this->addBehavior('Tenant');
     }
 

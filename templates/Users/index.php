@@ -7,19 +7,19 @@
 <header class="mb-8 flex items-center justify-between">
     <div>
         <h1 class="text-3xl font-black text-slate-800 tracking-tight uppercase">Usuarios del Sistema</h1>
-        <p class="text-orange-500 font-bold uppercase text-xs tracking-widest">Control de accesos y roles</p>
+        <p class="text-blue-600 font-bold uppercase text-xs tracking-widest">Control de accesos y roles</p>
     </div>
-    <?= $this->Html->link('<i class="fa-solid fa-user-plus mr-2"></i> Nuevo Usuario', ['action' => 'add'], ['escape' => false, 'class' => 'bg-slate-900 text-white px-6 py-3 rounded-2xl font-black text-xs uppercase hover:bg-orange-600 transition-all shadow-lg']) ?>
+    <?= $this->Html->link('<i class="fa-solid fa-user-plus mr-2"></i> Nuevo Usuario', ['action' => 'add'], ['escape' => false, 'class' => 'bg-slate-900 text-white px-6 py-3 rounded-2xl font-black text-xs uppercase hover:bg-blue-600 transition-all shadow-lg']) ?>
 </header>
 
-<div class="bg-white rounded-3xl border border-orange-100 overflow-hidden shadow-sm">
+<div class="bg-white rounded-3xl border border-slate-100 overflow-hidden shadow-sm">
     <table class="w-full text-left">
         <thead class="bg-slate-900 text-white text-[10px] uppercase font-bold tracking-widest">
             <tr>
                 <th class="p-5">ID</th>
                 <th class="p-5">Usuario</th>
                 <th class="p-5 text-center">Rol</th>
-                <th class="p-5">Creado</th>
+                <th class="p-5">Fecha Registro</th>
                 <th class="p-5 text-right">Acción</th>
             </tr>
         </thead>
@@ -29,17 +29,17 @@
                 <td class="p-5 font-mono text-xs text-slate-400 font-bold">#<?= $user->id ?></td>
                 <td class="p-5 font-black text-slate-800 uppercase text-sm"><?= h($user->username) ?></td>
                 <td class="p-5 text-center">
-                    <?php if (!empty($user->is_superadmin) || $user->username === 'admin'): ?>
+                    <?php if (!empty($user->is_superadmin) || $user->username === 'admin' || $user->role === 'admin'): ?>
                         <span class="px-3 py-1 rounded-full text-[9px] font-black uppercase bg-slate-900 text-white border border-slate-800 tracking-tighter">
-                            👑 Administrador Global
-                        </span>
-                    <?php elseif ($user->role === 'admin_empresa'): ?>
-                        <span class="px-3 py-1 rounded-full text-[9px] font-black uppercase bg-blue-600 text-white tracking-tighter">
-                            🏢 Admin de Empresa
+                            👑 Administrador
                         </span>
                     <?php elseif ($user->role === 'staff'): ?>
                         <span class="px-3 py-1 rounded-full text-[9px] font-black uppercase bg-emerald-100 text-emerald-700 tracking-tighter">
                             🛠️ Staff / Vendedor
+                        </span>
+                    <?php elseif ($user->role === 'repartidor'): ?>
+                        <span class="px-3 py-1 rounded-full text-[9px] font-black uppercase bg-blue-100 text-blue-700 tracking-tighter">
+                            🏍️ Repartidor
                         </span>
                     <?php else: ?>
                         <span class="px-3 py-1 rounded-full text-[9px] font-black uppercase bg-slate-100 text-slate-500 tracking-tighter">
@@ -48,7 +48,6 @@
                     <?php endif; ?>
                 </td>
                 <td class="p-5">
-                    <p class="text-[10px] text-slate-800 font-black uppercase leading-none mb-1"><?= $user->hasValue('company') ? h($user->company->name) : '--- GLOBAL ---' ?></p>
                     <p class="text-[10px] text-slate-400 font-bold"><?= $user->created ? $user->created->format('d/m/Y') : '---' ?></p>
                 </td>
                 <td class="p-5 text-right flex justify-end gap-3 mt-1">

@@ -33,7 +33,7 @@ class AppController extends Controller
             $action = $this->request->getParam('action');
 
             // 1. RESTRICCIONES DE ESTRUCTURA (Solo Admin)
-            $adminControllers = ['Companies', 'Users', 'OrderLogs'];
+            $adminControllers = ['Users', 'OrderLogs'];
             if (in_array($controller, $adminControllers) && !$isAdmin) {
                 if ($controller === 'Users' && in_array($action, ['login', 'logout'])) {
                     // Permitido
