@@ -130,7 +130,12 @@ class OrdersController extends AppController
                     'description' => 'Pedido #' . $orderGroupId . ' (Consolidado)',
                     'status' => 'pendiente'
                 ]);
-                $accountsReceivableTable->save($account);
+                if ($accountsReceivableTable->save($account)) {
+                    $this->Orders->updateAll(
+                        ['accounts_receivable_id' => $account->id],
+                        ['order_group_id' => $orderGroupId]
+                    );
+                }
                 $this->Flash->success(__('Venta registrada ({0} productos) y cargada a Crédito.', $successCount));
             } else {
                 $this->Flash->success(__('Venta registrada con éxito ({0} productos).', $successCount));

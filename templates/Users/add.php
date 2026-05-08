@@ -46,7 +46,7 @@
         </div>
 
         <div class="pt-10 mt-10 border-t border-slate-50">
-            <?= $this->Form->button(__('Crear Acceso CERRAJERÍA MASTER'), ['class' => 'w-full bg-slate-900 text-white font-black rounded-2xl py-5 uppercase shadow-xl hover:bg-red-600 transition-all text-lg tracking-widest']) ?>
+            <?= $this->Form->button(__('Crear Acceso CERRAJERÍA SARRIA'), ['class' => 'w-full bg-slate-900 text-white font-black rounded-2xl py-5 uppercase shadow-xl hover:bg-yellow-400 hover:text-slate-900 transition-all text-lg tracking-widest']) ?>
         </div>
     <?= $this->Form->end() ?>
 </div>

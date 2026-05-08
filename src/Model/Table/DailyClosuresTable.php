@@ -43,9 +43,7 @@ class DailyClosuresTable extends Table
         $this->setDisplayField('id');
         $this->setPrimaryKey('id');
 
-        $this->addBehavior('Timestamp');
-        // $this->addBehavior('Tenant');
-    }
+        $this->addBehavior('Timestamp');    }
 
     /**
      * Default validation rules.

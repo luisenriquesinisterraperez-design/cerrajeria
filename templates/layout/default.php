@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="es" class="h-full bg-slate-50">
+<html lang="es" class="h-full bg-slate-100">
 <head>
     <?= $this->Html->charset() ?>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>CERRAJERÍA MASTER - <?= $this->fetch('title') ?></title>
+    <title>CERRAJERÍA SARRIA - <?= $this->fetch('title') ?></title>
     <?= $this->Html->meta('icon') ?>
     
     <script src="https://cdn.tailwindcss.com"></script>
@@ -20,7 +20,7 @@
         body { 
             font-family: 'Plus Jakarta Sans', sans-serif; 
             -webkit-font-smoothing: antialiased;
-            color: #0f172a;
+            color: #1e293b;
         }
         
         /* Layout Structure */
@@ -36,13 +36,14 @@
             }
         }
 
-        /* Sidebar - Modern Enterprise */
+        /* Sidebar - Brand Colors (Blue & Black) */
         .sidebar {
             width: 280px;
-            background: #f8fafc;
-            border-right: 1px solid #e2e8f0;
+            background: #0f172a; /* Navy Black */
+            color: #f8fafc;
             flex-shrink: 0;
             display: none;
+            border-right: 4px solid #facc15; /* Yellow Border */
         }
 
         @media (min-width: 1024px) {
@@ -52,7 +53,7 @@
                 position: sticky;
                 top: 0;
                 height: 100vh;
-                overflow-y: auto; /* Fix: Sidebar scrollable if many items */
+                overflow-y: auto;
             }
         }
 
@@ -61,64 +62,48 @@
             display: flex;
             align-items: center;
             gap: 12px;
-            padding: 10px 16px;
-            margin: 2px 16px;
-            color: #475569;
+            padding: 12px 20px;
+            margin: 4px 16px;
+            color: #94a3b8;
             font-size: 0.875rem;
-            font-weight: 500;
-            border-radius: 8px;
+            font-weight: 600;
+            border-radius: 12px;
             transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .nav-link:hover {
-            color: #ef4444;
-            background: #ffffff;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            color: #ffffff;
+            background: #1e293b;
         }
 
         .nav-link.active {
-            color: #ffffff;
-            background: #ef4444;
-            box-shadow: 0 10px 15px -3px rgba(239, 68, 68, 0.25);
-            font-weight: 600;
+            color: #0f172a;
+            background: #facc15; /* Yellow Active */
+            box-shadow: 0 10px 15px -3px rgba(250, 204, 21, 0.3);
         }
 
         .nav-link i {
             font-size: 1.1rem;
             width: 24px;
             text-align: center;
-            opacity: 0.8;
-        }
-
-        .nav-link.active i {
-            opacity: 1;
         }
 
         /* Main Content Styling */
         .main-content {
             flex: 1;
             min-width: 0;
-            background: #ffffff;
-        }
-
-        /* Glass Header for Content */
-        .content-header {
-            background: rgba(255, 255, 255, 0.8);
-            backdrop-filter: blur(12px);
-            border-bottom: 1px solid #f1f5f9;
-            position: sticky;
-            top: 0;
-            z-index: 40;
+            background: #f1f5f9;
         }
 
         /* Mobile Header */
         .mobile-header {
-            background: #ffffff;
-            border-bottom: 1px solid #e2e8f0;
+            background: #0f172a;
+            color: white;
             padding: 16px 20px;
             position: sticky;
             top: 0;
             z-index: 50;
+            border-bottom: 3px solid #facc15;
         }
 
         /* Professional Details */
@@ -128,16 +113,21 @@
             font-weight: 800;
             text-transform: uppercase;
             letter-spacing: 0.15em;
-            color: #94a3b8;
+            color: #64748b;
         }
 
-        .user-profile {
-            background: #ffffff;
-            border: 1px solid #e2e8f0;
-            border-radius: 12px;
-            margin: 16px;
-            padding: 12px;
+        /* Custom Cards Styling */
+        .dashboard-card {
+            background: white;
+            border-radius: 24px;
+            border-bottom: 4px solid transparent;
+            transition: transform 0.2s;
         }
+        .dashboard-card:hover { transform: translateY(-5px); }
+        .card-yellow { border-color: #facc15; }
+        .card-blue { border-color: #2563eb; }
+        .card-red { border-color: #ef4444; }
+        .card-black { border-color: #0f172a; }
     </style>
 </head>
 <body class="h-full overflow-x-hidden">
@@ -153,29 +143,28 @@
     <div class="app-container">
         <!-- Sidebar Desktop -->
         <aside class="sidebar">
-            <div class="p-8 mb-4">
-                <div class="flex items-center gap-3">
-                    <div class="bg-gradient-to-br from-red-500 to-red-600 text-white p-2.5 rounded-xl shadow-lg shadow-red-200">
-                        <i class="fa-solid fa-key text-lg"></i>
+            <div class="p-8 mb-4 bg-[#1e293b]/50">
+                <div class="flex items-center gap-4">
+                    <div class="bg-yellow-400 text-slate-900 w-12 h-12 flex items-center justify-center rounded-2xl shadow-lg shadow-yellow-400/20 transform -rotate-6">
+                        <i class="fa-solid fa-key text-2xl"></i>
                     </div>
                     <div>
-                        <span class="font-extrabold text-lg tracking-tight text-slate-900 uppercase italic leading-none block">
-                            CERRAJERÍA <span class="text-red-500">MASTER</span>
-                            </span>
-                            <span class="text-[9px] font-bold text-slate-400 tracking-[0.2em] uppercase">Control de Servicios</span>
-
+                        <span class="font-black text-xl tracking-tighter text-white uppercase italic leading-none block">
+                            SARRIA<span class="text-yellow-400">.</span>
+                        </span>
+                        <span class="text-[9px] font-black text-blue-400 tracking-[0.3em] uppercase">Cerrajería</span>
                     </div>
                 </div>
             </div>
 
             <nav class="flex-1 flex flex-col pb-8">
-                <div class="section-tag text-red-500/60 font-black">Operaciones</div>
+                <div class="section-tag text-blue-400">Gestión de Negocio</div>
                 <?php
                 $navItems = [
-                    ['Dashboard', 'index', 'fa-grip', 'Panel General'],
-                    ['Orders', 'index', 'fa-receipt', 'Ventas & Pedidos'],
-                    ['AccountsReceivable', 'index', 'fa-money-check-dollar', 'Cuentas x Cobrar', ($isAdmin || $isStaff)],
-                    ['DailyClosures', 'index', 'fa-cash-register', 'Control de Caja', ($isAdmin || $isStaff)],
+                    ['Dashboard', 'index', 'fa-chart-pie', 'Resumen'],
+                    ['Orders', 'index', 'fa-receipt', 'Servicios'],
+                    ['AccountsReceivable', 'index', 'fa-wallet', 'Cuentas', ($isAdmin || $isStaff)],
+                    ['DailyClosures', 'index', 'fa-vault', 'Caja', ($isAdmin || $isStaff)],
                 ];
 
                 foreach ($navItems as $item):
@@ -189,13 +178,13 @@
                     ) ?>
                 <?php endif; endforeach; ?>
 
-                <div class="section-tag">Administración</div>
+                <div class="section-tag">Catálogo & Base</div>
                 <?php
                 $adminItems = [
-                    ['Products', 'index', 'fa-shapes', 'Catálogo Pro'],
-                    ['DeliveryDrivers', 'index', 'fa-motorcycle', 'Repartidores'],
-                    ['Clients', 'index', 'fa-address-card', 'Clientes'],
-                    ['Ingredients', 'index', 'fa-boxes-stacked', 'Inventario'],
+                    ['Products', 'index', 'fa-key', 'Servicios Pro'],
+                    ['DeliveryDrivers', 'index', 'fa-truck-fast', 'Técnicos'],
+                    ['Clients', 'index', 'fa-user-tag', 'Clientes'],
+                    ['Ingredients', 'index', 'fa-microchip', 'Insumos'],
                 ];
                 foreach ($adminItems as $item):
                     $active = $this->request->getParam('controller') == $item[0];
@@ -208,22 +197,22 @@
                 <?php endforeach; ?>
 
                 <?php if ($isAdmin): ?>
-                    <div class="section-tag">Sistema</div>
-                    <?= $this->Html->link('<i class="fa-solid fa-shield-user"></i> Gestión Usuarios', ['controller' => 'Users', 'action' => 'index'], ['escape' => false, 'class' => 'nav-link ' . ($this->request->getParam('controller') == 'Users' ? 'active' : '')]) ?>
-                    <?= $this->Html->link('<i class="fa-solid fa-gears"></i> Ajustes Stock', ['controller' => 'InventoryAdjustments', 'action' => 'index'], ['escape' => false, 'class' => 'nav-link ' . ($this->request->getParam('controller') == 'InventoryAdjustments' ? 'active' : '')]) ?>
+                    <div class="section-tag">Configuración</div>
+                    <?= $this->Html->link('<i class="fa-solid fa-user-shield"></i> Usuarios', ['controller' => 'Users', 'action' => 'index'], ['escape' => false, 'class' => 'nav-link ' . ($this->request->getParam('controller') == 'Users' ? 'active' : '')]) ?>
+                    <?= $this->Html->link('<i class="fa-solid fa-sliders"></i> Ajustes', ['controller' => 'InventoryAdjustments', 'action' => 'index'], ['escape' => false, 'class' => 'nav-link ' . ($this->request->getParam('controller') == 'InventoryAdjustments' ? 'active' : '')]) ?>
                 <?php endif; ?>
             </nav>
 
-            <div class="mt-auto border-t border-slate-100 bg-slate-50/50 p-4">
-                <div class="flex items-center gap-3 px-4 py-2">
-                    <div class="w-8 h-8 rounded-full bg-slate-200 flex items-center justify-center text-slate-500 font-bold text-xs uppercase">
+            <div class="mt-auto border-t border-slate-800 p-6">
+                <div class="flex items-center gap-3 bg-slate-800/50 p-3 rounded-xl border border-slate-700">
+                    <div class="w-10 h-10 rounded-lg bg-blue-600 flex items-center justify-center text-white font-black text-sm uppercase">
                         <?= substr($user->username, 0, 1) ?>
                     </div>
                     <div class="flex-1 min-w-0">
-                        <p class="text-xs font-bold text-slate-900 truncate"><?= h($user->username) ?></p>
-                        <p class="text-[10px] text-slate-500 truncate italic"><?= h($user->role) ?></p>
+                        <p class="text-xs font-bold text-white truncate"><?= h($user->username) ?></p>
+                        <p class="text-[9px] text-yellow-400 font-bold uppercase"><?= h($user->role) ?></p>
                     </div>
-                    <?= $this->Html->link('<i class="fa-solid fa-arrow-right-from-bracket"></i>', ['controller' => 'Users', 'action' => 'logout'], ['escape' => false, 'class' => 'text-slate-400 hover:text-red-500 transition-colors', 'title' => 'Salir']) ?>
+                    <?= $this->Html->link('<i class="fa-solid fa-power-off"></i>', ['controller' => 'Users', 'action' => 'logout'], ['escape' => false, 'class' => 'text-slate-400 hover:text-red-500 transition-colors']) ?>
                 </div>
             </div>
         </aside>
@@ -231,27 +220,31 @@
         <!-- Main Wrapper -->
         <div class="main-content flex flex-col">
             <!-- Mobile Header -->
-            <header class="lg:hidden mobile-header shadow-sm flex justify-between items-center">
-                <div class="flex items-center gap-2">
-                    <div class="bg-red-500 text-white p-1.5 rounded-lg">
+            <header class="lg:hidden mobile-header flex justify-between items-center shadow-lg">
+                <div class="flex items-center gap-3">
+                    <div class="bg-yellow-400 text-slate-900 p-2 rounded-lg transform -rotate-3">
                         <i class="fa-solid fa-key text-sm"></i>
                     </div>
-                    <span class="font-extrabold text-sm text-slate-900 uppercase italic tracking-tighter">CERRAJERÍA <span class="text-red-500">MASTER</span></span>
+                    <span class="font-black text-lg text-white uppercase italic tracking-tighter">SARRIA<span class="text-yellow-400">.</span></span>
                 </div>
-                <button id="drawer-toggle" class="p-2 text-slate-800 bg-slate-50 rounded-lg">
+                <button id="drawer-toggle" class="p-2 text-yellow-400 bg-slate-800 rounded-lg">
                     <i class="fa-solid fa-bars-staggered text-xl"></i>
                 </button>
             </header>
 
             <!-- Page Content -->
-            <div class="p-6 md:p-12 max-w-full min-h-screen">
-                <div class="mb-10 flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-slate-100 pb-8">
-                    <div>
-                        <h2 class="text-[10px] font-black text-red-500 uppercase tracking-[0.3em] mb-2">Sección Activa</h2>
-                        <h1 class="text-3xl md:text-4xl font-extrabold text-slate-900 tracking-tight"><?= h($this->fetch('title')) ?></h1>
+            <div class="p-4 md:p-10 max-w-full min-h-screen">
+                <div class="mb-8 flex flex-col md:flex-row md:items-center justify-between gap-6 bg-white p-6 rounded-3xl shadow-sm border border-slate-200">
+                    <div class="flex items-center gap-5">
+                        <div class="w-1.5 h-12 bg-yellow-400 rounded-full"></div>
+                        <div>
+                            <h2 class="text-[10px] font-black text-blue-600 uppercase tracking-[0.4em] mb-1">Cerrajería Sarria</h2>
+                            <h1 class="text-2xl md:text-3xl font-black text-slate-900 tracking-tight"><?= h($this->fetch('title')) ?></h1>
+                        </div>
                     </div>
-                    <div class="flex items-center gap-3">
-                        <span class="text-xs font-bold text-slate-400 italic"><?= date('l, d M Y') ?></span>
+                    <div class="flex items-center gap-3 bg-slate-50 px-4 py-2 rounded-full border border-slate-100">
+                        <i class="fa-solid fa-calendar-day text-blue-500"></i>
+                        <span class="text-xs font-bold text-slate-600"><?= date('l, d M Y') ?></span>
                     </div>
                 </div>
                 <?= $this->Flash->render() ?>
@@ -261,44 +254,46 @@
     </div>
 
     <!-- Mobile Drawer -->
-    <div id="drawer-overlay" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-[90] opacity-0 pointer-events-none transition-opacity"></div>
-    <div id="mobile-drawer" class="fixed inset-y-0 left-0 w-80 bg-white z-[100] transform -translate-x-full transition-transform ease-in-out duration-300 shadow-2xl flex flex-col">
-        <div class="p-8 border-b border-slate-50 flex justify-between items-center">
-            <span class="font-black text-slate-900 uppercase text-xs tracking-widest">Navegación</span>
-            <button id="drawer-close" class="text-slate-400"><i class="fa-solid fa-xmark text-2xl"></i></button>
+    <div id="drawer-overlay" class="fixed inset-0 bg-slate-900/60 backdrop-blur-md z-[90] opacity-0 pointer-events-none transition-opacity"></div>
+    <div id="mobile-drawer" class="fixed inset-y-0 left-0 w-80 bg-[#0f172a] z-[100] transform -translate-x-full transition-transform ease-in-out duration-300 shadow-2xl flex flex-col border-r-4 border-yellow-400">
+        <div class="p-8 border-b border-slate-800 flex justify-between items-center bg-[#1e293b]/50">
+            <span class="font-black text-yellow-400 uppercase text-xs tracking-widest">Navegación Pro</span>
+            <button id="drawer-close" class="text-white"><i class="fa-solid fa-xmark text-2xl"></i></button>
         </div>
         <div class="flex-1 overflow-y-auto pt-4">
-            <!-- Reuse Links in Drawer -->
-            <div class="section-tag text-red-500/60 font-black pt-2">Operaciones</div>
+            <div class="section-tag text-blue-400">Operaciones</div>
             <?php foreach ($navItems as $item): if (!isset($item[4]) || $item[4]): ?>
                 <?= $this->Html->link('<i class="fa-solid ' . $item[2] . '"></i> ' . $item[3], ['controller' => $item[0], 'action' => $item[1]], ['escape' => false, 'class' => 'nav-link ' . ($this->request->getParam('controller') == $item[0] ? 'active' : '')]) ?>
             <?php endif; endforeach; ?>
             
-            <div class="section-tag pt-6">Administración</div>
+            <div class="section-tag text-slate-500 pt-6">Administración</div>
             <?php foreach ($adminItems as $item): ?>
                 <?= $this->Html->link('<i class="fa-solid ' . $item[2] . '"></i> ' . $item[3], ['controller' => $item[0], 'action' => $item[1]], ['escape' => false, 'class' => 'nav-link ' . ($this->request->getParam('controller') == $item[0] ? 'active' : '')]) ?>
             <?php endforeach; ?>
 
             <div class="mt-8 p-6">
-                <?= $this->Html->link('<i class="fa-solid fa-power-off mr-2"></i> Cerrar Sesión', ['controller' => 'Users', 'action' => 'logout'], ['escape' => false, 'class' => 'w-full block bg-red-50 text-red-600 text-center py-4 rounded-xl font-bold text-sm']) ?>
+                <?= $this->Html->link('<i class="fa-solid fa-power-off mr-2"></i> Cerrar Sesión', ['controller' => 'Users', 'action' => 'logout'], ['escape' => false, 'class' => 'w-full block bg-red-600 text-white text-center py-4 rounded-xl font-bold text-sm shadow-lg shadow-red-600/30']) ?>
             </div>
         </div>
     </div>
 
     <?php else: ?>
-        <!-- Login Layout Refined -->
-        <main class="min-h-screen flex items-center justify-center p-8 bg-slate-50 relative overflow-hidden">
-            <div class="absolute top-0 left-0 w-full h-1 bg-red-500"></div>
+        <!-- Login Layout -->
+        <main class="min-h-screen flex items-center justify-center p-6 bg-[#0f172a] relative overflow-hidden">
+            <div class="absolute top-0 left-0 w-full h-2 bg-yellow-400"></div>
+            <div class="absolute bottom-[-10%] right-[-5%] w-96 h-96 bg-blue-600/10 rounded-full blur-3xl"></div>
+            <div class="absolute top-[-10%] left-[-5%] w-96 h-96 bg-red-600/10 rounded-full blur-3xl"></div>
+
             <div class="w-full max-w-sm relative z-10">
                 <div class="text-center mb-10">
-                    <div class="bg-gradient-to-br from-red-500 to-red-600 text-white w-14 h-14 flex items-center justify-center rounded-2xl mx-auto shadow-2xl shadow-red-200 mb-6 transform -rotate-3">
-                        <i class="fa-solid fa-key text-2xl"></i>
+                    <div class="bg-yellow-400 text-slate-900 w-20 h-20 flex items-center justify-center rounded-[2.5rem] mx-auto shadow-2xl shadow-yellow-400/20 mb-8 transform -rotate-12 border-4 border-white">
+                        <i class="fa-solid fa-key text-3xl"></i>
                     </div>
-                    <h1 class="text-3xl font-black text-slate-900 uppercase italic tracking-tighter leading-none">CERRAJERÍA <span class="text-red-500">MASTER</span></h1>
-                    <p class="text-[10px] font-black text-slate-400 tracking-[0.4em] uppercase mt-3">Acceso Master</p>
+                    <h1 class="text-4xl font-black text-white uppercase italic tracking-tighter leading-none">SARRIA<span class="text-yellow-400">.</span></h1>
+                    <p class="text-[10px] font-black text-blue-400 tracking-[0.5em] uppercase mt-4">Cerrajería Profesional</p>
                 </div>
-                <div class="bg-white p-2 rounded-3xl shadow-2xl shadow-slate-200 border border-slate-100">
-                    <div class="p-6">
+                <div class="bg-white p-3 rounded-[3rem] shadow-2xl shadow-black/50">
+                    <div class="p-8">
                         <?= $this->Flash->render() ?>
                         <?= $this->fetch('content') ?>
                     </div>

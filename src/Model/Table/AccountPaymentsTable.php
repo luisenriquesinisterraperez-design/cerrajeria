@@ -49,8 +49,6 @@ class AccountPaymentsTable extends Table
             'foreignKey' => 'accounts_receivable_id',
             'joinType' => 'INNER',
         ]);
-
-        // $this->addBehavior('Tenant');
     }
 
     /**

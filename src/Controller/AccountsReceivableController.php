@@ -14,12 +14,53 @@ class AccountsReceivableController extends AppController
     public function index()
     {
         $query = $this->AccountsReceivable->find()
-            ->contain(['Clients', 'Orders', 'AccountPayments'])
+            ->contain(['Clients', 'AccountPayments'])
             ->orderBy(['AccountsReceivable.status' => 'ASC', 'AccountsReceivable.created' => 'DESC']);
             
         $accountsReceivable = $this->paginate($query);
 
         $this->set(compact('accountsReceivable'));
+    }
+
+    public function view($id = null)
+    {
+        $account = $this->AccountsReceivable->get($id, [
+            'contain' => ['Clients', 'Orders.Products', 'AccountPayments']
+        ]);
+
+        if ($this->request->is('post')) {
+            $data = $this->request->getData();
+            $ordersTable = $this->fetchTable('Orders');
+            $newOrder = $ordersTable->newEmptyEntity();
+            
+            $orderData = [
+                'product_id' => $data['product_id'],
+                'quantity' => $data['quantity'],
+                'accounts_receivable_id' => $account->id,
+                'payment_method' => 'Crédito',
+                'customer_name' => $account->client->full_name,
+                'customer_phone' => $account->client->phone,
+                'customer_address' => $account->client->address,
+                'type' => 'local',
+                'status' => 'entregado'
+            ];
+            
+            $newOrder = $ordersTable->patchEntity($newOrder, $orderData);
+            if ($ordersTable->save($newOrder)) {
+                $account->amount += $newOrder->total;
+                if ($account->status === 'pagado') {
+                    $account->status = 'pendiente';
+                }
+                $this->AccountsReceivable->save($account);
+                
+                $this->Flash->success(__('Producto agregado a la deuda exitosamente.'));
+                return $this->redirect(['action' => 'view', $account->id]);
+            }
+            $this->Flash->error(__('No se pudo agregar el producto. Verifique los datos e intente de nuevo.'));
+        }
+
+        $products = $this->fetchTable('Products')->find('list')->all();
+        $this->set(compact('account', 'products'));
     }
 
     public function add()

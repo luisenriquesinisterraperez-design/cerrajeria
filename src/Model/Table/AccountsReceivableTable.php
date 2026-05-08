@@ -47,16 +47,19 @@ class AccountsReceivableTable extends Table
         $this->setPrimaryKey('id');
 
         $this->addBehavior('Timestamp');
-        // $this->addBehavior('Tenant');
 
         $this->belongsTo('Clients', [
             'foreignKey' => 'client_id',
             'joinType' => 'INNER',
         ]);
-        $this->belongsTo('Orders', [
+        $this->belongsTo('OriginOrders', [
+            'className' => 'Orders',
             'foreignKey' => 'order_id',
         ]);
         $this->hasMany('AccountPayments', [
+            'foreignKey' => 'accounts_receivable_id',
+        ]);
+        $this->hasMany('Orders', [
             'foreignKey' => 'accounts_receivable_id',
         ]);
     }
@@ -103,7 +106,7 @@ class AccountsReceivableTable extends Table
     public function buildRules(RulesChecker $rules): RulesChecker
     {
         $rules->add($rules->existsIn(['client_id'], 'Clients'), ['errorField' => 'client_id']);
-        $rules->add($rules->existsIn(['order_id'], 'Orders'), ['errorField' => 'order_id']);
+        $rules->add($rules->existsIn(['order_id'], 'OriginOrders'), ['errorField' => 'order_id']);
 
         return $rules;
     }

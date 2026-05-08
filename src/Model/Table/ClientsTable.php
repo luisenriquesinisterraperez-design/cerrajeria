@@ -43,9 +43,7 @@ class ClientsTable extends Table
         $this->setDisplayField('full_name');
         $this->setPrimaryKey('id');
 
-        $this->addBehavior('Timestamp');
-        // $this->addBehavior('Tenant');
-    }
+        $this->addBehavior('Timestamp');    }
 
     /**
      * Default validation rules.

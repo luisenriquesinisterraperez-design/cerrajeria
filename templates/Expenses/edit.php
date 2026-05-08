@@ -17,24 +17,24 @@
         <div class="space-y-6">
             <div>
                 <label class="text-[10px] font-bold text-slate-400 ml-2 uppercase">Descripción del Gasto</label>
-                <?= $this->Form->control('description', ['label' => false, 'class' => 'w-full p-4 bg-slate-50 border rounded-2xl outline-none focus:ring-2 focus:ring-red-500 transition-all font-bold text-slate-700']) ?>
+                <?= $this->Form->control('description', ['label' => false, 'class' => 'w-full p-4 bg-slate-50 border rounded-2xl outline-none focus:ring-2 focus:ring-blue-600 transition-all font-bold text-slate-700']) ?>
             </div>
             
             <div class="grid grid-cols-2 gap-4">
-                <div>
-                    <label class="text-[10px] font-bold text-slate-400 ml-2 uppercase">Monto ($)</label>
-                    <?= $this->Form->control('amount', ['label' => false, 'class' => 'w-full p-4 bg-slate-50 border rounded-2xl outline-none focus:ring-2 focus:ring-red-500 transition-all font-black text-red-600']) ?>
+                <label class="text-[10px] font-bold text-slate-400 ml-2 uppercase">Monto del Gasto ($)</label>
+                <?= $this->Form->control('amount', ['label' => false, 'class' => 'w-full p-4 bg-slate-50 border rounded-2xl outline-none focus:ring-2 focus:ring-blue-600 transition-all font-black text-red-600']) ?>
                 </div>
-                <div>
-                    <label class="text-[10px] font-bold text-slate-400 ml-2 uppercase">Fecha</label>
-                    <?= $this->Form->control('date', ['type' => 'date', 'label' => false, 'class' => 'w-full p-4 bg-slate-50 border rounded-2xl outline-none focus:ring-2 focus:ring-red-500 transition-all font-bold']) ?>
-                </div>
-            </div>
 
-            <div class="pt-6 border-t border-slate-50 flex gap-4">
-                <?= $this->Form->button(__('Actualizar Gasto'), ['class' => 'flex-1 bg-red-600 text-white font-black rounded-2xl py-4 uppercase shadow-lg hover:bg-red-700 transition-all']) ?>
+                <div class="flex flex-col gap-1">
+                <label class="text-[10px] font-bold text-slate-400 ml-2 uppercase">Fecha</label>
+                <?= $this->Form->control('date', ['type' => 'date', 'label' => false, 'class' => 'w-full p-4 bg-slate-50 border rounded-2xl outline-none focus:ring-2 focus:ring-blue-600 transition-all']) ?>
+                </div>
+                </div>
+
+                <div class="pt-8 mt-8 border-t border-slate-50 flex gap-4">
+                <?= $this->Form->button(__('Actualizar Gasto'), ['class' => 'flex-1 bg-blue-600 text-white font-black rounded-2xl py-4 uppercase shadow-lg hover:bg-slate-900 transition-all']) ?>
                 <?= $this->Form->postLink(__('Eliminar'), ['action' => 'delete', $expense->id], ['confirm' => __('¿Eliminar este gasto?'), 'class' => 'px-6 bg-red-50 text-red-500 font-bold rounded-2xl py-4 uppercase hover:bg-red-100 transition-all text-xs']) ?>
-            </div>
+                </div>
         </div>
     <?= $this->Form->end() ?>
 </div>

@@ -48,6 +48,7 @@ class Order extends Entity
         'total' => true,
         'payment_method' => true,
         'status' => true,
+        'accounts_receivable_id' => true,
         'delivered_at' => true,
         'created' => true,
         'modified' => true,

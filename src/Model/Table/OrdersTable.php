@@ -30,12 +30,13 @@ class OrdersTable extends Table
         $this->belongsTo('DeliveryDrivers', [
             'foreignKey' => 'delivery_driver_id',
         ]);
+        $this->belongsTo('AccountsReceivable', [
+            'foreignKey' => 'accounts_receivable_id',
+        ]);
         $this->hasMany('OrderLogs', [
             'foreignKey' => 'order_id',
             'dependent' => false,
         ]);
-
-        // $this->addBehavior('Tenant');
     }
 
     public function validationDefault(Validator $validator): Validator
@@ -76,6 +77,10 @@ class OrdersTable extends Table
         $validator
             ->integer('delivery_driver_id')
             ->allowEmptyString('delivery_driver_id');
+
+        $validator
+            ->integer('accounts_receivable_id')
+            ->allowEmptyString('accounts_receivable_id');
 
         $validator
             ->scalar('payment_method')

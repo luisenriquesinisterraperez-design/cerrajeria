@@ -48,9 +48,7 @@
                 </td>
                 <td class="p-5 text-[10px] text-slate-400 font-bold"><?= $account->created->format('d/m/Y') ?></td>
                 <td class="p-5 text-right flex justify-end gap-2 mt-2">
-                    <?php if ($account->order_id): ?>
-                        <?= $this->Html->link('<i class="fa-solid fa-print"></i>', ['controller' => 'Orders', 'action' => 'printTicket', $account->order_id], ['escape' => false, 'target' => '_blank', 'class' => 'p-1.5 text-blue-500 hover:text-blue-700', 'title' => 'Imprimir Ticket']) ?>
-                    <?php endif; ?>
+                    <?= $this->Html->link('<i class="fa-solid fa-eye"></i> Ver', ['action' => 'view', $account->id], ['escape' => false, 'class' => 'bg-blue-600 text-white px-3 py-1.5 rounded-xl text-[10px] font-black uppercase hover:bg-yellow-400 hover:text-slate-900 transition-all shadow-sm']) ?>
 
                     <?php if ($account->status === 'pendiente'): ?>
                         <?= $this->Html->link('<i class="fa-solid fa-hand-holding-dollar"></i> Abonar', ['action' => 'payment', $account->id], ['escape' => false, 'class' => 'bg-green-600 text-white px-3 py-1.5 rounded-xl text-[10px] font-black uppercase hover:bg-green-700 transition-all shadow-sm']) ?>
