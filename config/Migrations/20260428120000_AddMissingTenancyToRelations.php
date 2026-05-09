@@ -10,13 +10,15 @@ class AddMissingTenancyToRelations extends BaseMigration
         $tables = ['product_ingredients', 'tareas'];
 
         foreach ($tables as $t) {
-            $table = $this->table($t);
-            if (!$table->hasColumn('company_id')) {
-                $table->addColumn('company_id', 'integer', ['null' => true, 'after' => 'id'])
-                      ->addColumn('branch_id', 'integer', ['null' => true, 'after' => 'company_id'])
-                      ->addIndex(['company_id'])
-                      ->addIndex(['branch_id'])
-                      ->update();
+            if ($this->hasTable($t)) {
+                $table = $this->table($t);
+                if (!$table->hasColumn('company_id')) {
+                    $table->addColumn('company_id', 'integer', ['null' => true, 'after' => 'id'])
+                          ->addColumn('branch_id', 'integer', ['null' => true, 'after' => 'company_id'])
+                          ->addIndex(['company_id'])
+                          ->addIndex(['branch_id'])
+                          ->update();
+                }
             }
         }
     }
