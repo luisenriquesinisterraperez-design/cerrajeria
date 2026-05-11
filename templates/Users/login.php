@@ -2,7 +2,6 @@
 /**
  * @var \App\View\AppView $this
  */
-$this->layout = 'default';
 ?>
 <div class="fixed inset-0 z-[100] bg-[#0f172a] flex items-center justify-center p-6">
     <!-- Fondo decorativo suave -->
