@@ -28,7 +28,7 @@ RUN composer install --no-dev --no-scripts --no-autoloader --prefer-dist
 COPY . .
 
 # Finalizar la instalación de Composer y preparar directorios
-RUN composer dump-autoload --optimize --no-dev \
+RUN composer dump-autoload --optimize \
     && mkdir -p /var/www/html/tmp/cache/models /var/www/html/tmp/cache/persistent /var/www/html/tmp/cache/views /var/www/html/logs \
     && chown -R www-data:www-data /var/www/html/tmp /var/www/html/logs \
     && chmod -R 775 /var/www/html/tmp /var/www/html/logs
