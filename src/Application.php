@@ -52,6 +52,15 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
      */
     public function bootstrap(): void
     {
+        // Forzar carga de .env para servidores que no lo leen automáticamente
+        if (file_exists(dirname(__DIR__) . '/config/.env')) {
+            $dotenv = new \josegonzalez\Dotenv\Loader([dirname(__DIR__) . '/config/.env']);
+            $dotenv->parse()
+                ->putenv()
+                ->toEnv()
+                ->toServer();
+        }
+
         // Call parent to load bootstrap from files.
         parent::bootstrap();
 
