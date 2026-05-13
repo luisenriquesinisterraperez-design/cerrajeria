@@ -101,7 +101,9 @@ class UsersController extends AppController
                     $user->lockout_time = null;
                     $this->Users->save($user);
                 }
-                return $this->redirect(['controller' => 'Dashboard', 'action' => 'index']);
+
+                $target = $this->Authentication->getLoginRedirect() ?? ['controller' => 'Dashboard', 'action' => 'index'];
+                return $this->redirect($target);
             }
 
             \Cake\Log\Log::debug('Login fallido para: ' . $username . '. Status: ' . ($result ? $result->getStatus() : 'null'));

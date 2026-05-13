@@ -69,11 +69,12 @@ require CAKE . 'functions.php';
 */
 if (file_exists(CONFIG . '.env')) {
     $dotenv = new \josegonzalez\Dotenv\Loader([CONFIG . '.env']);
-    $dotenv->parse()
-        ->skipExisting(['putenv', 'toEnv', 'toServer'])
-        ->putenv()
-        ->toEnv()
-        ->toServer();
+    $envData = $dotenv->parse()->toArray();
+    foreach ($envData as $key => $val) {
+        putenv("{$key}={$val}");
+        $_ENV[$key] = $val;
+        $_SERVER[$key] = $val;
+    }
 }
 
 /*
@@ -160,9 +161,14 @@ if (PHP_SAPI === 'cli') {
  * Example: APP_FULL_BASE_URL=https://yourdomain.com
  */
 $fullBaseUrl = Configure::read('App.fullBaseUrl');
-if (!$fullBaseUrl) {
-    $httpHost = env('HTTP_HOST');
+$httpHost = env('HTTP_HOST');
 
+// Si estamos en localhost, ignoramos la URL de producción del .env para no redirigir fuera del local
+if ($httpHost && (str_contains($httpHost, 'localhost') || str_contains($httpHost, '127.0.0.1'))) {
+    $fullBaseUrl = null;
+}
+
+if (!$fullBaseUrl) {
     /*
      * Only enforce fullBaseUrl requirement when we're in a web request context.
      * This allows CLI tools (like PHPStan) to load the bootstrap without throwing.

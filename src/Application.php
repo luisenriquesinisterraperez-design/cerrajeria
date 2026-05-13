@@ -55,11 +55,12 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
         // Forzar carga de .env para servidores que no lo leen automáticamente
         if (file_exists(dirname(__DIR__) . '/config/.env')) {
             $dotenv = new \josegonzalez\Dotenv\Loader([dirname(__DIR__) . '/config/.env']);
-            $dotenv->parse()
-                ->skipExisting(['putenv', 'toEnv', 'toServer'])
-                ->putenv()
-                ->toEnv()
-                ->toServer();
+            $envData = $dotenv->parse()->toArray();
+            foreach ($envData as $key => $val) {
+                putenv("{$key}={$val}");
+                $_ENV[$key] = $val;
+                $_SERVER[$key] = $val;
+            }
         }
 
         // Call parent to load bootstrap from files.
