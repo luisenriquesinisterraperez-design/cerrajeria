@@ -34,6 +34,8 @@ class User extends Entity
         'role' => true,
         'is_superadmin' => true,
         'delivery_driver_id' => true,
+        'failed_logins' => true,
+        'lockout_time' => true,
         'created' => true,
         'modified' => true,
     ];

@@ -56,6 +56,7 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
         if (file_exists(dirname(__DIR__) . '/config/.env')) {
             $dotenv = new \josegonzalez\Dotenv\Loader([dirname(__DIR__) . '/config/.env']);
             $dotenv->parse()
+                ->skipExisting(['putenv', 'toEnv', 'toServer'])
                 ->putenv()
                 ->toEnv()
                 ->toServer();
@@ -99,14 +100,14 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
             // https://book.cakephp.org/5/en/controllers/middleware.html#body-parser-middleware
             ->add(new BodyParserMiddleware())
 
-            // Add authentication middleware
-            ->add(new AuthenticationMiddleware($this))
-
             // Cross Site Request Forgery (CSRF) Protection Middleware
             // https://book.cakephp.org/5/en/security/csrf.html#cross-site-request-forgery-csrf-middleware
             ->add(new CsrfProtectionMiddleware([
                 'httponly' => true,
-            ]));
+            ]))
+
+            // Add authentication middleware
+            ->add(new AuthenticationMiddleware($this));
 
         return $middlewareQueue;
     }
@@ -120,7 +121,7 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
     public function getAuthenticationService(ServerRequestInterface $request): AuthenticationServiceInterface
     {
         $authenticationService = new AuthenticationService([
-            'unauthenticatedRedirect' => Router::url(['controller' => 'Users', 'action' => 'login']),
+            'unauthenticatedRedirect' => '/users/login',
             'queryParam' => 'redirect',
         ]);
 
@@ -132,7 +133,7 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
                 'username' => 'username',
                 'password' => 'password',
             ],
-            'loginUrl' => Router::url(['controller' => 'Users', 'action' => 'login']),
+            'loginUrl' => '/users/login',
             'identifier' => [
                 'className' => 'Authentication.Password',
                 'fields' => [

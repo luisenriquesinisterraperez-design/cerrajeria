@@ -189,6 +189,7 @@ if (!$fullBaseUrl) {
     unset($httpHost, $s);
 }
 if ($fullBaseUrl) {
+    $fullBaseUrl = rtrim($fullBaseUrl, '/');
     Router::fullBaseUrl($fullBaseUrl);
 }
 unset($fullBaseUrl);

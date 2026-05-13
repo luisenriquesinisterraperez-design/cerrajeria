@@ -2,4 +2,4 @@
     NIXPACKS_PHP_ROOT = "webroot"
 
 [start]
-    cmd = "php -S 0.0.0.0:$PORT -t webroot"
+    cmd = "php -S 0.0.0.0:$PORT -t webroot index.php"

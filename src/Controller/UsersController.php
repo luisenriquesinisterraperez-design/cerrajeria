@@ -13,7 +13,7 @@ class UsersController extends AppController
     public function beforeFilter(\Cake\Event\EventInterface $event)
     {
         parent::beforeFilter($event);
-        $this->Authentication->addUnauthenticatedActions(['login', 'logout']);
+        $this->Authentication->allowUnauthenticated(['login', 'logout']);
     }
 
     public function index()
@@ -94,6 +94,7 @@ class UsersController extends AppController
 
             $result = $this->Authentication->getResult();
             if ($result && $result->isValid()) {
+                \Cake\Log\Log::debug('Login exitoso para: ' . $username);
                 // 2. Login exitoso -> Resetear intentos fallidos
                 if ($user) {
                     $user->failed_logins = 0;
@@ -102,6 +103,8 @@ class UsersController extends AppController
                 }
                 return $this->redirect(['controller' => 'Dashboard', 'action' => 'index']);
             }
+
+            \Cake\Log\Log::debug('Login fallido para: ' . $username . '. Status: ' . ($result ? $result->getStatus() : 'null'));
 
             // 3. Login fallido -> Incrementar contador
             if ($user) {
