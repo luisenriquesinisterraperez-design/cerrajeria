@@ -38,19 +38,28 @@ $isRepartidor = ($user->role === 'repartidor');
                         'id' => 'customer-name',
                         'required' => true
                     ]) ?>
+                    <datalist id="clients-list">
+                        <?php foreach ($clients as $c): ?>
+                            <option value="<?= h($c->full_name) ?>">
+                        <?php endforeach; ?>
+                    </datalist>
                 </div>
                 <div>
                     <label class="text-[10px] font-bold text-slate-400 ml-2 uppercase">Celular</label>
                     <?= $this->Form->text('customer_phone', [
-                        'placeholder' => 'Ej: 3001234567', 
-                        'class' => 'w-full p-4 bg-slate-50 border rounded-2xl outline-none focus:ring-2 focus:ring-blue-500', 
+                        'placeholder' => 'Ej: 3001234567',
+                        'class' => 'w-full p-4 bg-slate-50 border rounded-2xl outline-none focus:ring-2 focus:ring-blue-500',
                         'id' => 'customer-phone',
                         'list' => 'phones-list',
                         'required' => true
                     ]) ?>
+                    <datalist id="phones-list">
+                        <?php foreach ($clients as $c): ?>
+                            <option value="<?= h($c->phone) ?>">
+                        <?php endforeach; ?>
+                    </datalist>
                 </div>
-                <div id="venta-direccion-container">
-                    <label class="text-[10px] font-bold text-slate-400 ml-2 uppercase">Dirección</label>
+                <div id="venta-direccion-container">                    <label class="text-[10px] font-bold text-slate-400 ml-2 uppercase">Dirección</label>
                     <?= $this->Form->text('customer_address', ['placeholder' => 'Calle, Barrio...', 'class' => 'w-full p-4 bg-slate-50 border rounded-2xl outline-none focus:ring-2 focus:ring-blue-500', 'id' => 'customer-address']) ?>
                 </div>
                 <div>

@@ -44,6 +44,10 @@ class UsersTable extends Table
         $this->setPrimaryKey('id');
 
         $this->addBehavior('Timestamp');
+
+        $this->belongsTo('Clients', [
+            'foreignKey' => 'client_id',
+        ]);
     }
 
     /**

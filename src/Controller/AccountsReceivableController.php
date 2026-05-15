@@ -13,9 +13,22 @@ class AccountsReceivableController extends AppController
 {
     public function index()
     {
+        $identity = $this->request->getAttribute('identity');
+        $user = $identity ? $identity->getOriginalData() : null;
+        $isCliente = ($user && $user->role === 'cliente');
+
         $query = $this->AccountsReceivable->find()
             ->contain(['Clients', 'AccountPayments'])
             ->orderBy(['AccountsReceivable.status' => 'ASC', 'AccountsReceivable.created' => 'DESC']);
+
+        if ($isCliente) {
+            if ($user->client_id) {
+                $query->where(['AccountsReceivable.client_id' => $user->client_id]);
+            } else {
+                // Si es cliente pero no tiene ID vinculado, no mostrar nada
+                $query->where(['AccountsReceivable.id' => 0]);
+            }
+        }
             
         $accountsReceivable = $this->paginate($query);
 
@@ -24,11 +37,20 @@ class AccountsReceivableController extends AppController
 
     public function view($id = null)
     {
+        $identity = $this->request->getAttribute('identity');
+        $user = $identity ? $identity->getOriginalData() : null;
+        $isCliente = ($user && $user->role === 'cliente');
+
         $account = $this->AccountsReceivable->get($id, [
             'contain' => ['Clients', 'Orders.Products', 'AccountPayments']
         ]);
 
-        if ($this->request->is('post')) {
+        if ($isCliente && $account->client_id !== $user->client_id) {
+            $this->Flash->error(__('No tienes permiso para ver esta cuenta.'));
+            return $this->redirect(['action' => 'index']);
+        }
+
+        if ($this->request->is('post') && !$isCliente) {
             $data = $this->request->getData();
             $ordersTable = $this->fetchTable('Orders');
             $newOrder = $ordersTable->newEmptyEntity();
@@ -65,6 +87,12 @@ class AccountsReceivableController extends AppController
 
     public function add()
     {
+        $identity = $this->request->getAttribute('identity');
+        $user = $identity ? $identity->getOriginalData() : null;
+        if ($user && $user->role === 'cliente') {
+            $this->Flash->error(__('Acción no permitida.'));
+            return $this->redirect(['action' => 'index']);
+        }
         $accountsReceivable = $this->AccountsReceivable->newEmptyEntity();
         if ($this->request->is('post')) {
             $accountsReceivable = $this->AccountsReceivable->patchEntity($accountsReceivable, $this->request->getData());
@@ -80,6 +108,12 @@ class AccountsReceivableController extends AppController
 
     public function payment($id = null)
     {
+        $identity = $this->request->getAttribute('identity');
+        $user = $identity ? $identity->getOriginalData() : null;
+        if ($user && $user->role === 'cliente') {
+            $this->Flash->error(__('Acción no permitida.'));
+            return $this->redirect(['action' => 'index']);
+        }
         $account = $this->AccountsReceivable->get($id, [
             'contain' => ['Clients', 'AccountPayments']
         ]);
@@ -125,6 +159,12 @@ class AccountsReceivableController extends AppController
     public function markAsPaid($id = null)
     {
         $this->request->allowMethod(['post', 'put']);
+        $identity = $this->request->getAttribute('identity');
+        $user = $identity ? $identity->getOriginalData() : null;
+        if ($user && $user->role === 'cliente') {
+            $this->Flash->error(__('Acción no permitida.'));
+            return $this->redirect(['action' => 'index']);
+        }
         $account = $this->AccountsReceivable->get($id);
         $account->status = 'pagado';
         if ($this->AccountsReceivable->save($account)) {
@@ -138,6 +178,12 @@ class AccountsReceivableController extends AppController
     public function delete($id = null)
     {
         $this->request->allowMethod(['post', 'delete']);
+        $identity = $this->request->getAttribute('identity');
+        $user = $identity ? $identity->getOriginalData() : null;
+        if ($user && $user->role === 'cliente') {
+            $this->Flash->error(__('Acción no permitida.'));
+            return $this->redirect(['action' => 'index']);
+        }
         $accountsReceivable = $this->AccountsReceivable->get($id);
         if ($this->AccountsReceivable->delete($accountsReceivable)) {
             $this->Flash->success(__('La cuenta por cobrar ha sido eliminada.'));

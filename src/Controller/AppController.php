@@ -27,6 +27,7 @@ class AppController extends Controller
         $isAdmin = $isSuperAdmin; // En modo simple, Admin es lo mismo que SuperAdmin
         $isRepartidor = ($user && !empty($user->role) && $user->role === 'repartidor');
         $isStaff = ($user && !empty($user->role) && $user->role === 'staff');
+        $isCliente = ($user && !empty($user->role) && $user->role === 'cliente');
         
         if ($user) {
             $controller = $this->request->getParam('controller');
@@ -35,7 +36,7 @@ class AppController extends Controller
             // 1. RESTRICCIONES DE ESTRUCTURA (Solo Admin)
             $adminControllers = ['Users', 'OrderLogs'];
             if (in_array($controller, $adminControllers) && !$isAdmin) {
-                if ($controller === 'Users' && in_array($action, ['login', 'logout'])) {
+                if ($controller === 'Users' && in_array($action, ['login', 'logout', 'profile'])) {
                     // Permitido
                 } else {
                     $this->Flash->error(__('Acceso Denegado: Solo el Administrador puede gestionar estos módulos.'));
@@ -49,14 +50,21 @@ class AppController extends Controller
                 return $this->redirect($this->referer(['controller' => 'Dashboard', 'action' => 'index']));
             }
 
-            // 3. RESTRICCIONES DE MÓDULOS PARA STAFF / REPARTIDOR
+            // 3. RESTRICCIONES DE MÓDULOS PARA STAFF / REPARTIDOR / CLIENTE
             if (!$isAdmin) {
-                if ($isStaff || $isRepartidor) {
-                    $allowed = ($isRepartidor) ? ['Dashboard', 'Orders'] : ['Dashboard', 'Orders', 'Products', 'Ingredients', 'Clients', 'DeliveryDrivers', 'DailyClosures', 'AccountsReceivable', 'ProductIngredients', 'InventoryAdjustments'];
+                if ($isStaff || $isRepartidor || $isCliente) {
+                    $allowed = [];
+                    if ($isRepartidor) {
+                        $allowed = ['Dashboard', 'Orders'];
+                    } elseif ($isStaff) {
+                        $allowed = ['Dashboard', 'Orders', 'Products', 'Ingredients', 'Clients', 'DeliveryDrivers', 'DailyClosures', 'AccountsReceivable', 'ProductIngredients', 'InventoryAdjustments'];
+                    } elseif ($isCliente) {
+                        $allowed = ['Dashboard', 'AccountsReceivable'];
+                    }
                     
                     if (!in_array($controller, $allowed)) {
-                        if (!($controller === 'Users' && in_array($action, ['login', 'logout']))) {
-                            $this->Flash->error(__('Módulo administrativo restringido.'));
+                        if (!($controller === 'Users' && in_array($action, ['login', 'logout', 'profile']))) {
+                            $this->Flash->error(__('Módulo restringido para su perfil.'));
                             return $this->redirect(['controller' => 'Dashboard', 'action' => 'index']);
                         }
                     }
@@ -64,7 +72,7 @@ class AppController extends Controller
             }
         }
 
-        $this->set(compact('user', 'isAdmin', 'isSuperAdmin', 'isRepartidor', 'isStaff'));
+        $this->set(compact('user', 'isAdmin', 'isSuperAdmin', 'isRepartidor', 'isStaff', 'isCliente'));
         $this->set('isAdminEmpresa', $isAdmin); // Compatibilidad con vistas antiguas
         $this->set('authUser', $user); // Compatibilidad
     }

@@ -18,7 +18,7 @@ $balance = $account->amount - $totalPaid;
     </div>
     <div class="flex gap-2">
         <?= $this->Html->link('<i class="fa-solid fa-arrow-left mr-2"></i> Volver', ['action' => 'index'], ['escape' => false, 'class' => 'bg-slate-100 text-slate-600 px-6 py-3 rounded-2xl font-black text-xs uppercase hover:bg-slate-200 transition-all']) ?>
-        <?php if ($balance > 0): ?>
+        <?php if (!$isCliente && $balance > 0): ?>
             <?= $this->Html->link('<i class="fa-solid fa-hand-holding-dollar mr-2"></i> Registrar Abono', ['action' => 'payment', $account->id], ['escape' => false, 'class' => 'bg-green-600 text-white px-6 py-3 rounded-2xl font-black text-xs uppercase hover:bg-green-700 transition-all shadow-lg']) ?>
         <?php endif; ?>
     </div>
@@ -76,35 +76,37 @@ $balance = $account->amount - $totalPaid;
             </div>
         </div>
 
-        <!-- Formulario para agregar más productos -->
-        <div class="bg-white rounded-[2.5rem] shadow-lg border-2 border-yellow-400 overflow-hidden">
-            <div class="p-8 bg-yellow-400 flex items-center gap-4">
-                <div class="bg-slate-900 text-white p-3 rounded-2xl shadow-lg">
-                    <i class="fa-solid fa-plus-circle text-xl"></i>
-                </div>
-                <div>
-                    <h3 class="font-black text-slate-900 uppercase text-sm tracking-widest leading-none">Cargar más a esta Deuda</h3>
-                    <p class="text-[10px] text-slate-800 font-bold uppercase mt-1">Fiar producto adicional al cliente</p>
-                </div>
-            </div>
-            <div class="p-8">
-                <?= $this->Form->create() ?>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 items-end">
-                    <div class="md:col-span-1">
-                        <label class="text-[10px] font-black text-slate-400 uppercase ml-2 mb-2 block">Seleccionar Insumo/Servicio</label>
-                        <?= $this->Form->control('product_id', ['options' => $products, 'label' => false, 'class' => 'w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl font-bold outline-none focus:ring-2 focus:ring-blue-600 transition-all']) ?>
+        <?php if (!$isCliente): ?>
+            <!-- Formulario para agregar más productos -->
+            <div class="bg-white rounded-[2.5rem] shadow-lg border-2 border-yellow-400 overflow-hidden">
+                <div class="p-8 bg-yellow-400 flex items-center gap-4">
+                    <div class="bg-slate-900 text-white p-3 rounded-2xl shadow-lg">
+                        <i class="fa-solid fa-plus-circle text-xl"></i>
                     </div>
                     <div>
-                        <label class="text-[10px] font-black text-slate-400 uppercase ml-2 mb-2 block">Cantidad</label>
-                        <?= $this->Form->control('quantity', ['type' => 'number', 'value' => 1, 'min' => 1, 'label' => false, 'class' => 'w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl font-bold outline-none focus:ring-2 focus:ring-blue-600 transition-all']) ?>
-                    </div>
-                    <div>
-                        <?= $this->Form->button(__('Cargar a Deuda'), ['class' => 'w-full bg-slate-900 text-white font-black rounded-2xl py-4 uppercase shadow-xl hover:bg-blue-600 transition-all tracking-widest text-xs']) ?>
+                        <h3 class="font-black text-slate-900 uppercase text-sm tracking-widest leading-none">Cargar más a esta Deuda</h3>
+                        <p class="text-[10px] text-slate-800 font-bold uppercase mt-1">Fiar producto adicional al cliente</p>
                     </div>
                 </div>
-                <?= $this->Form->end() ?>
+                <div class="p-8">
+                    <?= $this->Form->create() ?>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 items-end">
+                        <div class="md:col-span-1">
+                            <label class="text-[10px] font-black text-slate-400 uppercase ml-2 mb-2 block">Seleccionar Insumo/Servicio</label>
+                            <?= $this->Form->control('product_id', ['options' => $products, 'label' => false, 'class' => 'w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl font-bold outline-none focus:ring-2 focus:ring-blue-600 transition-all']) ?>
+                        </div>
+                        <div>
+                            <label class="text-[10px] font-black text-slate-400 uppercase ml-2 mb-2 block">Cantidad</label>
+                            <?= $this->Form->control('quantity', ['type' => 'number', 'value' => 1, 'min' => 1, 'label' => false, 'class' => 'w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl font-bold outline-none focus:ring-2 focus:ring-blue-600 transition-all']) ?>
+                        </div>
+                        <div>
+                            <?= $this->Form->button(__('Cargar a Deuda'), ['class' => 'w-full bg-slate-900 text-white font-black rounded-2xl py-4 uppercase shadow-xl hover:bg-blue-600 transition-all tracking-widest text-xs']) ?>
+                        </div>
+                    </div>
+                    <?= $this->Form->end() ?>
+                </div>
             </div>
-        </div>
+        <?php endif; ?>
     </div>
 
     <!-- Columna Derecha: Resumen de Pagos -->

@@ -43,7 +43,15 @@ class ClientsTable extends Table
         $this->setDisplayField('full_name');
         $this->setPrimaryKey('id');
 
-        $this->addBehavior('Timestamp');    }
+        $this->addBehavior('Timestamp');
+
+        $this->hasMany('Users', [
+            'foreignKey' => 'client_id',
+        ]);
+        $this->hasMany('AccountsReceivable', [
+            'foreignKey' => 'client_id',
+        ]);
+    }
 
     /**
      * Default validation rules.

@@ -395,6 +395,21 @@ $isStaff = ($user && $user->role === 'staff'); // Explicitly check for staff rol
     });
     </script>
 
+<?php elseif ($isCliente): ?>
+    <!-- DASHBOARD PARA CLIENTES -->
+    <div class="flex flex-col items-center justify-center min-h-[60vh] p-8 bg-white rounded-[3rem] shadow-sm border border-slate-100 text-center">
+        <div class="w-24 h-24 bg-blue-100 text-blue-600 rounded-3xl flex items-center justify-center mb-6 shadow-lg">
+            <i class="fa-solid fa-handshake text-4xl"></i>
+        </div>
+        <h1 class="text-3xl font-black text-slate-800 uppercase tracking-tight mb-2">¡Bienvenido, <?= h($user->username) ?>!</h1>
+        <p class="text-slate-500 font-bold max-w-md mx-auto mb-8">
+            Desde aquí puedes consultar el estado actual de tus deudas y el historial de tus servicios con nosotros.
+        </p>
+        <div class="grid grid-cols-1 md:grid-cols-1 gap-4 w-full max-w-xs">
+            <?= $this->Html->link('<i class="fa-solid fa-receipt mr-2"></i> Ver Mis Cuentas', ['controller' => 'AccountsReceivable', 'action' => 'index'], ['escape' => false, 'class' => 'bg-slate-900 text-white px-8 py-4 rounded-2xl font-black text-xs uppercase hover:bg-blue-600 transition-all shadow-xl tracking-widest']) ?>
+        </div>
+    </div>
+
 <?php else: ?>
     <!-- ACCESO DENEGADO / VISTA MÍNIMA SI NO ES ADMIN, STAFF O REPARTIDOR -->
     <div class="flex flex-col items-center justify-center min-h-screen p-6 bg-slate-100">

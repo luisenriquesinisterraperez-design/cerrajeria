@@ -45,8 +45,9 @@ class UsersController extends AppController
         }
         
         $deliveryDrivers = $this->fetchTable('DeliveryDrivers')->find('list', ['keyField' => 'id', 'valueField' => 'name'])->all();
+        $clients = $this->fetchTable('Clients')->find('list', ['keyField' => 'id', 'valueField' => 'full_name'])->all();
         
-        $this->set(compact('user', 'deliveryDrivers'));
+        $this->set(compact('user', 'deliveryDrivers', 'clients'));
     }
 
     public function edit($id = null)
@@ -73,8 +74,9 @@ class UsersController extends AppController
         }
 
         $deliveryDrivers = $this->fetchTable('DeliveryDrivers')->find('list', ['keyField' => 'id', 'valueField' => 'name'])->all();
+        $clients = $this->fetchTable('Clients')->find('list', ['keyField' => 'id', 'valueField' => 'full_name'])->all();
 
-        $this->set(compact('user', 'deliveryDrivers'));
+        $this->set(compact('user', 'deliveryDrivers', 'clients'));
     }
 
     public function login()

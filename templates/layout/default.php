@@ -137,6 +137,8 @@
     $user = $identity ? $identity->getOriginalData() : null;
     $isAdmin = ($user && (!empty($user->is_superadmin) || $user->username === 'admin' || $user->role === 'admin'));
     $isStaff = ($user && !empty($user->role) && $user->role === 'staff');
+    $isRepartidor = ($user && !empty($user->role) && $user->role === 'repartidor');
+    $isCliente = ($user && !empty($user->role) && $user->role === 'cliente');
     
     if ($user): 
     ?>
@@ -158,17 +160,17 @@
             </div>
 
             <nav class="flex-1 flex flex-col pb-8">
-                <div class="section-tag text-blue-400">Gestión de Negocio</div>
+                <div class="section-tag text-blue-400">Menú de Usuario</div>
                 <?php
                 $navItems = [
-                    ['Dashboard', 'index', 'fa-chart-pie', 'Resumen'],
-                    ['Orders', 'index', 'fa-receipt', 'Servicios'],
-                    ['AccountsReceivable', 'index', 'fa-wallet', 'Cuentas', ($isAdmin || $isStaff)],
+                    ['Dashboard', 'index', 'fa-chart-pie', 'Resumen', true],
+                    ['Orders', 'index', 'fa-receipt', 'Servicios', ($isAdmin || $isStaff || $isRepartidor)],
+                    ['AccountsReceivable', 'index', 'fa-wallet', 'Mis Cuentas', true],
                     ['DailyClosures', 'index', 'fa-vault', 'Caja', ($isAdmin || $isStaff)],
                 ];
 
                 foreach ($navItems as $item):
-                    if (!isset($item[4]) || $item[4]):
+                    if ($item[4]):
                         $active = $this->request->getParam('controller') == $item[0];
                 ?>
                     <?= $this->Html->link(
@@ -178,23 +180,25 @@
                     ) ?>
                 <?php endif; endforeach; ?>
 
-                <div class="section-tag">Catálogo & Base</div>
-                <?php
-                $adminItems = [
-                    ['Products', 'index', 'fa-key', 'Servicios Pro'],
-                    ['DeliveryDrivers', 'index', 'fa-truck-fast', 'Técnicos'],
-                    ['Clients', 'index', 'fa-user-tag', 'Clientes'],
-                    ['Ingredients', 'index', 'fa-microchip', 'Insumos'],
-                ];
-                foreach ($adminItems as $item):
-                    $active = $this->request->getParam('controller') == $item[0];
-                ?>
-                    <?= $this->Html->link(
-                        '<i class="fa-solid ' . $item[2] . '"></i> ' . $item[3],
-                        ['controller' => $item[0], 'action' => $item[1]],
-                        ['escape' => false, 'class' => 'nav-link ' . ($active ? 'active' : '')]
-                    ) ?>
-                <?php endforeach; ?>
+                <?php if (!$isCliente && !$isRepartidor): ?>
+                    <div class="section-tag">Catálogo & Base</div>
+                    <?php
+                    $adminItems = [
+                        ['Products', 'index', 'fa-key', 'Servicios Pro'],
+                        ['DeliveryDrivers', 'index', 'fa-truck-fast', 'Técnicos'],
+                        ['Clients', 'index', 'fa-user-tag', 'Clientes'],
+                        ['Ingredients', 'index', 'fa-microchip', 'Insumos'],
+                    ];
+                    foreach ($adminItems as $item):
+                        $active = $this->request->getParam('controller') == $item[0];
+                    ?>
+                        <?= $this->Html->link(
+                            '<i class="fa-solid ' . $item[2] . '"></i> ' . $item[3],
+                            ['controller' => $item[0], 'action' => $item[1]],
+                            ['escape' => false, 'class' => 'nav-link ' . ($active ? 'active' : '')]
+                        ) ?>
+                    <?php endforeach; ?>
+                <?php endif; ?>
 
                 <?php if ($isAdmin): ?>
                     <div class="section-tag">Configuración</div>

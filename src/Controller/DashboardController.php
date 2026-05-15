@@ -16,6 +16,7 @@ class DashboardController extends AppController
         $isAdminEmpresa = ($user && $user->role === 'admin_empresa');
         $isAdmin = ($user && ($user->role === 'admin' || $isAdminEmpresa || $isSuperAdmin));
         $isRepartidor = ($user && $user->role === 'repartidor');
+        $isCliente = ($user && $user->role === 'cliente');
 
         $ordersTable = $this->fetchTable('Orders');
         
@@ -44,6 +45,11 @@ class DashboardController extends AppController
             ])->count();
 
             $this->set(compact('deliveredInPeriod', 'totalEarned', 'pendingDeliveries', 'isRepartidor', 'startDate', 'endDate'));
+            return;
+        }
+
+        if ($isCliente) {
+            $this->set(compact('isCliente', 'user'));
             return;
         }
 
@@ -231,6 +237,11 @@ class DashboardController extends AppController
 
         $lowStock = $this->fetchTable('Ingredients')->find()->where(['stock <=' => 5])->orderBy(['stock' => 'ASC'])->limit(5)->all();
 
+        // 6. Pendientes por entregar (Global para Admin/Staff)
+        $pendingDeliveries = $ordersTable->find()->where([
+            'status NOT IN' => ['entregado', 'cancelado']
+        ])->count();
+
         $this->set([
             'totalIncome' => $totalIncome,
             'totalExpenses' => $totalExpenses,
@@ -245,7 +256,8 @@ class DashboardController extends AppController
             'startDate' => $startDate,
             'endDate' => $endDate,
             'paymentTotals' => $formattedPaymentTotals,
-            'isRepartidor' => $isRepartidor
+            'isRepartidor' => $isRepartidor,
+            'pendingDeliveries' => $pendingDeliveries
         ]);
     }
 }

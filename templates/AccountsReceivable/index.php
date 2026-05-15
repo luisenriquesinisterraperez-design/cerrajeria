@@ -9,7 +9,9 @@
         <h1 class="text-3xl font-black text-slate-800 tracking-tight uppercase">Cuentas por Cobrar</h1>
         <p class="text-orange-500 font-bold uppercase text-xs tracking-widest">Gestión de deudas y créditos</p>
     </div>
-    <?= $this->Html->link('<i class="fa-solid fa-plus mr-2"></i> Nueva Deuda Manual', ['action' => 'add'], ['escape' => false, 'class' => 'bg-slate-900 text-white px-6 py-3 rounded-2xl font-black text-xs uppercase hover:bg-orange-600 transition-all shadow-lg']) ?>
+    <?php if (!$isCliente): ?>
+        <?= $this->Html->link('<i class="fa-solid fa-plus mr-2"></i> Nueva Deuda Manual', ['action' => 'add'], ['escape' => false, 'class' => 'bg-slate-900 text-white px-6 py-3 rounded-2xl font-black text-xs uppercase hover:bg-orange-600 transition-all shadow-lg']) ?>
+    <?php endif; ?>
 </header>
 
 <div class="bg-white rounded-3xl border border-orange-100 overflow-hidden shadow-sm">
@@ -50,11 +52,13 @@
                 <td class="p-5 text-right flex justify-end gap-2 mt-2">
                     <?= $this->Html->link('<i class="fa-solid fa-eye"></i> Ver', ['action' => 'view', $account->id], ['escape' => false, 'class' => 'bg-blue-600 text-white px-3 py-1.5 rounded-xl text-[10px] font-black uppercase hover:bg-yellow-400 hover:text-slate-900 transition-all shadow-sm']) ?>
 
-                    <?php if ($account->status === 'pendiente'): ?>
-                        <?= $this->Html->link('<i class="fa-solid fa-hand-holding-dollar"></i> Abonar', ['action' => 'payment', $account->id], ['escape' => false, 'class' => 'bg-green-600 text-white px-3 py-1.5 rounded-xl text-[10px] font-black uppercase hover:bg-green-700 transition-all shadow-sm']) ?>
+                    <?php if (!$isCliente): ?>
+                        <?php if ($account->status === 'pendiente'): ?>
+                            <?= $this->Html->link('<i class="fa-solid fa-hand-holding-dollar"></i> Abonar', ['action' => 'payment', $account->id], ['escape' => false, 'class' => 'bg-green-600 text-white px-3 py-1.5 rounded-xl text-[10px] font-black uppercase hover:bg-green-700 transition-all shadow-sm']) ?>
+                        <?php endif; ?>
+                        
+                        <?= $this->Form->postLink('<i class="fa-solid fa-trash"></i>', ['action' => 'delete', $account->id], ['confirm' => __('¿Eliminar este registro?'), 'escape' => false, 'class' => 'text-red-200 hover:text-red-600 p-1.5']) ?>
                     <?php endif; ?>
-                    
-                    <?= $this->Form->postLink('<i class="fa-solid fa-trash"></i>', ['action' => 'delete', $account->id], ['confirm' => __('¿Eliminar este registro?'), 'escape' => false, 'class' => 'text-red-200 hover:text-red-600 p-1.5']) ?>
                 </td>
             </tr>
             <?php endforeach; ?>

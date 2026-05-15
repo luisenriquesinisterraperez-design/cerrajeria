@@ -35,13 +35,19 @@
                 <?= $this->Form->select('role', [
                     'admin' => '👑 ADMINISTRADOR',
                     'staff' => '🛠️ STAFF / OPERADOR',
-                    'repartidor' => '🏍️ REPARTIDOR'
+                    'repartidor' => '🏍️ REPARTIDOR',
+                    'cliente' => '👤 CLIENTE'
                 ], ['id' => 'role-select', 'class' => 'w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl outline-none focus:ring-2 focus:ring-blue-500 font-black text-xs uppercase']) ?>
             </div>
 
             <div id="driver-link-div" class="hidden">
                 <label class="text-[10px] font-black text-slate-400 ml-2 uppercase tracking-widest italic text-blue-600">Vincular Repartidor</label>
                 <?= $this->Form->control('delivery_driver_id', ['options' => $deliveryDrivers, 'empty' => 'Seleccionar...', 'label' => false, 'class' => 'w-full p-4 bg-blue-50 border border-blue-200 rounded-2xl outline-none focus:ring-2 focus:ring-blue-500 font-bold']) ?>
+            </div>
+
+            <div id="client-link-div" class="hidden">
+                <label class="text-[10px] font-black text-slate-400 ml-2 uppercase tracking-widest italic text-blue-600">Vincular Cliente</label>
+                <?= $this->Form->control('client_id', ['options' => $clients, 'empty' => 'Seleccionar...', 'label' => false, 'class' => 'w-full p-4 bg-blue-50 border border-blue-200 rounded-2xl outline-none focus:ring-2 focus:ring-blue-500 font-bold']) ?>
             </div>
         </div>
 
@@ -55,16 +61,20 @@
     document.addEventListener('DOMContentLoaded', function() {
         const roleSelect = document.getElementById('role-select');
         const driverDiv = document.getElementById('driver-link-div');
+        const clientDiv = document.getElementById('client-link-div');
 
-        function toggleDriver() {
+        function toggleRoles() {
+            driverDiv.classList.add('hidden');
+            clientDiv.classList.add('hidden');
+
             if (roleSelect.value === 'repartidor') {
                 driverDiv.classList.remove('hidden');
-            } else {
-                driverDiv.classList.add('hidden');
+            } else if (roleSelect.value === 'cliente') {
+                clientDiv.classList.remove('hidden');
             }
         }
 
-        roleSelect.addEventListener('change', toggleDriver);
-        toggleDriver(); 
+        roleSelect.addEventListener('change', toggleRoles);
+        toggleRoles(); 
     });
 </script>
