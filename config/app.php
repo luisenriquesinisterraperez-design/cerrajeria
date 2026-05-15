@@ -75,12 +75,11 @@ return [
             'persistent' => false,
             'timezone' => 'UTC',
 
-            'host' => env('DATABASE_HOST', env('DB_HOST', '127.0.0.1')),
-            'port' => env('DATABASE_PORT', env('DB_PORT', 3306)),
-            'username' => env('DATABASE_USER', env('DB_USER', 'my_app')),
-            'password' => env('DATABASE_PASSWORD', env('DB_PASSWORD', 'secret')),
-            'database' => env('DATABASE_NAME', env('DB_DATABASE', env('DB_NAME', 'my_app'))),
-            'url' => env('DATABASE_URL', env('DB_URL', null)),
+            'host' => $_SERVER['DB_HOST'] ?? $_ENV['DB_HOST'] ?? $_SERVER['DATABASE_HOST'] ?? $_ENV['DATABASE_HOST'] ?? '127.0.0.1',
+            'port' => $_SERVER['DB_PORT'] ?? $_ENV['DB_PORT'] ?? $_SERVER['DATABASE_PORT'] ?? $_ENV['DATABASE_PORT'] ?? 3306,
+            'username' => $_SERVER['DB_USER'] ?? $_ENV['DB_USER'] ?? $_SERVER['DATABASE_USER'] ?? $_ENV['DATABASE_USER'] ?? 'my_app',
+            'password' => $_SERVER['DB_PASSWORD'] ?? $_ENV['DB_PASSWORD'] ?? $_SERVER['DATABASE_PASSWORD'] ?? $_ENV['DATABASE_PASSWORD'] ?? 'secret',
+            'database' => $_SERVER['DB_NAME'] ?? $_ENV['DB_NAME'] ?? $_SERVER['DB_DATABASE'] ?? $_ENV['DB_DATABASE'] ?? $_SERVER['DATABASE_NAME'] ?? $_ENV['DATABASE_NAME'] ?? 'my_app',
 
             'encoding' => 'utf8mb4',
             'cacheMetadata' => true,
