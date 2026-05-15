@@ -2,13 +2,17 @@
 declare(strict_types=1);
 
 return [
+    /* 
+     * FORZAMOS DEBUG TRUE 
+     * Esto nos permitirá ver el error real (Reason) en la pantalla de "Missing Connection"
+     */
     'debug' => true,
 
     'App' => [
         'namespace' => 'App',
-        'encoding' => env('APP_ENCODING', 'UTF-8'),
-        'defaultLocale' => env('APP_DEFAULT_LOCALE', 'en_US'),
-        'defaultTimezone' => env('APP_DEFAULT_TIMEZONE', 'UTC'),
+        'encoding' => 'UTF-8',
+        'defaultLocale' => 'es_ES',
+        'defaultTimezone' => 'UTC',
         'base' => false,
         'dir' => 'src',
         'webroot' => 'webroot',
@@ -35,11 +39,17 @@ return [
             'persistent' => false,
             'timezone' => 'UTC',
 
-            'host' => $_SERVER['DB_HOST'] ?? $_ENV['DB_HOST'] ?? $_SERVER['DATABASE_HOST'] ?? $_ENV['DATABASE_HOST'] ?? '127.0.0.1',
-            'port' => $_SERVER['DB_PORT'] ?? $_ENV['DB_PORT'] ?? $_SERVER['DATABASE_PORT'] ?? $_ENV['DATABASE_PORT'] ?? 3306,
-            'username' => $_SERVER['DB_USER'] ?? $_ENV['DB_USER'] ?? $_SERVER['DATABASE_USER'] ?? $_ENV['DATABASE_USER'] ?? 'my_app',
-            'password' => $_SERVER['DB_PASSWORD'] ?? $_ENV['DB_PASSWORD'] ?? $_SERVER['DATABASE_PASSWORD'] ?? $_ENV['DATABASE_PASSWORD'] ?? 'secret',
-            'database' => $_SERVER['DB_NAME'] ?? $_ENV['DB_NAME'] ?? $_SERVER['DB_DATABASE'] ?? $_ENV['DB_DATABASE'] ?? $_SERVER['DATABASE_NAME'] ?? $_ENV['DATABASE_NAME'] ?? 'my_app',
+            /* 
+             * Buscamos las variables en todas partes ($_SERVER, $_ENV y env())
+             */
+            'host' => $_SERVER['DB_HOST'] ?? $_ENV['DB_HOST'] ?? $_SERVER['DATABASE_HOST'] ?? env('DATABASE_HOST', '127.0.0.1'),
+            'port' => $_SERVER['DB_PORT'] ?? $_ENV['DB_PORT'] ?? $_SERVER['DATABASE_PORT'] ?? env('DATABASE_PORT', 3306),
+            'username' => $_SERVER['DB_USER'] ?? $_ENV['DB_USER'] ?? $_SERVER['DATABASE_USER'] ?? env('DATABASE_USER', 'my_app'),
+            'password' => $_SERVER['DB_PASSWORD'] ?? $_ENV['DB_PASSWORD'] ?? $_SERVER['DATABASE_PASSWORD'] ?? env('DATABASE_PASSWORD', 'secret'),
+            'database' => $_SERVER['DB_NAME'] ?? $_ENV['DB_NAME'] ?? $_SERVER['DB_DATABASE'] ?? env('DATABASE_NAME', 'my_app'),
+            
+            /* Si tienes una DATABASE_URL configurada en EasyPanel, úsala */
+            'url' => $_SERVER['DATABASE_URL'] ?? $_ENV['DATABASE_URL'] ?? $_SERVER['DB_URL'] ?? env('DATABASE_URL', null),
 
             'encoding' => 'utf8mb4',
             'cacheMetadata' => true,
