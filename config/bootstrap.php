@@ -100,6 +100,31 @@ if (file_exists(CONFIG . 'app_local.php')) {
 }
 
 /*
+ * FORCE PRODUCTION CONFIG FROM ENVIRONMENT VARIABLES
+ * This ensures that if we are in production (e.g. EasyPanel),
+ * the environment variables take precedence over any local files.
+ */
+if (env('DATABASE_URL') || env('DB_URL') || env('DATABASE_HOST') || env('DB_HOST')) {
+    Configure::write('Datasources.default', array_merge(
+        Configure::read('Datasources.default') ?? [],
+        array_filter([
+            'host' => env('DATABASE_HOST', env('DB_HOST')),
+            'port' => env('DATABASE_PORT', env('DB_PORT')),
+            'username' => env('DATABASE_USER', env('DB_USER')),
+            'password' => env('DATABASE_PASSWORD', env('DB_PASSWORD')),
+            'database' => env('DATABASE_NAME', env('DB_DATABASE', env('DB_NAME'))),
+            'url' => env('DATABASE_URL', env('DB_URL')),
+        ])
+    ));
+    
+    // Forzar 127.0.0.1 si se configuró como localhost para evitar errores de socket
+    $currentHost = Configure::read('Datasources.default.host');
+    if ($currentHost === 'localhost') {
+        Configure::write('Datasources.default.host', '127.0.0.1');
+    }
+}
+
+/*
  * When debug = true the metadata cache should only last for a short time.
  */
 if (Configure::read('debug')) {
