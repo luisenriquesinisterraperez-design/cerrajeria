@@ -43,7 +43,7 @@ return [
         'webroot' => 'webroot',
         'wwwRoot' => WWW_ROOT,
         //'baseUrl' => env('SCRIPT_NAME'),
-        'fullBaseUrl' => 'https://cerrajeri.stokmaster.com.co',
+        'fullBaseUrl' => 'https://cerrajeria.stokmaster.com.co',
         'imageBaseUrl' => 'img/',
         'cssBaseUrl' => 'css/',
         'jsBaseUrl' => 'js/',
