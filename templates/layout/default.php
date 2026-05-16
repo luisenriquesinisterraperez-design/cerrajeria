@@ -6,9 +6,8 @@
     <title>CERRAJERÍA SARRIA - <?= $this->fetch('title') ?></title>
     <?= $this->Html->meta('icon') ?>
     
-    <script src="https://cdn.tailwindcss.com"></script>
+    <?= $this->Html->css('tailwind.css') ?>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <?= $this->fetch('meta') ?>
     <?= $this->fetch('css') ?>
@@ -148,7 +147,7 @@
             <div class="p-8 mb-4 bg-[#1e293b]/50">
                 <div class="flex items-center gap-4">
                     <div class="bg-yellow-400 text-slate-900 w-12 h-12 flex items-center justify-center rounded-2xl shadow-lg shadow-yellow-400/20 transform -rotate-6">
-                        <i class="fa-solid fa-key text-2xl"></i>
+                        <i class="fa-solid fa-store text-2xl"></i>
                     </div>
                     <div>
                         <span class="font-black text-xl tracking-tighter text-white uppercase italic leading-none block">
@@ -164,7 +163,7 @@
                 <?php
                 $navItems = [
                     ['Dashboard', 'index', 'fa-chart-pie', 'Resumen', true],
-                    ['Orders', 'index', 'fa-receipt', 'Servicios', ($isAdmin || $isStaff || $isRepartidor)],
+                    ['Orders', 'index', 'fa-receipt', 'Ventas', ($isAdmin || $isStaff || $isRepartidor)],
                     ['AccountsReceivable', 'index', 'fa-wallet', 'Mis Cuentas', true],
                     ['DailyClosures', 'index', 'fa-vault', 'Caja', ($isAdmin || $isStaff)],
                 ];
@@ -184,8 +183,8 @@
                     <div class="section-tag">Catálogo & Base</div>
                     <?php
                     $adminItems = [
-                        ['Products', 'index', 'fa-key', 'Servicios Pro'],
-                        ['DeliveryDrivers', 'index', 'fa-truck-fast', 'Técnicos'],
+                        ['Products', 'index', 'fa-store', 'Catálogo'],
+                        ['DeliveryDrivers', 'index', 'fa-truck-fast', 'Repartidores'],
                         ['Clients', 'index', 'fa-user-tag', 'Clientes'],
                         ['Ingredients', 'index', 'fa-microchip', 'Insumos'],
                     ];
@@ -227,7 +226,7 @@
             <header class="lg:hidden mobile-header flex justify-between items-center shadow-lg">
                 <div class="flex items-center gap-3">
                     <div class="bg-yellow-400 text-slate-900 p-2 rounded-lg transform -rotate-3">
-                        <i class="fa-solid fa-key text-sm"></i>
+                        <i class="fa-solid fa-store text-sm"></i>
                     </div>
                     <span class="font-black text-lg text-white uppercase italic tracking-tighter">SARRIA<span class="text-yellow-400">.</span></span>
                 </div>
@@ -246,9 +245,9 @@
                             <h1 class="text-2xl md:text-3xl font-black text-slate-900 tracking-tight"><?= h($this->fetch('title')) ?></h1>
                         </div>
                     </div>
-                    <div class="flex items-center gap-3 bg-slate-50 px-4 py-2 rounded-full border border-slate-100">
-                        <i class="fa-solid fa-calendar-day text-blue-500"></i>
-                        <span class="text-xs font-bold text-slate-600"><?= date('l, d M Y') ?></span>
+                    <div class="flex items-center gap-3 bg-gradient-to-r from-blue-600 to-blue-500 px-5 py-2.5 rounded-2xl shadow-lg shadow-blue-200 border border-blue-400">
+                        <i class="fa-solid fa-clock text-white/90 text-sm"></i>
+                        <span class="text-xs font-bold text-white tracking-wide" id="live-clock"></span>
                     </div>
                 </div>
                 <?= $this->Flash->render() ?>
@@ -291,7 +290,7 @@
             <div class="w-full max-w-sm relative z-10">
                 <div class="text-center mb-10">
                     <div class="bg-yellow-400 text-slate-900 w-20 h-20 flex items-center justify-center rounded-[2.5rem] mx-auto shadow-2xl shadow-yellow-400/20 mb-8 transform -rotate-12 border-4 border-white">
-                        <i class="fa-solid fa-key text-3xl"></i>
+                        <i class="fa-solid fa-store text-3xl"></i>
                     </div>
                     <h1 class="text-4xl font-black text-white uppercase italic tracking-tighter leading-none">SARRIA<span class="text-yellow-400">.</span></h1>
                     <p class="text-[10px] font-black text-blue-400 tracking-[0.5em] uppercase mt-4">Cerrajería Profesional</p>
@@ -328,6 +327,19 @@
             if(toggle) toggle.addEventListener('click', openDrawer);
             if(close) close.addEventListener('click', closeDrawer);
             if(overlay) overlay.addEventListener('click', closeDrawer);
+
+            (function() {
+                var el = document.getElementById('live-clock');
+                if (!el) return;
+                var months = 'enero_febrero_marzo_abril_mayo_junio_julio_agosto_septiembre_octubre_noviembre_diciembre'.split('_');
+                var days = 'domingo_lunes_martes_miercoles_jueves_viernes_sabado'.split('_');
+                function tick() {
+                    var d = new Date();
+                    el.textContent = days[d.getDay()] + ', ' + d.getDate() + ' de ' + months[d.getMonth()] + ' de ' + d.getFullYear() + ' - ' + d.toLocaleTimeString('es-CO');
+                }
+                tick();
+                setInterval(tick, 1000);
+            })();
         });
     </script>
 </body>

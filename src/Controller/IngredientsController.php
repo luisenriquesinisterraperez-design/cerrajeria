@@ -91,6 +91,7 @@ class IngredientsController extends AppController
     {
         $this->request->allowMethod(['post', 'delete']);
         $ingredient = $this->Ingredients->get($id);
+        $ingredientName = $ingredient->name;
         
         try {
             // 1. Eliminar relaciones en recetas
@@ -102,6 +103,12 @@ class IngredientsController extends AppController
             $adjustmentsTable->deleteAll(['ingredient_id' => $id]);
 
             if ($this->Ingredients->delete($ingredient)) {
+                $identity = $this->request->getAttribute('identity');
+                $user = $identity ? $identity->getOriginalData() : null;
+                $this->logAudit(
+                    $user ? $user->id : 1,
+                    "ELIMINACIÓN: El usuario " . ($user ? $user->username : 'Sistema') . " eliminó el insumo \"{$ingredientName}\""
+                );
                 $this->Flash->success(__('El insumo y sus relaciones han sido eliminados correctamente.'));
             } else {
                 $this->Flash->error(__('No se pudo eliminar el insumo. Por favor, intente de nuevo.'));

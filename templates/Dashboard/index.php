@@ -30,7 +30,7 @@ $isStaff = ($user && $user->role === 'staff'); // Explicitly check for staff rol
     <!-- DASHBOARD EXCLUSIVO PARA TÉCNICO -->
     <header class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10">
         <div>
-            <h1 class="text-4xl font-black text-slate-900 tracking-tight uppercase leading-none">Mi Panel Técnico</h1>
+            <h1 class="text-4xl font-black text-slate-900 tracking-tight uppercase leading-none">Mi Panel</h1>
             <p class="text-blue-600 font-bold uppercase text-xs tracking-[0.2em] mt-2">Bienvenido, <?= h($user->username) ?></p>
         </div>
 
@@ -52,7 +52,7 @@ $isStaff = ($user && $user->role === 'staff'); // Explicitly check for staff rol
             <p class="text-blue-100 text-[10px] font-black uppercase mb-2 tracking-widest leading-none">Servicios Período</p>
             <p class="text-5xl font-black"><?= $deliveredInPeriod ?></p>
             <p class="text-[10px] font-bold mt-4 uppercase opacity-80">Finalizados</p>
-            <i class="fa-solid fa-key absolute -bottom-4 -right-4 text-7xl opacity-10 rotate-12"></i>
+            <i class="fa-solid fa-store absolute -bottom-4 -right-4 text-7xl opacity-10 rotate-12"></i>
         </div>
 
         <div class="dashboard-card card-black p-8 shadow-xl text-white relative overflow-hidden bg-slate-900">
@@ -156,7 +156,7 @@ $isStaff = ($user && $user->role === 'staff'); // Explicitly check for staff rol
             <div class="flex items-center justify-between mb-8">
                 <div>
                     <h3 class="font-black text-slate-900 uppercase text-xs tracking-widest">Rendimiento</h3>
-                    <p class="text-[10px] text-slate-400 font-bold uppercase italic">Servicios vs Tiempo</p>
+                    <p class="text-[10px] text-slate-400 font-bold uppercase italic">Ventas vs Tiempo</p>
                 </div>
                 <div class="flex items-center gap-3 bg-slate-50 px-3 py-1.5 rounded-xl border border-slate-100">
                     <span class="text-[10px] font-black text-blue-600 uppercase"><?= count($salesByDay) ?> Días medidos</span>
@@ -169,9 +169,9 @@ $isStaff = ($user && $user->role === 'staff'); // Explicitly check for staff rol
     </div>
 
     <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
-        <!-- Ranking Técnicos -->
+        <!-- Ranking Repartidores -->
         <div class="lg:col-span-1 bg-white p-8 rounded-[2.5rem] shadow-sm border border-slate-100">
-            <h3 class="font-black text-slate-900 uppercase text-xs tracking-widest mb-6">Técnicos & Puntos</h3>
+            <h3 class="font-black text-slate-900 uppercase text-xs tracking-widest mb-6">Repartidores & Puntos</h3>
             <div class="space-y-6">
                 <?php foreach ($driversRanking as $index => $driver): ?>
                     <div class="flex items-center justify-between group">
@@ -181,7 +181,7 @@ $isStaff = ($user && $user->role === 'staff'); // Explicitly check for staff rol
                             </div>
                             <div>
                                 <p class="text-[10px] font-black text-slate-800 uppercase"><?= h($driver->name) ?></p>
-                                <p class="text-[9px] font-bold text-slate-400"><?= $driver->orders_count ?> servicios</p>
+                                <p class="text-[9px] font-bold text-slate-400"><?= $driver->orders_count ?> pedidos</p>
                             </div>
                         </div>
                         <p class="text-[10px] font-black text-slate-900">$<?= number_format($driver->total, 0) ?></p>
@@ -190,9 +190,11 @@ $isStaff = ($user && $user->role === 'staff'); // Explicitly check for staff rol
             </div>
         </div>
 
-        <!-- Servicios Top -->
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+        <!-- Productos Top -->
         <div class="lg:col-span-2 bg-slate-900 p-8 rounded-[2.5rem] shadow-xl text-white">
-            <h3 class="font-black text-yellow-400 uppercase text-xs tracking-widest mb-6">Servicios más Solicitados</h3>
+            <h3 class="font-black text-yellow-400 uppercase text-xs tracking-widest mb-6">Productos más Vendidos</h3>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <?php foreach ($topProducts as $prod): ?>
                     <div class="bg-slate-800/50 p-4 rounded-2xl border border-slate-800">
@@ -284,7 +286,7 @@ $isStaff = ($user && $user->role === 'staff'); // Explicitly check for staff rol
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
         <div class="dashboard-card card-blue bg-white p-6 shadow-sm border border-slate-100">
             <div class="flex justify-between items-start mb-2">
-                <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Servicios Realizados</span>
+                <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Ventas Realizadas</span>
                 <i class="fa-solid fa-receipt text-blue-600"></i>
             </div>
             <p class="text-3xl font-black text-slate-900"><?= number_format($totalOrders) ?></p>
@@ -296,7 +298,7 @@ $isStaff = ($user && $user->role === 'staff'); // Explicitly check for staff rol
                 <i class="fa-solid fa-list-check text-yellow-500"></i>
             </div>
             <p class="text-3xl font-black text-slate-900"><?= $pendingDeliveries ?></p>
-            <p class="text-[10px] font-bold text-slate-400 mt-1 uppercase italic">Servicios por entregar</p>
+            <p class="text-[10px] font-bold text-slate-400 mt-1 uppercase italic">Pedidos por entregar</p>
         </div>
     </div>
     <!-- No mostrar gráfico de ventas ni desglose de caja ni stock crítico -->
@@ -308,7 +310,7 @@ $isStaff = ($user && $user->role === 'staff'); // Explicitly check for staff rol
     </div>
     <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
         <div class="lg:col-span-1 bg-white p-8 rounded-[2.5rem] shadow-sm border border-slate-100">
-            <h3 class="font-black text-slate-900 uppercase text-xs tracking-widest mb-6">Técnicos & Puntos</h3>
+            <h3 class="font-black text-slate-900 uppercase text-xs tracking-widest mb-6">Repartidores & Puntos</h3>
             <div class="space-y-6">
                 <?php foreach ($driversRanking as $index => $driver): ?>
                     <div class="flex items-center justify-between group">
@@ -318,7 +320,7 @@ $isStaff = ($user && $user->role === 'staff'); // Explicitly check for staff rol
                             </div>
                             <div>
                                 <p class="text-[10px] font-black text-slate-800 uppercase"><?= h($driver->name) ?></p>
-                                <p class="text-[9px] font-bold text-slate-400"><?= $driver->orders_count ?> servicios</p>
+                                <p class="text-[9px] font-bold text-slate-400"><?= $driver->orders_count ?> pedidos</p>
                             </div>
                         </div>
                         <p class="text-[10px] font-black text-slate-900">$<?= number_format($driver->total, 0) ?></p>
@@ -328,7 +330,7 @@ $isStaff = ($user && $user->role === 'staff'); // Explicitly check for staff rol
         </div>
 
         <div class="lg:col-span-2 bg-slate-900 p-8 rounded-[2.5rem] shadow-xl text-white">
-            <h3 class="font-black text-yellow-400 uppercase text-xs tracking-widest mb-6">Servicios más Solicitados</h3>
+            <h3 class="font-black text-yellow-400 uppercase text-xs tracking-widest mb-6">Productos más Vendidos</h3>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <?php foreach ($topProducts as $prod): ?>
                     <div class="bg-slate-800/50 p-4 rounded-2xl border border-slate-800">
@@ -360,6 +362,7 @@ $isStaff = ($user && $user->role === 'staff'); // Explicitly check for staff rol
             </div>
         </div>
     </div>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <!-- Script for salesChart -->
     <script>
     document.addEventListener('DOMContentLoaded', function() {
@@ -403,7 +406,7 @@ $isStaff = ($user && $user->role === 'staff'); // Explicitly check for staff rol
         </div>
         <h1 class="text-3xl font-black text-slate-800 uppercase tracking-tight mb-2">¡Bienvenido, <?= h($user->username) ?>!</h1>
         <p class="text-slate-500 font-bold max-w-md mx-auto mb-8">
-            Desde aquí puedes consultar el estado actual de tus deudas y el historial de tus servicios con nosotros.
+            Desde aquí puedes consultar el estado actual de tus cuentas y el historial de tus pedidos.
         </p>
         <div class="grid grid-cols-1 md:grid-cols-1 gap-4 w-full max-w-xs">
             <?= $this->Html->link('<i class="fa-solid fa-receipt mr-2"></i> Ver Mis Cuentas', ['controller' => 'AccountsReceivable', 'action' => 'index'], ['escape' => false, 'class' => 'bg-slate-900 text-white px-8 py-4 rounded-2xl font-black text-xs uppercase hover:bg-blue-600 transition-all shadow-xl tracking-widest']) ?>

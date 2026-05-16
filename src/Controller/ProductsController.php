@@ -73,7 +73,14 @@ class ProductsController extends AppController
         $this->request->allowMethod(['post', 'delete']);
         try {
             $product = $this->Products->get($id);
+            $productName = $product->name;
             if ($this->Products->delete($product)) {
+                $identity = $this->request->getAttribute('identity');
+                $user = $identity ? $identity->getOriginalData() : null;
+                $this->logAudit(
+                    $user ? $user->id : 1,
+                    "ELIMINACIÓN: El usuario " . ($user ? $user->username : 'Sistema') . " eliminó el producto \"{$productName}\""
+                );
                 $this->Flash->success(__('Producto eliminado.'));
             }
         } catch (Exception $e) {

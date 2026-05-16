@@ -43,7 +43,14 @@ class DeliveryDriversController extends AppController
     {
         $this->request->allowMethod(['post', 'delete']);
         $deliveryDriver = $this->DeliveryDrivers->get($id);
+        $driverName = $deliveryDriver->name . ' ' . ($deliveryDriver->last_name ?? '');
         if ($this->DeliveryDrivers->delete($deliveryDriver)) {
+            $identity = $this->request->getAttribute('identity');
+            $user = $identity ? $identity->getOriginalData() : null;
+            $this->logAudit(
+                $user ? $user->id : 1,
+                "ELIMINACIÓN: El usuario " . ($user ? $user->username : 'Sistema') . " eliminó al repartidor \"{$driverName}\""
+            );
             $this->Flash->success(__('Repartidor eliminado.'));
         }
         return $this->redirect(['action' => 'index']);

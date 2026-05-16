@@ -305,28 +305,11 @@ class OrdersController extends AppController
         
         $identity = $this->request->getAttribute('identity');
         $user = $identity ? $identity->getOriginalData() : null;
-        $userId = $user ? $user->id : 1; 
-
-        // Capturamos los datos necesarios antes de que el objeto desaparezca
         $orderId = $order->id;
         $details = "ELIMINACIÓN DEFINITIVA: El usuario " . ($user ? $user->username : 'Sistema') . " borró el pedido #" . $orderId . " de " . $order->product->name . " (Cliente: " . $order->customer_name . ")";
 
-        // 1. Intentamos eliminar el pedido primero
         if ($this->Orders->delete($order)) {
-            // 2. Solo si el borrado fue exitoso, creamos el log de auditoría
-            $logsTable = $this->fetchTable('OrderLogs');
-            $log = $logsTable->newEntity([
-                'order_id' => $orderId,
-                'user_id' => $userId,
-                'modification_details' => $details,
-                'created' => new \Cake\I18n\DateTime()
-            ]);
-
-            if (!$logsTable->save($log)) {
-                $errs = json_encode($log->getErrors());
-                \Cake\Log\Log::error("AUDIT SAVE FAILED FOR ORDER #$orderId: " . $errs);
-            }
-
+            $this->logAudit($user ? $user->id : 1, $details, $orderId);
             $this->Flash->success(__('Pedido eliminado exitosamente y huella registrada.'));
         } else {
             $this->Flash->error(__('No se pudo eliminar el pedido. Intente de nuevo.'));

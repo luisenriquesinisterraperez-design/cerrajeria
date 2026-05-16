@@ -8,7 +8,7 @@ return [
         'namespace' => 'App',
         'encoding' => 'UTF-8',
         'defaultLocale' => 'es_ES',
-        'defaultTimezone' => 'UTC',
+        'defaultTimezone' => 'America/Bogota',
         'base' => false,
         'dir' => 'src',
         'webroot' => 'webroot',

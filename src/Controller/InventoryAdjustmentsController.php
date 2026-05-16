@@ -55,18 +55,28 @@ class InventoryAdjustmentsController extends AppController
         $this->request->allowMethod(['post', 'delete']);
         $inventoryAdjustment = $this->InventoryAdjustments->get($id);
         
-        // Revertir el stock antes de borrar el registro (opcional, pero recomendado para consistencia)
+        $ingredientName = $inventoryAdjustment->ingredient->name ?? "ID #{$inventoryAdjustment->ingredient_id}";
+        $adjType = $inventoryAdjustment->type;
+        $adjQty = $inventoryAdjustment->adjustment_quantity ?? $inventoryAdjustment->quantity;
+
+        // Revertir el stock antes de borrar el registro
         $ingredientsTable = $this->fetchTable('Ingredients');
         $ingredient = $ingredientsTable->get($inventoryAdjustment->ingredient_id);
         
         if ($inventoryAdjustment->type === 'baja') {
-            $ingredient->stock += $inventoryAdjustment->adjustment_quantity;
+            $ingredient->stock += $adjQty;
         } else {
-            $ingredient->stock -= $inventoryAdjustment->adjustment_quantity;
+            $ingredient->stock -= $adjQty;
         }
         $ingredientsTable->save($ingredient);
 
         if ($this->InventoryAdjustments->delete($inventoryAdjustment)) {
+            $identity = $this->request->getAttribute('identity');
+            $user = $identity ? $identity->getOriginalData() : null;
+            $this->logAudit(
+                $user ? $user->id : 1,
+                "ELIMINACIÓN: El usuario " . ($user ? $user->username : 'Sistema') . " eliminó un ajuste de inventario ({$adjType}) de \"{$ingredientName}\" por {$adjQty}"
+            );
             $this->Flash->success(__('El registro ha sido eliminado y el stock revertido.'));
         } else {
             $this->Flash->error(__('No se pudo eliminar el registro.'));

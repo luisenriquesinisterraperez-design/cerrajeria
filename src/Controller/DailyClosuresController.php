@@ -73,7 +73,14 @@ class DailyClosuresController extends AppController
     {
         $this->request->allowMethod(['post', 'delete']);
         $dailyClosure = $this->DailyClosures->get($id);
+        $closureDate = $dailyClosure->date ?? $dailyClosure->created;
         if ($this->DailyClosures->delete($dailyClosure)) {
+            $identity = $this->request->getAttribute('identity');
+            $user = $identity ? $identity->getOriginalData() : null;
+            $this->logAudit(
+                $user ? $user->id : 1,
+                "ELIMINACIÓN: El usuario " . ($user ? $user->username : 'Sistema') . " eliminó el cierre de caja del {$closureDate}"
+            );
             $this->Flash->success(__('El registro de cierre ha sido eliminado.'));
         } else {
             $this->Flash->error(__('No se pudo eliminar el registro.'));

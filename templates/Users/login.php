@@ -13,7 +13,7 @@
     <div class="relative w-full max-w-sm">
         <div class="text-center mb-10">
             <div class="bg-yellow-400 text-slate-900 w-20 h-20 flex items-center justify-center rounded-[2.5rem] mx-auto shadow-2xl shadow-yellow-400/20 mb-8 transform -rotate-12 border-4 border-white">
-                <i class="fa-solid fa-key text-3xl"></i>
+                <i class="fa-solid fa-store text-3xl"></i>
             </div>
             <h1 class="text-4xl font-black text-white uppercase italic tracking-tighter leading-none">SARRIA<span class="text-yellow-400">.</span></h1>
             <p class="text-[10px] font-black text-blue-400 tracking-[0.5em] uppercase mt-4">Cerrajería Profesional</p>

@@ -1,0 +1,27 @@
+{
+  "name": "cerrajeria",
+  "version": "1.0.0",
+  "description": "![Build Status](https://github.com/cakephp/app/actions/workflows/ci.yml/badge.svg?branch=5.x) [![Total Downloads](https://img.shields.io/packagist/dt/cakephp/app.svg?style=flat-square)](https://packagist.org/packages/cakephp/app) [![PHPStan](https://img.shields.io/badge/PHPStan-level%208-brightgreen.svg?style=flat-square)](https://github.com/phpstan/phpstan)",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "tailwind:build": "tailwindcss -i ./webroot/css/src/tailwind.css -o ./webroot/css/tailwind.css --minify"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/luisenriquesinisterraperez-design/cerrajeria.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/luisenriquesinisterraperez-design/cerrajeria/issues"
+  },
+  "homepage": "https://github.com/luisenriquesinisterraperez-design/cerrajeria#readme",
+  "devDependencies": {
+    "tailwindcss": "^3.4.19"
+  }
+}

@@ -3,13 +3,23 @@
  * @var \App\View\AppView $this
  * @var iterable<\App\Model\Entity\Ingredient> $ingredients
  */
+$totalInversion = 0;
+foreach ($ingredients as $ing) {
+    $totalInversion += (float)$ing->cost * (float)$ing->stock;
+}
 ?>
 <header class="mb-8 flex items-center justify-between">
     <div>
         <h1 class="text-3xl font-black text-slate-800 tracking-tight uppercase">Control de Inventario</h1>
         <p class="text-blue-600 font-bold uppercase text-xs tracking-widest">Gestión de insumos y materia prima</p>
     </div>
-    <?= $this->Html->link('<i class="fa-solid fa-plus mr-2"></i> Nuevo Insumo', ['action' => 'add'], ['escape' => false, 'class' => 'bg-blue-600 text-white px-6 py-3 rounded-2xl font-black text-xs uppercase hover:bg-blue-700 transition-all shadow-lg shadow-blue-500/20']) ?>
+    <div class="flex items-center gap-4">
+        <div class="bg-slate-900 text-white px-6 py-3 rounded-2xl shadow-lg">
+            <span class="text-[10px] font-black text-yellow-400 uppercase tracking-widest">Inversión Total</span>
+            <p class="text-2xl font-black mt-1">$<?= number_format($totalInversion, 0) ?></p>
+        </div>
+        <?= $this->Html->link('<i class="fa-solid fa-plus mr-2"></i> Nuevo Insumo', ['action' => 'add'], ['escape' => false, 'class' => 'bg-blue-600 text-white px-6 py-3 rounded-2xl font-black text-xs uppercase hover:bg-blue-700 transition-all shadow-lg shadow-blue-500/20']) ?>
+    </div>
 </header>
 
 <div class="bg-white rounded-3xl border border-slate-100 overflow-hidden shadow-sm">
@@ -19,11 +29,14 @@
                 <th class="p-5">Insumo</th>
                 <th class="p-5 text-center">Costo Unitario</th>
                 <th class="p-5 text-center">Stock Actual</th>
+                <th class="p-5 text-center">Valor Total</th>
                 <th class="p-5 text-right">Acciones</th>
             </tr>
         </thead>
         <tbody class="divide-y text-sm">
-            <?php foreach ($ingredients as $ingredient): ?>
+            <?php foreach ($ingredients as $ingredient):
+                $valorTotal = (float)$ingredient->cost * (float)$ingredient->stock;
+            ?>
             <tr class="hover:bg-slate-50 transition-colors">
                 <td class="p-5">
                     <div class="font-black text-slate-800 uppercase text-sm"><?= h($ingredient->name) ?></div>
@@ -37,6 +50,9 @@
                         <?= number_format($ingredient->stock, 1) ?>
                     </span>
                 </td>
+                <td class="p-5 text-center font-bold text-emerald-600">
+                    $<?= number_format($valorTotal, 0) ?>
+                </td>
                 <td class="p-5 text-right">
                     <div class="flex justify-end gap-2 mt-1">
                         <?= $this->Html->link('<i class="fa-solid fa-pen"></i>', ['action' => 'edit', $ingredient->id], ['escape' => false, 'class' => 'p-2 bg-blue-50 text-blue-600 rounded-xl hover:bg-blue-100 transition-all']) ?>
@@ -49,5 +65,14 @@
             </tr>
             <?php endforeach; ?>
         </tbody>
+        <tfoot class="bg-slate-900 text-white">
+            <tr>
+                <td class="p-5 font-black uppercase text-yellow-400 tracking-widest">Total Inversión</td>
+                <td></td>
+                <td></td>
+                <td class="p-5 text-center font-black text-yellow-400 text-lg">$<?= number_format($totalInversion, 0) ?></td>
+                <td></td>
+            </tr>
+        </tfoot>
     </table>
 </div>

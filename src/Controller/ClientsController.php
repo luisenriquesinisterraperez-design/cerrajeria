@@ -44,7 +44,14 @@ class ClientsController extends AppController
     {
         $this->request->allowMethod(['post', 'delete']);
         $client = $this->Clients->get($id);
+        $clientName = $client->name;
         if ($this->Clients->delete($client)) {
+            $identity = $this->request->getAttribute('identity');
+            $user = $identity ? $identity->getOriginalData() : null;
+            $this->logAudit(
+                $user ? $user->id : 1,
+                "ELIMINACIÓN: El usuario " . ($user ? $user->username : 'Sistema') . " eliminó el cliente \"{$clientName}\""
+            );
             $this->Flash->success(__('Cliente eliminado.'));
         }
         return $this->redirect(['action' => 'index']);

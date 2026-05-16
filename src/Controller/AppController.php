@@ -5,6 +5,8 @@ namespace App\Controller;
 
 use Cake\Controller\Controller;
 use Cake\Event\EventInterface;
+use Cake\I18n\DateTime;
+use Cake\Log\Log;
 
 class AppController extends Controller
 {
@@ -13,6 +15,21 @@ class AppController extends Controller
         parent::initialize();
         $this->loadComponent('Flash');
         $this->loadComponent('Authentication.Authentication');
+    }
+
+    protected function logAudit(int $userId, string $details, ?int $orderId = null): void
+    {
+        $logsTable = $this->fetchTable('OrderLogs');
+        $log = $logsTable->newEntity([
+            'order_id' => $orderId,
+            'user_id' => $userId,
+            'modification_details' => $details,
+            'created' => new DateTime(),
+        ]);
+        if (!$logsTable->save($log)) {
+            $errs = json_encode($log->getErrors());
+            Log::error('AUDIT SAVE FAILED: ' . $errs);
+        }
     }
 
     public function beforeFilter(EventInterface $event)
@@ -44,8 +61,8 @@ class AppController extends Controller
                 }
             }
 
-            // 2. RESTRICCIONES DE ELIMINACIÓN (Permitir a Staff para que sea auditado)
-            if ($action === 'delete' && (!$isAdmin && !$isStaff)) {
+            // 2. RESTRICCIONES DE ELIMINACIÓN (Solo Admin)
+            if ($action === 'delete' && !$isAdmin) {
                 $this->Flash->error(__('Acceso Denegado: No tienes permiso para eliminar registros.'));
                 return $this->redirect($this->referer(['controller' => 'Dashboard', 'action' => 'index']));
             }

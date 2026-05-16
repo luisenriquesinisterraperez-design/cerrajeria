@@ -44,10 +44,17 @@ class ProductIngredientsController extends AppController
     public function delete($id = null)
     {
         $this->request->allowMethod(['post', 'delete']);
-        $productIngredient = $this->ProductIngredients->get($id);
+        $productIngredient = $this->ProductIngredients->get($id, contain: ['Ingredients']);
         $productId = $productIngredient->product_id;
+        $ingredientName = $productIngredient->ingredient->name ?? "ID #{$productIngredient->ingredient_id}";
         
         if ($this->ProductIngredients->delete($productIngredient)) {
+            $identity = $this->request->getAttribute('identity');
+            $user = $identity ? $identity->getOriginalData() : null;
+            $this->logAudit(
+                $user ? $user->id : 1,
+                "ELIMINACIÓN: El usuario " . ($user ? $user->username : 'Sistema') . " removió el ingrediente \"{$ingredientName}\" de la receta del producto #{$productId}"
+            );
             $this->Flash->success(__('Ingrediente removido de la receta.'));
         }
         return $this->redirect(['action' => 'recipe', $productId]);
