@@ -1,11 +1,7 @@
-﻿<?php
+<?php
 declare(strict_types=1);
 
 return [
-    /* 
-     * FORZAMOS DEBUG TRUE 
-     * Esto nos permitirá ver el error real (Reason) en la pantalla de "Missing Connection"
-     */
     'debug' => true,
 
     'App' => [
@@ -32,25 +28,50 @@ return [
         'salt' => env('SECURITY_SALT', '70214f44059424856f772584149021e145789632145874563214589632145874'),
     ],
 
+    'Error' => [
+        'errorLevel' => E_ALL,
+        'skipLog' => [],
+        'log' => true,
+        'trace' => true,
+        'ignoredDeprecationWarnings' => [],
+    ],
+
+    'Cache' => [
+        'default' => [
+            'className' => 'File',
+            'path' => CACHE,
+            'url' => env('CACHE_DEFAULT_URL', null),
+        ],
+        '_cake_core_' => [
+            'className' => 'File',
+            'prefix' => 'myapp_cake_core_',
+            'path' => CACHE . 'persistent' . DS,
+            'serialize' => true,
+            'duration' => '+2 minutes',
+            'url' => env('CACHE_CAKECORE_URL', null),
+        ],
+        '_cake_model_' => [
+            'className' => 'File',
+            'prefix' => 'myapp_cake_model_',
+            'path' => CACHE . 'models' . DS,
+            'serialize' => true,
+            'duration' => '+2 minutes',
+            'url' => env('CACHE_CAKEMODEL_URL', null),
+        ],
+    ],
+
     'Datasources' => [
         'default' => [
             'className' => 'Cake\Database\Connection',
             'driver' => 'Cake\Database\Driver\Mysql',
             'persistent' => false,
             'timezone' => 'UTC',
-
-            /* 
-             * Buscamos las variables en todas partes ($_SERVER, $_ENV y env())
-             */
             'host' => $_SERVER['DB_HOST'] ?? $_ENV['DB_HOST'] ?? $_SERVER['DATABASE_HOST'] ?? env('DATABASE_HOST', '127.0.0.1'),
             'port' => $_SERVER['DB_PORT'] ?? $_ENV['DB_PORT'] ?? $_SERVER['DATABASE_PORT'] ?? env('DATABASE_PORT', 3306),
             'username' => $_SERVER['DB_USER'] ?? $_ENV['DB_USER'] ?? $_SERVER['DATABASE_USER'] ?? env('DATABASE_USER', 'my_app'),
             'password' => $_SERVER['DB_PASSWORD'] ?? $_ENV['DB_PASSWORD'] ?? $_SERVER['DATABASE_PASSWORD'] ?? env('DATABASE_PASSWORD', 'secret'),
             'database' => $_SERVER['DB_NAME'] ?? $_ENV['DB_NAME'] ?? $_SERVER['DB_DATABASE'] ?? env('DATABASE_NAME', 'my_app'),
-            
-            /* Si tienes una DATABASE_URL configurada en EasyPanel, úsala */
             'url' => $_SERVER['DATABASE_URL'] ?? $_ENV['DATABASE_URL'] ?? $_SERVER['DB_URL'] ?? env('DATABASE_URL', null),
-
             'encoding' => 'utf8mb4',
             'cacheMetadata' => true,
             'log' => false,
@@ -60,6 +81,27 @@ return [
 
     'Session' => [
         'defaults' => 'php',
+    ],
+
+    'EmailTransport' => [
+        'default' => [
+            'className' => 'Mail',
+            'host' => 'localhost',
+            'port' => 25,
+            'timeout' => 30,
+            'username' => null,
+            'password' => null,
+            'client' => null,
+            'tls' => null,
+            'url' => env('EMAIL_TRANSPORT_DEFAULT_URL', null),
+        ],
+    ],
+
+    'Email' => [
+        'default' => [
+            'transport' => 'default',
+            'from' => 'you@localhost',
+        ],
     ],
 
     'Log' => [
