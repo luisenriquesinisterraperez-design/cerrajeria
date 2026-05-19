@@ -13,7 +13,7 @@ return [
         'dir' => 'src',
         'webroot' => 'webroot',
         'wwwRoot' => WWW_ROOT,
-        'fullBaseUrl' => 'https://cerrajeria.stokmaster.com.co',
+        'fullBaseUrl' => env('APP_FULL_BASE_URL', 'https://cerrajeria.stokmaster.com.co'),
         'imageBaseUrl' => 'img/',
         'cssBaseUrl' => 'css/',
         'jsBaseUrl' => 'js/',

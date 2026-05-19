@@ -269,10 +269,12 @@
                 <?= $this->Html->link('<i class="fa-solid ' . $item[2] . '"></i> ' . $item[3], ['controller' => $item[0], 'action' => $item[1]], ['escape' => false, 'class' => 'nav-link ' . ($this->request->getParam('controller') == $item[0] ? 'active' : '')]) ?>
             <?php endif; endforeach; ?>
             
+            <?php if (!$isCliente && !$isRepartidor): ?>
             <div class="section-tag text-slate-500 pt-6">Administración</div>
             <?php foreach ($adminItems as $item): ?>
                 <?= $this->Html->link('<i class="fa-solid ' . $item[2] . '"></i> ' . $item[3], ['controller' => $item[0], 'action' => $item[1]], ['escape' => false, 'class' => 'nav-link ' . ($this->request->getParam('controller') == $item[0] ? 'active' : '')]) ?>
             <?php endforeach; ?>
+            <?php endif; ?>
 
             <div class="mt-8 p-6">
                 <?= $this->Html->link('<i class="fa-solid fa-power-off mr-2"></i> Cerrar Sesión', ['controller' => 'Users', 'action' => 'logout'], ['escape' => false, 'class' => 'w-full block bg-red-600 text-white text-center py-4 rounded-xl font-bold text-sm shadow-lg shadow-red-600/30']) ?>
