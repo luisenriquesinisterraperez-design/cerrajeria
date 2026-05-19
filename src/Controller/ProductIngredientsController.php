@@ -30,12 +30,13 @@ class ProductIngredientsController extends AppController
         }
 
         $ingredients = $this->ProductIngredients->Ingredients->find('list', ['limit' => 200])->all();
-        $ingredientCosts = $this->ProductIngredients->Ingredients->find()
+        $ingredientCosts = [];
+        $costsData = $this->ProductIngredients->Ingredients->find()
             ->select(['id', 'cost', 'unit'])
-            ->combine('id', function ($i) {
-                return ['cost' => $i->cost, 'unit' => $i->unit];
-            })
-            ->toArray();
+            ->all();
+        foreach ($costsData as $i) {
+            $ingredientCosts[$i->id] = ['cost' => $i->cost, 'unit' => $i->unit];
+        }
         $this->set(compact('product', 'ingredients', 'ingredientCosts'));
     }
 
