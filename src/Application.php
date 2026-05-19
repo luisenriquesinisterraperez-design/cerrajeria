@@ -126,9 +126,8 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
             'queryParam' => 'redirect',
         ]);
 
-        // Load the authenticators, you want session first
-        $authenticationService->loadAuthenticator('Authentication.Session');
-        // Configure form data check to pick up data
+        // Load Form first so POST to /users/login validates credentials
+        // before falling back to session (avoid bypassing password check)
         $authenticationService->loadAuthenticator('Authentication.Form', [
             'fields' => [
                 'username' => 'username',
@@ -147,6 +146,8 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
                 ],
             ]
         ]);
+        // Fallback to session for already authenticated users
+        $authenticationService->loadAuthenticator('Authentication.Session');
 
         return $authenticationService;
     }
