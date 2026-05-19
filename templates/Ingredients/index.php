@@ -4,17 +4,17 @@
  * @var iterable<\App\Model\Entity\Ingredient> $ingredients
  */
 ?>
-<header class="mb-8 flex items-center justify-between">
+<header class="mb-8 flex flex-col md:flex-row md:items-center justify-between gap-4">
     <div>
         <h1 class="text-3xl font-black text-slate-800 tracking-tight uppercase">Control de Inventario</h1>
         <p class="text-blue-600 font-bold uppercase text-xs tracking-widest">Gestión de insumos y materia prima</p>
     </div>
-    <div class="flex items-center gap-4">
+    <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
         <div class="bg-slate-900 text-white px-6 py-3 rounded-2xl shadow-lg">
             <span class="text-[10px] font-black text-yellow-400 uppercase tracking-widest">Inversión Total</span>
             <p class="text-2xl font-black mt-1">$<?= number_format($totalInversion, 0) ?></p>
         </div>
-        <?= $this->Html->link('<i class="fa-solid fa-plus mr-2"></i> Nuevo Insumo', ['action' => 'add'], ['escape' => false, 'class' => 'bg-blue-600 text-white px-6 py-3 rounded-2xl font-black text-xs uppercase hover:bg-blue-700 transition-all shadow-lg shadow-blue-500/20']) ?>
+        <?= $this->Html->link('<i class="fa-solid fa-plus mr-2"></i> Nuevo Insumo', ['action' => 'add'], ['escape' => false, 'class' => 'bg-blue-600 text-white px-6 py-3 rounded-2xl font-black text-xs uppercase hover:bg-blue-700 transition-all shadow-lg shadow-blue-500/20 text-center']) ?>
     </div>
 </header>
 
