@@ -35,7 +35,6 @@ require CORE_PATH . 'config' . DS . 'bootstrap.php';
 use Cake\Cache\Cache;
 use Cake\Core\Configure;
 use Cake\Core\Configure\Engine\PhpConfig;
-use Cake\Core\Exception\CakeException;
 use Cake\Datasource\ConnectionManager;
 use Cake\Error\ErrorTrap;
 use Cake\Error\ExceptionTrap;
@@ -69,12 +68,11 @@ require CAKE . 'functions.php';
 */
 if (file_exists(CONFIG . '.env')) {
     $dotenv = new \josegonzalez\Dotenv\Loader([CONFIG . '.env']);
-    $envData = $dotenv->parse()->toArray();
-    foreach ($envData as $key => $val) {
-        putenv("{$key}={$val}");
-        $_ENV[$key] = $val;
-        $_SERVER[$key] = $val;
-    }
+    $dotenv->parse()
+        ->skipExisting(['toEnv', 'toServer', 'putenv'])
+        ->putenv()
+        ->toEnv()
+        ->toServer();
 }
 
 /*
@@ -97,34 +95,6 @@ try {
  */
 if (file_exists(CONFIG . 'app_local.php')) {
     Configure::load('app_local', 'default');
-}
-
-/*
- * FORCE PRODUCTION CONFIG FROM ENVIRONMENT VARIABLES
- * This ensures that if we are in production (e.g. EasyPanel),
- * the environment variables take precedence over any local files.
- */
-if (env('DATABASE_URL') || env('DB_URL') || env('DATABASE_HOST') || env('DB_HOST')) {
-    // Forzar 127.0.0.1 si se configuró como localhost para evitar errores de socket Unix
-    $dbHost = env('DATABASE_HOST', env('DB_HOST'));
-    if ($dbHost === 'localhost') {
-        $dbHost = '127.0.0.1';
-    }
-    $dbUrl = env('DATABASE_URL', env('DB_URL'));
-    if ($dbUrl) {
-        $dbUrl = str_replace(['@localhost', ':/localhost'], ['@127.0.0.1', ':/127.0.0.1'], $dbUrl);
-    }
-    Configure::write('Datasources.default', array_merge(
-        Configure::read('Datasources.default') ?? [],
-        array_filter([
-            'host' => $dbHost,
-            'port' => env('DATABASE_PORT', env('DB_PORT')),
-            'username' => env('DATABASE_USER', env('DB_USER')),
-            'password' => env('DATABASE_PASSWORD', env('DB_PASSWORD')),
-            'database' => env('DATABASE_NAME', env('DB_DATABASE', env('DB_NAME'))),
-            'url' => $dbUrl,
-        ])
-    ));
 }
 
 /*
@@ -176,42 +146,25 @@ if (PHP_SAPI === 'cli') {
 }
 
 /*
- * SECURITY: Validate and set the full base URL.
- * This URL is used as the base of all absolute links.
+ * Set the full base URL for the application.
  *
- * IMPORTANT: In production, App.fullBaseUrl MUST be explicitly configured to prevent
- * Host Header Injection attacks. Relying on the HTTP_HOST header can allow attackers
- * to hijack password reset tokens and other security-critical operations.
+ * SECURITY: In production, App.fullBaseUrl MUST be explicitly configured to prevent
+ * Host Header Injection attacks. The HostHeaderMiddleware enforces this requirement
+ * and validates incoming Host headers against the configured value.
  *
  * Set APP_FULL_BASE_URL in your environment variables or configure App.fullBaseUrl
  * in config/app.php or config/app_local.php
  *
- * Example: APP_FULL_BASE_URL=https://yourdomain.com
+ * Example: APP_FULL_BASE_URL=https://example.com
  */
 $fullBaseUrl = Configure::read('App.fullBaseUrl');
-$httpHost = env('HTTP_HOST');
-
-// Si estamos en localhost, ignoramos la URL de producción del .env para no redirigir fuera del local
-if ($httpHost && (str_contains($httpHost, 'localhost') || str_contains($httpHost, '127.0.0.1'))) {
-    $fullBaseUrl = null;
-}
-
 if (!$fullBaseUrl) {
-    /*
-     * Only enforce fullBaseUrl requirement when we're in a web request context.
-     * This allows CLI tools (like PHPStan) to load the bootstrap without throwing.
-     */
-    if (!Configure::read('debug') && $httpHost) {
-        throw new CakeException(
-            'SECURITY: App.fullBaseUrl is not configured. ' .
-            'This is required in production to prevent Host Header Injection attacks. ' .
-            'Set APP_FULL_BASE_URL environment variable or configure App.fullBaseUrl in config/app.php',
-        );
-    }
+    $httpHost = env('HTTP_HOST');
 
     /*
      * Development mode fallback: Use HTTP_HOST for convenience.
-     * WARNING: This is ONLY safe in development. Never use this pattern in production!
+     * WARNING: This is ONLY safe in development. In production, the
+     * HostHeaderMiddleware will reject requests when fullBaseUrl is not configured.
      */
     if ($httpHost) {
         $s = null;
@@ -223,7 +176,6 @@ if (!$fullBaseUrl) {
     unset($httpHost, $s);
 }
 if ($fullBaseUrl) {
-    $fullBaseUrl = rtrim($fullBaseUrl, '/');
     Router::fullBaseUrl($fullBaseUrl);
 }
 unset($fullBaseUrl);
