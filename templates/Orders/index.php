@@ -29,30 +29,34 @@ $isRepartidor = ($user->role === 'repartidor');
         <?= $this->Form->create(null, ['url' => ['action' => 'add'], 'id' => 'order-form']) ?>
             <!-- Datos del Cliente -->
             <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8 pb-8 border-b border-slate-50">
-                <div>
+                <div class="relative">
                     <label class="text-[10px] font-bold text-slate-400 ml-2 uppercase">Nombre del Cliente</label>
                     <?= $this->Form->text('customer_name', [
-                        'placeholder' => 'Nombre del cliente',
+                        'placeholder' => 'Buscar o escribir nombre...',
                         'class' => 'w-full p-4 bg-slate-50 border rounded-2xl outline-none focus:ring-2 focus:ring-blue-500',
                         'list' => 'clients-list',
                         'id' => 'customer-name',
+                        'autocomplete' => 'off',
                         'required' => true
                     ]) ?>
+                    <i class="fa-solid fa-chevron-down absolute right-4 bottom-5 text-slate-300 pointer-events-none"></i>
                     <datalist id="clients-list">
                         <?php foreach ($clients as $c): ?>
                             <option value="<?= h($c->full_name) ?>">
                         <?php endforeach; ?>
                     </datalist>
                 </div>
-                <div>
+                <div class="relative">
                     <label class="text-[10px] font-bold text-slate-400 ml-2 uppercase">Celular</label>
                     <?= $this->Form->text('customer_phone', [
                         'placeholder' => 'Ej: 3001234567',
                         'class' => 'w-full p-4 bg-slate-50 border rounded-2xl outline-none focus:ring-2 focus:ring-blue-500',
                         'id' => 'customer-phone',
                         'list' => 'phones-list',
+                        'autocomplete' => 'off',
                         'required' => true
                     ]) ?>
+                    <i class="fa-solid fa-chevron-down absolute right-4 bottom-5 text-slate-300 pointer-events-none"></i>
                     <datalist id="phones-list">
                         <?php foreach ($clients as $c): ?>
                             <option value="<?= h($c->phone) ?>">
@@ -77,9 +81,16 @@ $isRepartidor = ($user->role === 'repartidor');
             <!-- Selector de Productos (CARRITO) -->
             <div class="bg-slate-50 p-6 rounded-[2rem] mb-8">
                 <div class="grid grid-cols-1 md:grid-cols-12 gap-4 items-end">
-                    <div class="md:col-span-5">
-                        <label class="text-[10px] font-bold text-slate-400 ml-2 uppercase">Seleccionar Producto</label>
-                        <?= $this->Form->select('temp_product_id', $products, ['id' => 'cart-product-id', 'class' => 'w-full p-4 bg-white border rounded-2xl outline-none font-bold text-slate-700 focus:ring-2 focus:ring-blue-500']) ?>
+                    <div class="md:col-span-5 relative">
+                        <label class="text-[10px] font-bold text-slate-400 ml-2 uppercase">Buscar Producto</label>
+                        <input type="text" id="cart-product-search" list="products-list" autocomplete="off" placeholder="Escriba para buscar..." class="w-full p-4 bg-white border rounded-2xl outline-none font-bold text-slate-700 focus:ring-2 focus:ring-blue-500">
+                        <i class="fa-solid fa-chevron-down absolute right-4 bottom-5 text-slate-300 pointer-events-none"></i>
+                        <datalist id="products-list">
+                            <?php foreach ($products as $id => $name): ?>
+                                <option value="<?= h($name) ?>">
+                            <?php endforeach; ?>
+                        </datalist>
+                        <input type="hidden" id="cart-product-id" value="">
                     </div>
                     <div class="md:col-span-2">
                         <label class="text-[10px] font-bold text-slate-400 ml-2 uppercase">Cantidad</label>
@@ -146,7 +157,8 @@ $isRepartidor = ($user->role === 'repartidor');
         const btnAdd = document.getElementById('btn-add-to-cart');
         const btnSubmit = document.getElementById('btn-submit-order');
         
-        const prodSelect = document.getElementById('cart-product-id');
+        const prodSearch = document.getElementById('cart-product-search');
+        const prodIdHidden = document.getElementById('cart-product-id');
         const qtyInput = document.getElementById('cart-quantity');
 
         const tipoSelect = document.getElementById('venta-tipo');
@@ -160,6 +172,8 @@ $isRepartidor = ($user->role === 'repartidor');
 
         // Datos de clientes para búsqueda rápida
         const clientsData = <?= json_encode($clients) ?>;
+        // Datos de productos para búsqueda rápida
+        const productsData = <?= json_encode($products) ?>;
         let cartItems = [];
 
         function renderCart() {
@@ -203,12 +217,30 @@ $isRepartidor = ($user->role === 'repartidor');
             });
         }
 
+        // Buscar producto por nombre al seleccionar en el datalist
+        prodSearch.addEventListener('input', function() {
+            const name = this.value;
+            // Buscar coincidencia exacta en productsData
+            for (const [id, prodName] of Object.entries(productsData)) {
+                if (prodName === name) {
+                    prodIdHidden.value = id;
+                    return;
+                }
+            }
+            prodIdHidden.value = '';
+        });
+
         btnAdd.addEventListener('click', function() {
-            const productId = prodSelect.value;
-            const productName = prodSelect.options[prodSelect.selectedIndex].text;
+            const productId = prodIdHidden.value;
+            const productName = prodSearch.value;
             const quantity = parseInt(qtyInput.value);
 
-            if (!productId || quantity < 1) return;
+            if (!productId || quantity < 1) {
+                if (!productId && prodSearch.value) {
+                    alert('Seleccione un producto válido de la lista');
+                }
+                return;
+            }
 
             // Evitar duplicados, sumar a la cantidad
             const existing = cartItems.find(i => i.productId === productId);
@@ -218,7 +250,10 @@ $isRepartidor = ($user->role === 'repartidor');
                 cartItems.push({ productId, productName, quantity });
             }
 
-            qtyInput.value = 1; // Reset
+            qtyInput.value = 1;
+            prodSearch.value = '';
+            prodIdHidden.value = '';
+            prodSearch.focus();
             renderCart();
         });
 
