@@ -63,7 +63,7 @@
                 <div class="pt-4 p-4 bg-slate-50 rounded-2xl mb-6 border border-slate-200">
                     <p class="text-[10px] font-black text-slate-400 uppercase mb-2">Resumen de cálculos:</p>
                     <p class="text-xs text-slate-600">
-                        Esperado = Base + (Ventas Directas: $<?= number_format($totalSales, 0) ?>) + (Abonos de Fiados: $<?= number_format($totalAbonos, 0) ?>) - (Gastos: $<?= number_format($totalExpenses, 0) ?>)
+                        Esperado = Base + (Ventas Directas: $<?= number_format($totalSales, 0) ?>) + (Abonos de Fiados: $<?= number_format($totalAbonos, 0) ?>) | Gastos del día: $<?= number_format($totalExpenses, 0) ?> (solo informativo, no afecta el cierre)
                     </p>
                 </div>
                 <?php endif; ?>
@@ -90,12 +90,12 @@
                     <span class="text-xs font-bold uppercase">Abonos de Deudas</span>
                     <span class="font-black">+$<?= number_format($totalAbonos, 0) ?></span>
                 </div>
-                <div class="flex justify-between items-center text-red-500">
-                    <span class="text-xs font-bold uppercase">Gastos Pagados</span>
-                    <span class="font-black">-$<?= number_format($totalExpenses, 0) ?></span>
+                <div class="flex justify-between items-center text-slate-400">
+                    <span class="text-xs font-bold uppercase">Gastos del Día (informativo)</span>
+                    <span class="font-black">$<?= number_format($totalExpenses, 0) ?></span>
                 </div>
                 <div class="pt-3 border-t border-slate-100 flex justify-between items-center">
-                    <span class="text-xs font-black text-slate-800 uppercase">Ingreso Neto Real</span>
+                    <span class="text-xs font-black text-slate-800 uppercase">Ingreso Total</span>
                     <span class="font-black text-orange-600">$<?= number_format($netExpectedIncome, 0) ?></span>
                 </div>
             </div>
