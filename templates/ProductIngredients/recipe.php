@@ -32,7 +32,7 @@
                 </div>
                 <div class="md:col-span-3">
                     <label class="text-[9px] font-black uppercase text-slate-400 ml-2 mb-1 block">Cant. Necesaria</label>
-                    <?= $this->Form->control('quantity_required', ['label' => false, 'placeholder' => '0.00', 'class' => 'w-full p-3 bg-slate-50 border rounded-xl outline-none focus:ring-2 focus:ring-blue-500 font-black text-center text-xs']) ?>
+                    <?= $this->Form->control('quantity_required', ['label' => false, 'placeholder' => '0.00', 'default' => 1, 'class' => 'w-full p-3 bg-slate-50 border rounded-xl outline-none focus:ring-2 focus:ring-blue-500 font-black text-center text-xs']) ?>
                 </div>
                 <div class="md:col-span-2">
                     <label class="text-[9px] font-black uppercase text-slate-400 ml-2 mb-1 block">Costo x Und</label>
