@@ -17,6 +17,7 @@
     <div class="column column-80">
         <div class="expenses view content">
             <h3><?= h($expense->description) ?></h3>
+            <div class="overflow-x-auto">
             <table>
                 <tr>
                     <th><?= __('Description') ?></th>
@@ -43,6 +44,7 @@
                     <td><?= h($expense->modified) ?></td>
                 </tr>
             </table>
+            </div>
         </div>
     </div>
 </div>

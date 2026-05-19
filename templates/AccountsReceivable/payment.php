@@ -38,7 +38,7 @@ $balance = $account->amount - $totalPaid;
             <?= $this->Form->end() ?>
         </div>
 
-        <div class="bg-white rounded-3xl border border-slate-100 overflow-hidden shadow-sm">
+        <div class="bg-white rounded-3xl border border-slate-100 overflow-x-auto shadow-sm">
             <h3 class="p-6 font-black text-slate-800 uppercase text-xs border-b">Historial de Pagos</h3>
             <table class="w-full text-left">
                 <thead class="bg-slate-50 text-[10px] uppercase font-bold text-slate-400 tracking-widest">

@@ -57,8 +57,8 @@
 
 <div class="mt-8">
     <div class="flex items-center justify-center gap-2">
-        <?= $this->Paginator->prev('<i class="fa-solid fa-chevron-left"></i>', ['escape' => false, 'class' => 'bg-white p-2 rounded-lg border hover:bg-slate-50']) ?>
+        <?= $this->Paginator->prev('<i class="fa-solid fa-chevron-left"></i>', ['escape' => false, 'class' => 'bg-white p-3 rounded-lg border hover:bg-slate-50']) ?>
         <?= $this->Paginator->numbers(['class' => 'bg-white px-4 py-2 rounded-lg border hover:bg-slate-50 font-bold text-xs']) ?>
-        <?= $this->Paginator->next('<i class="fa-solid fa-chevron-right"></i>', ['escape' => false, 'class' => 'bg-white p-2 rounded-lg border hover:bg-slate-50']) ?>
+        <?= $this->Paginator->next('<i class="fa-solid fa-chevron-right"></i>', ['escape' => false, 'class' => 'bg-white p-3 rounded-lg border hover:bg-slate-50']) ?>
     </div>
 </div>

@@ -17,6 +17,7 @@
     <div class="column column-80">
         <div class="deliveryDrivers view content">
             <h3><?= h($deliveryDriver->name) ?></h3>
+            <div class="overflow-x-auto">
             <table>
                 <tr>
                     <th><?= __('Name') ?></th>
@@ -43,6 +44,7 @@
                     <td><?= h($deliveryDriver->modified) ?></td>
                 </tr>
             </table>
+            </div>
             <div class="related">
                 <h4><?= __('Related Orders') ?></h4>
                 <?php if (!empty($deliveryDriver->orders)) : ?>

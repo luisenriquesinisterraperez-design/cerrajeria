@@ -40,7 +40,7 @@
         </div>
 
         <!-- Tabla de la receta -->
-        <div class="bg-white rounded-3xl border border-blue-50 overflow-hidden shadow-sm">
+        <div class="bg-white rounded-3xl border border-blue-50 overflow-x-auto shadow-sm">
             <table class="w-full text-left">
                 <thead class="bg-slate-900 text-white text-[9px] uppercase font-bold tracking-[0.2em]">
                     <tr>

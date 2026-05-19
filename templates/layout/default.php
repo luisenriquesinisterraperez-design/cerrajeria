@@ -230,7 +230,7 @@
                     </div>
                     <span class="font-black text-lg text-white uppercase italic tracking-tighter">SARRIA<span class="text-yellow-400">.</span></span>
                 </div>
-                <button id="drawer-toggle" class="p-2 text-yellow-400 bg-slate-800 rounded-lg">
+                <button id="drawer-toggle" class="p-3 text-yellow-400 bg-slate-800 rounded-lg">
                     <i class="fa-solid fa-bars-staggered text-xl"></i>
                 </button>
             </header>

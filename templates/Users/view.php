@@ -17,6 +17,7 @@
     <div class="column column-80">
         <div class="users view content">
             <h3><?= h($user->username) ?></h3>
+            <div class="overflow-x-auto">
             <table>
                 <tr>
                     <th><?= __('Username') ?></th>
@@ -39,6 +40,7 @@
                     <td><?= h($user->modified) ?></td>
                 </tr>
             </table>
+            </div>
         </div>
     </div>
 </div>

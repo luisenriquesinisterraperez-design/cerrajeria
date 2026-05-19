@@ -20,7 +20,7 @@
                 <?= $this->Form->control('description', ['label' => false, 'class' => 'w-full p-4 bg-slate-50 border rounded-2xl outline-none focus:ring-2 focus:ring-blue-600 transition-all font-bold text-slate-700']) ?>
             </div>
             
-            <div class="grid grid-cols-2 gap-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <label class="text-[10px] font-bold text-slate-400 ml-2 uppercase">Monto del Gasto ($)</label>
                 <?= $this->Form->control('amount', ['label' => false, 'class' => 'w-full p-4 bg-slate-50 border rounded-2xl outline-none focus:ring-2 focus:ring-blue-600 transition-all font-black text-red-600']) ?>
                 </div>

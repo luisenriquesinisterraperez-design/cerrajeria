@@ -12,7 +12,7 @@
     <?= $this->Html->link('<i class="fa-solid fa-plus mr-2"></i> Registrar Baja/Ajuste', ['action' => 'add'], ['escape' => false, 'class' => 'bg-blue-600 text-white px-6 py-3 rounded-2xl font-black text-xs uppercase hover:bg-blue-700 transition-all shadow-lg shadow-blue-500/20']) ?>
 </header>
 
-<div class="bg-white rounded-3xl border border-slate-100 overflow-hidden shadow-sm">
+<div class="bg-white rounded-3xl border border-slate-100 overflow-x-auto shadow-sm">
     <table class="w-full text-left">
         <thead class="bg-slate-900 text-white text-[10px] uppercase font-bold tracking-widest">
             <tr>

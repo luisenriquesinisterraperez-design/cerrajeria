@@ -22,7 +22,7 @@ foreach ($ingredients as $ing) {
     </div>
 </header>
 
-<div class="bg-white rounded-3xl border border-slate-100 overflow-hidden shadow-sm">
+<div class="bg-white rounded-3xl border border-slate-100 overflow-x-auto shadow-sm">
     <table class="w-full text-left">
         <thead class="bg-slate-900 text-white text-[10px] uppercase font-bold tracking-widest">
             <tr>
@@ -55,11 +55,11 @@ foreach ($ingredients as $ing) {
                 </td>
                 <td class="p-5 text-right">
                     <div class="flex justify-end gap-2 mt-1">
-                        <?= $this->Html->link('<i class="fa-solid fa-pen"></i>', ['action' => 'edit', $ingredient->id], ['escape' => false, 'class' => 'p-2 bg-blue-50 text-blue-600 rounded-xl hover:bg-blue-100 transition-all']) ?>
+                        <?= $this->Html->link('<i class="fa-solid fa-pen"></i>', ['action' => 'edit', $ingredient->id], ['escape' => false, 'class' => 'p-3 bg-blue-50 text-blue-600 rounded-xl hover:bg-blue-100 transition-all']) ?>
                         
-                        <?= $this->Html->link('<i class="fa-solid fa-book"></i>', ['controller' => 'Products', 'action' => 'index'], ['escape' => false, 'class' => 'p-2 bg-slate-50 text-slate-400 rounded-xl hover:bg-slate-200 transition-all', 'title' => 'Ver/Gestionar Recetas']) ?>
+                        <?= $this->Html->link('<i class="fa-solid fa-book"></i>', ['controller' => 'Products', 'action' => 'index'], ['escape' => false, 'class' => 'p-3 bg-slate-50 text-slate-400 rounded-xl hover:bg-slate-200 transition-all', 'title' => 'Ver/Gestionar Recetas']) ?>
 
-                        <?= $this->Form->postLink('<i class="fa-solid fa-trash"></i>', ['action' => 'delete', $ingredient->id], ['confirm' => __('¿Eliminar insumo?'), 'escape' => false, 'class' => 'p-2 text-red-200 hover:text-red-600']) ?>
+                        <?= $this->Form->postLink('<i class="fa-solid fa-trash"></i>', ['action' => 'delete', $ingredient->id], ['confirm' => __('¿Eliminar insumo?'), 'escape' => false, 'class' => 'p-3 text-red-200 hover:text-red-600']) ?>
                     </div>
                 </td>
             </tr>

@@ -17,6 +17,7 @@
     <div class="column column-80">
         <div class="products view content">
             <h3><?= h($product->name) ?></h3>
+            <div class="overflow-x-auto">
             <table>
                 <tr>
                     <th><?= __('Name') ?></th>
@@ -47,6 +48,7 @@
                     <td><?= $product->status ? __('Yes') : __('No'); ?></td>
                 </tr>
             </table>
+            </div>
             <div class="text">
                 <strong><?= __('Description') ?></strong>
                 <blockquote>

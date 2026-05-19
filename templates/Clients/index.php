@@ -40,7 +40,7 @@
     <?= $this->Form->end() ?>
 </div>
 
-<div class="bg-white rounded-3xl border border-orange-100 overflow-hidden shadow-sm">
+<div class="bg-white rounded-3xl border border-orange-100 overflow-x-auto shadow-sm">
     <table class="w-full text-left">
         <thead class="bg-slate-900 text-white text-[10px] uppercase font-bold tracking-widest">
             <tr>
@@ -63,8 +63,8 @@
                     <?= h($client->address ?: 'Sin dirección registrada') ?>
                 </td>
                 <td class="p-5 text-right flex justify-end gap-2 mt-2">
-                    <?= $this->Html->link('<i class="fa-solid fa-pen"></i>', ['action' => 'edit', $client->id], ['escape' => false, 'class' => 'text-blue-400 hover:text-blue-600']) ?>
-                    <?= $this->Form->postLink('<i class="fa-solid fa-trash"></i>', ['action' => 'delete', $client->id], ['confirm' => __('¿Eliminar cliente?'), 'escape' => false, 'class' => 'text-red-200 hover:text-red-600']) ?>
+                    <?= $this->Html->link('<i class="fa-solid fa-pen"></i>', ['action' => 'edit', $client->id], ['escape' => false, 'class' => 'p-2 inline-block text-blue-400 hover:text-blue-600']) ?>
+                    <?= $this->Form->postLink('<i class="fa-solid fa-trash"></i>', ['action' => 'delete', $client->id], ['confirm' => __('¿Eliminar cliente?'), 'escape' => false, 'class' => 'p-2 inline-block text-red-200 hover:text-red-600']) ?>
                 </td>
             </tr>
             <?php endforeach; ?>

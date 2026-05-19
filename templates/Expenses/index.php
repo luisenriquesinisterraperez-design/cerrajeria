@@ -34,7 +34,7 @@
     <?= $this->Form->end() ?>
 </div>
 
-<div class="bg-white rounded-3xl border border-blue-100 overflow-hidden shadow-sm">
+<div class="bg-white rounded-3xl border border-blue-100 overflow-x-auto shadow-sm">
     <table class="w-full text-left">
         <thead class="bg-slate-900 text-white text-[10px] uppercase font-bold tracking-widest">
             <tr>

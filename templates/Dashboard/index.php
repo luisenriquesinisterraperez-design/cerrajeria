@@ -36,13 +36,13 @@ $isStaff = ($user && $user->role === 'staff'); // Explicitly check for staff rol
 
         <div class="flex items-center gap-2 bg-white p-2 rounded-2xl shadow-sm border border-slate-100">
             <?= $this->Form->create(null, ['type' => 'get', 'class' => 'flex items-center gap-2']) ?>
-                <?= $this->Form->control('start_date', ['type' => 'date', 'value' => $startDate, 'label' => false, 'class' => 'text-[10px] font-black p-2 bg-slate-50 rounded-xl border-none outline-none']) ?>
+                <?= $this->Form->control('start_date', ['type' => 'date', 'value' => $startDate, 'label' => false, 'class' => 'text-[10px] font-black p-3 bg-slate-50 rounded-xl border-none outline-none']) ?>
                 <span class="text-slate-300 font-bold">/</span>
-                <?= $this->Form->control('end_date', ['type' => 'date', 'value' => $endDate, 'label' => false, 'class' => 'text-[10px] font-black p-2 bg-slate-50 rounded-xl border-none outline-none']) ?>
-                <button type="submit" class="bg-blue-600 text-white p-2.5 rounded-xl hover:bg-yellow-400 hover:text-slate-900 transition-all shadow-lg">
+                <?= $this->Form->control('end_date', ['type' => 'date', 'value' => $endDate, 'label' => false, 'class' => 'text-[10px] font-black p-3 bg-slate-50 rounded-xl border-none outline-none']) ?>
+                <button type="submit" class="bg-blue-600 text-white p-3 rounded-xl hover:bg-yellow-400 hover:text-slate-900 transition-all shadow-lg">
                     <i class="fa-solid fa-magnifying-glass text-xs"></i>
                 </button>
-                <?= $this->Html->link('<i class="fa-solid fa-rotate-left"></i>', ['action' => 'index'], ['class' => 'bg-slate-100 text-slate-400 p-2.5 rounded-xl hover:bg-slate-200', 'escape' => false]) ?>
+                <?= $this->Html->link('<i class="fa-solid fa-rotate-left"></i>', ['action' => 'index'], ['class' => 'bg-slate-100 text-slate-400 p-3 rounded-xl hover:bg-slate-200', 'escape' => false]) ?>
             <?= $this->Form->end() ?>
         </div>
     </header>
@@ -81,13 +81,13 @@ $isStaff = ($user && $user->role === 'staff'); // Explicitly check for staff rol
         <div class="flex flex-col md:flex-row items-center gap-2">
             <div class="flex items-center gap-2 bg-white p-2 rounded-2xl shadow-sm border">
                 <?= $this->Form->create(null, ['type' => 'get', 'class' => 'flex items-center gap-2']) ?>
-                    <?= $this->Form->control('start_date', ['type' => 'date', 'value' => $startDate, 'label' => false, 'class' => 'text-xs font-bold p-2 outline-none border-none']) ?>
+                    <?= $this->Form->control('start_date', ['type' => 'date', 'value' => $startDate, 'label' => false, 'class' => 'text-xs font-bold p-3 outline-none border-none']) ?>
                     <span class="text-slate-300">/</span>
-                    <?= $this->Form->control('end_date', ['type' => 'date', 'value' => $endDate, 'label' => false, 'class' => 'text-xs font-bold p-2 outline-none border-none']) ?>
-                    <button type="submit" class="bg-blue-600 text-white p-2 rounded-xl hover:bg-yellow-400 hover:text-slate-900 transition-colors">
+                    <?= $this->Form->control('end_date', ['type' => 'date', 'value' => $endDate, 'label' => false, 'class' => 'text-xs font-bold p-3 outline-none border-none']) ?>
+<button type="submit" class="bg-blue-600 text-white p-3 rounded-xl hover:bg-yellow-400 hover:text-slate-900 transition-colors">
                         <i class="fa-solid fa-magnifying-glass"></i>
                     </button>
-                    <?= $this->Html->link('<i class="fa-solid fa-rotate-left"></i>', ['action' => 'index'], ['class' => 'bg-slate-100 text-slate-500 p-2 rounded-xl hover:bg-slate-200', 'escape' => false]) ?>
+<?= $this->Html->link('<i class="fa-solid fa-rotate-left"></i>', ['action' => 'index'], ['class' => 'bg-slate-100 text-slate-500 p-3 rounded-xl hover:bg-slate-200', 'escape' => false]) ?>
                 <?= $this->Form->end() ?>
             </div>
         </div>
@@ -271,13 +271,13 @@ $isStaff = ($user && $user->role === 'staff'); // Explicitly check for staff rol
         </div>
         <div class="flex flex-col md:flex-row items-center gap-2">
              <?= $this->Form->create(null, ['type' => 'get', 'class' => 'flex items-center gap-2']) ?>
-                <?= $this->Form->control('start_date', ['type' => 'date', 'value' => $startDate, 'label' => false, 'class' => 'text-xs font-bold p-2 outline-none border-none']) ?>
+                <?= $this->Form->control('start_date', ['type' => 'date', 'value' => $startDate, 'label' => false, 'class' => 'text-xs font-bold p-3 outline-none border-none']) ?>
                 <span class="text-slate-300">/</span>
-                <?= $this->Form->control('end_date', ['type' => 'date', 'value' => $endDate, 'label' => false, 'class' => 'text-xs font-bold p-2 outline-none border-none']) ?>
-                <button type="submit" class="bg-blue-600 text-white p-2 rounded-xl hover:bg-yellow-400 hover:text-slate-900 transition-colors">
+                <?= $this->Form->control('end_date', ['type' => 'date', 'value' => $endDate, 'label' => false, 'class' => 'text-xs font-bold p-3 outline-none border-none']) ?>
+                <button type="submit" class="bg-blue-600 text-white p-3 rounded-xl hover:bg-yellow-400 hover:text-slate-900 transition-colors">
                     <i class="fa-solid fa-magnifying-glass"></i>
                 </button>
-                <?= $this->Html->link('<i class="fa-solid fa-rotate-left"></i>', ['action' => 'index'], ['class' => 'bg-slate-100 text-slate-500 p-2 rounded-xl hover:bg-slate-200', 'escape' => false]) ?>
+                <?= $this->Html->link('<i class="fa-solid fa-rotate-left"></i>', ['action' => 'index'], ['class' => 'bg-slate-100 text-slate-500 p-3 rounded-xl hover:bg-slate-200', 'escape' => false]) ?>
             <?= $this->Form->end() ?>
         </div>
     </header>

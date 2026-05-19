@@ -53,8 +53,8 @@
         <div class="relative w-full h-40 bg-slate-100 overflow-hidden">
             <!-- Botones de Acción -->
             <div class="absolute top-2 right-2 flex gap-1 z-20 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                <?= $this->Html->link('<i class="fa-solid fa-pen text-xs"></i>', ['action' => 'edit', $product->id], ['escape' => false, 'class' => 'bg-white text-blue-600 w-7 h-7 rounded-lg shadow-md flex items-center justify-center hover:bg-blue-600 hover:text-white transition-all']) ?>
-                <?= $this->Form->postLink('<i class="fa-solid fa-trash-alt text-xs"></i>', ['action' => 'delete', $product->id], ['confirm' => __('¿Eliminar {0}?', $product->name), 'escape' => false, 'class' => 'bg-white text-red-600 w-7 h-7 rounded-lg shadow-md flex items-center justify-center hover:bg-red-600 hover:text-white transition-all']) ?>
+                <?= $this->Html->link('<i class="fa-solid fa-pen text-sm"></i>', ['action' => 'edit', $product->id], ['escape' => false, 'class' => 'bg-white text-blue-600 w-9 h-9 rounded-lg shadow-md flex items-center justify-center hover:bg-blue-600 hover:text-white transition-all']) ?>
+                <?= $this->Form->postLink('<i class="fa-solid fa-trash-alt text-sm"></i>', ['action' => 'delete', $product->id], ['confirm' => __('¿Eliminar {0}?', $product->name), 'escape' => false, 'class' => 'bg-white text-red-600 w-9 h-9 rounded-lg shadow-md flex items-center justify-center hover:bg-red-600 hover:text-white transition-all']) ?>
             </div>
 
             <?php if ($product->image): ?>

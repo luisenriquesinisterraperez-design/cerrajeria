@@ -14,7 +14,7 @@
     <?php endif; ?>
 </header>
 
-<div class="bg-white rounded-3xl border border-orange-100 overflow-hidden shadow-sm">
+<div class="bg-white rounded-3xl border border-orange-100 overflow-x-auto shadow-sm">
     <table class="w-full text-left">
         <thead class="bg-slate-900 text-white text-[10px] uppercase font-bold tracking-widest">
             <tr>
@@ -57,7 +57,7 @@
                             <?= $this->Html->link('<i class="fa-solid fa-hand-holding-dollar"></i> Abonar', ['action' => 'payment', $account->id], ['escape' => false, 'class' => 'bg-green-600 text-white px-3 py-1.5 rounded-xl text-[10px] font-black uppercase hover:bg-green-700 transition-all shadow-sm']) ?>
                         <?php endif; ?>
                         
-                        <?= $this->Form->postLink('<i class="fa-solid fa-trash"></i>', ['action' => 'delete', $account->id], ['confirm' => __('¿Eliminar este registro?'), 'escape' => false, 'class' => 'text-red-200 hover:text-red-600 p-1.5']) ?>
+                        <?= $this->Form->postLink('<i class="fa-solid fa-trash"></i>', ['action' => 'delete', $account->id], ['confirm' => __('¿Eliminar este registro?'), 'escape' => false, 'class' => 'text-red-200 hover:text-red-600 p-3']) ?>
                     <?php endif; ?>
                 </td>
             </tr>

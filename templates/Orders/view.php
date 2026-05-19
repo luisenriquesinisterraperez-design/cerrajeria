@@ -17,6 +17,7 @@
     <div class="column column-80">
         <div class="orders view content">
             <h3><?= h($order->type) ?></h3>
+            <div class="overflow-x-auto">
             <table>
                 <tr>
                     <th><?= __('Product') ?></th>
@@ -63,6 +64,7 @@
                     <td><?= h($order->modified) ?></td>
                 </tr>
             </table>
+            </div>
             <div class="text">
                 <strong><?= __('Customer Address') ?></strong>
                 <blockquote>

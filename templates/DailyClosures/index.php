@@ -12,7 +12,7 @@
     <?= $this->Html->link('<i class="fa-solid fa-cash-register mr-2"></i> Nuevo Cierre', ['action' => 'add'], ['escape' => false, 'class' => 'bg-orange-500 text-white px-6 py-3 rounded-2xl font-black text-xs uppercase hover:bg-orange-600 transition-all shadow-lg']) ?>
 </header>
 
-<div class="bg-white rounded-3xl border border-orange-100 overflow-hidden shadow-sm">
+<div class="bg-white rounded-3xl border border-orange-100 overflow-x-auto shadow-sm">
     <table class="w-full text-left">
         <thead class="bg-slate-900 text-white text-[10px] uppercase font-bold tracking-widest">
             <tr>

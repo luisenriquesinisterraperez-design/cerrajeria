@@ -67,7 +67,7 @@
     <h3 class="text-xl font-black text-slate-800 uppercase mb-4 flex items-center gap-2">
         <i class="fa-solid fa-clock-rotate-left text-orange-500"></i> Historial de Cambios (Huella)
     </h3>
-    <div class="bg-slate-50 rounded-3xl border border-slate-200 overflow-hidden shadow-inner">
+    <div class="bg-slate-50 rounded-3xl border border-slate-200 overflow-x-auto shadow-inner">
         <table class="w-full text-left text-sm">
             <thead class="bg-slate-200 text-slate-600 text-[10px] uppercase font-bold tracking-widest">
                 <tr>
