@@ -20,18 +20,25 @@
         <!-- Formulario para añadir -->
         <div class="bg-white p-6 rounded-3xl border border-blue-50 shadow-lg">
             <h3 class="text-xs font-black uppercase text-slate-400 mb-4 tracking-widest">Añadir Insumo a la Receta</h3>
-            <?= $this->Form->create(null, ['class' => 'grid grid-cols-1 md:grid-cols-12 gap-4 items-end']) ?>
+            <?= $this->Form->create(null, ['class' => 'grid grid-cols-1 md:grid-cols-11 gap-4 items-end']) ?>
                 <div class="md:col-span-4">
                     <label class="text-[9px] font-black uppercase text-slate-400 ml-2 mb-1 block">Insumo</label>
-                    <?= $this->Form->control('ingredient_id', ['options' => $ingredients, 'label' => false, 'class' => 'w-full p-3 bg-slate-50 border rounded-xl outline-none focus:ring-2 focus:ring-blue-500 font-bold text-xs']) ?>
+                    <?= $this->Form->control('ingredient_id', [
+                        'options' => $ingredients,
+                        'label' => false,
+                        'id' => 'ingredient-select',
+                        'class' => 'w-full p-3 bg-slate-50 border rounded-xl outline-none focus:ring-2 focus:ring-blue-500 font-bold text-xs'
+                    ]) ?>
                 </div>
                 <div class="md:col-span-3">
                     <label class="text-[9px] font-black uppercase text-slate-400 ml-2 mb-1 block">Cant. Necesaria</label>
                     <?= $this->Form->control('quantity_required', ['label' => false, 'placeholder' => '0.00', 'class' => 'w-full p-3 bg-slate-50 border rounded-xl outline-none focus:ring-2 focus:ring-blue-500 font-black text-center text-xs']) ?>
                 </div>
-                <div class="md:col-span-3">
-                    <label class="text-[9px] font-black uppercase text-slate-400 ml-2 mb-1 block">Actualizar Costo x Unidad ($)</label>
-                    <?= $this->Form->control('cost_update', ['label' => false, 'placeholder' => 'Opcional', 'class' => 'w-full p-3 bg-blue-50 border border-blue-100 rounded-xl outline-none focus:ring-2 focus:ring-blue-500 font-black text-center text-xs text-blue-600']) ?>
+                <div class="md:col-span-2">
+                    <label class="text-[9px] font-black uppercase text-slate-400 ml-2 mb-1 block">Costo x Und</label>
+                    <div id="cost-display" class="w-full p-3 bg-slate-100 border border-slate-200 rounded-xl flex items-center justify-center font-black text-[11px] text-blue-600">
+                        $0.00
+                    </div>
                 </div>
                 <div class="md:col-span-2">
                     <?= $this->Form->button(__('Añadir'), ['class' => 'w-full bg-blue-600 text-white font-black rounded-xl py-3.5 uppercase shadow-lg hover:bg-blue-700 transition-all text-[10px] tracking-widest']) ?>
@@ -118,3 +125,18 @@
         </div>
     </div>
 </div>
+
+<script>
+var costs = <?= json_encode($ingredientCosts) ?>;
+var sel = document.getElementById('ingredient-select');
+var disp = document.getElementById('cost-display');
+if (sel && disp) {
+    function updateCost() {
+        var id = sel.value;
+        var c = costs[id];
+        disp.textContent = c ? '$' + parseFloat(c.cost).toFixed(2) : '$0.00';
+    }
+    sel.addEventListener('change', updateCost);
+    updateCost();
+}
+</script>

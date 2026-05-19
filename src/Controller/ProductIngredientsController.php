@@ -22,15 +22,7 @@ class ProductIngredientsController extends AppController
             $productIngredient->product_id = $productId;
 
             if ($this->ProductIngredients->save($productIngredient)) {
-                // Si se proporcionó un costo, actualizar el insumo
-                if (!empty($data['cost_update'])) {
-                    $ingredientsTable = $this->fetchTable('Ingredients');
-                    $ingredient = $ingredientsTable->get($data['ingredient_id']);
-                    $ingredient->cost = (float)$data['cost_update'];
-                    $ingredientsTable->save($ingredient);
-                }
-                
-                $this->Flash->success(__('Ingrediente añadido a la receta y costo actualizado.'));
+                $this->Flash->success(__('Ingrediente añadido a la receta.'));
             } else {
                 $this->Flash->error(__('No se pudo añadir el ingrediente.'));
             }
@@ -38,7 +30,13 @@ class ProductIngredientsController extends AppController
         }
 
         $ingredients = $this->ProductIngredients->Ingredients->find('list', ['limit' => 200])->all();
-        $this->set(compact('product', 'ingredients'));
+        $ingredientCosts = $this->ProductIngredients->Ingredients->find()
+            ->select(['id', 'cost', 'unit'])
+            ->combine('id', function ($i) {
+                return ['cost' => $i->cost, 'unit' => $i->unit];
+            })
+            ->toArray();
+        $this->set(compact('product', 'ingredients', 'ingredientCosts'));
     }
 
     public function delete($id = null)
