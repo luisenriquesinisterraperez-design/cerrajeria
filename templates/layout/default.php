@@ -280,7 +280,7 @@
             <span class="font-black text-yellow-400 uppercase text-xs tracking-widest">Navegación Pro</span>
             <button id="drawer-close" class="text-white"><i class="fa-solid fa-xmark text-2xl"></i></button>
         </div>
-        <div class="flex-1 overflow-y-auto drawer-scroll pt-4">
+        <div class="flex-1 min-h-0 overflow-y-auto drawer-scroll pt-4">
             <div class="section-tag text-blue-400">Operaciones</div>
             <?php foreach ($navItems as $item): if (!isset($item[4]) || $item[4]): ?>
                 <?= $this->Html->link('<i class="fa-solid ' . $item[2] . '"></i> ' . $item[3], ['controller' => $item[0], 'action' => $item[1]], ['escape' => false, 'class' => 'nav-link ' . ($this->request->getParam('controller') == $item[0] ? 'active' : '')]) ?>
