@@ -293,6 +293,12 @@
             <?php endforeach; ?>
             <?php endif; ?>
 
+            <?php if ($isAdmin): ?>
+            <div class="section-tag text-blue-400 pt-6">Configuración</div>
+                <?= $this->Html->link('<i class="fa-solid fa-user-shield"></i> Usuarios', ['controller' => 'Users', 'action' => 'index'], ['escape' => false, 'class' => 'nav-link ' . ($this->request->getParam('controller') == 'Users' ? 'active' : '')]) ?>
+                <?= $this->Html->link('<i class="fa-solid fa-sliders"></i> Ajustes', ['controller' => 'InventoryAdjustments', 'action' => 'index'], ['escape' => false, 'class' => 'nav-link ' . ($this->request->getParam('controller') == 'InventoryAdjustments' ? 'active' : '')]) ?>
+            <?php endif; ?>
+
             <div class="mt-8 p-6">
                 <?= $this->Html->link('<i class="fa-solid fa-power-off mr-2"></i> Cerrar Sesión', ['controller' => 'Users', 'action' => 'logout'], ['escape' => false, 'class' => 'w-full block bg-red-600 text-white text-center py-4 rounded-xl font-bold text-sm shadow-lg shadow-red-600/30']) ?>
             </div>
