@@ -291,6 +291,13 @@ return [
             'persistent' => false,
             'timezone' => 'UTC',
 
+            'host' => env('DATABASE_HOST', 'localhost'),
+            'port' => env('DATABASE_PORT', '3306'),
+            'username' => env('DATABASE_USER', 'root'),
+            'password' => env('DATABASE_PASSWORD', ''),
+            'database' => env('DATABASE_NAME', 'cake'),
+            'url' => env('DATABASE_URL', null),
+
             /*
              * For MariaDB/MySQL the internal default changed from utf8 to utf8mb4, aka full utf-8 support
              */
