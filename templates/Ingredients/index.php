@@ -3,10 +3,6 @@
  * @var \App\View\AppView $this
  * @var iterable<\App\Model\Entity\Ingredient> $ingredients
  */
-$totalInversion = 0;
-foreach ($ingredients as $ing) {
-    $totalInversion += (float)$ing->cost * (float)$ing->stock;
-}
 ?>
 <header class="mb-8 flex items-center justify-between">
     <div>

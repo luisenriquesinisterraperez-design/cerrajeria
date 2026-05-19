@@ -18,9 +18,15 @@ class IngredientsController extends AppController
     public function index()
     {
         $query = $this->Ingredients->find()->orderBy(['Ingredients.name' => 'ASC']);
+
+        $totalInversion = 0;
+        foreach ($query->all() as $ing) {
+            $totalInversion += (float)$ing->cost * (float)$ing->stock;
+        }
+
         $ingredients = $this->paginate($query);
 
-        $this->set(compact('ingredients'));
+        $this->set(compact('ingredients', 'totalInversion'));
     }
 
     /**
