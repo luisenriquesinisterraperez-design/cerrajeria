@@ -74,11 +74,37 @@ class IngredientsController extends AppController
         $ingredient = $this->Ingredients->get($id, contain: [
             'ProductIngredients' => ['Products']
         ]);
-        if ($this->request->is(['patch', 'post', 'put'])) {
-            $ingredient = $this->Ingredients->patchEntity($ingredient, $this->request->getData());
-            if ($this->Ingredients->save($ingredient)) {
-                $this->Flash->success(__('El insumo ha sido actualizado.'));
+        $oldStock = (float)$ingredient->stock;
+        $oldCost = (float)$ingredient->cost;
 
+        if ($this->request->is(['patch', 'post', 'put'])) {
+            $data = $this->request->getData();
+            $ingredient = $this->Ingredients->patchEntity($ingredient, $data);
+            if ($this->Ingredients->save($ingredient)) {
+                $newStock = (float)$ingredient->stock;
+                $diff = $newStock - $oldStock;
+
+                if (abs($diff) > 0.001) {
+                    $type = $diff > 0 ? 'alta' : 'baja';
+                    $adjustmentsTable = $this->fetchTable('InventoryAdjustments');
+                    $adj = $adjustmentsTable->newEntity([
+                        'ingredient_id' => $ingredient->id,
+                        'quantity' => abs($diff),
+                        'type' => $type,
+                        'reason' => 'Edición manual desde gestión de insumos',
+                        'observations' => 'Stock anterior: ' . number_format($oldStock, 2) . ' → Nuevo: ' . number_format($newStock, 2),
+                    ]);
+                    $adjustmentsTable->save($adj);
+
+                    $identity = $this->request->getAttribute('identity');
+                    $user = $identity ? $identity->getOriginalData() : null;
+                    $this->logAudit(
+                        $user ? $user->id : 1,
+                        "AJUSTE STOCK: El usuario " . ($user ? $user->username : 'Sistema') . " cambió el stock de \"{$ingredient->name}\" de {$oldStock} a {$newStock} ({$type} {$diff})"
+                    );
+                }
+
+                $this->Flash->success(__('El insumo ha sido actualizado.'));
                 return $this->redirect(['action' => 'index']);
             }
             $this->Flash->error(__('No se pudo actualizar el insumo. Por favor, intente de nuevo.'));
