@@ -183,6 +183,7 @@
                     ['Orders', 'index', 'fa-receipt', 'Ventas', ($isAdmin || $isStaff || $isRepartidor)],
                     ['AccountsReceivable', 'index', 'fa-wallet', 'Mis Cuentas', true],
                     ['DailyClosures', 'index', 'fa-vault', 'Caja', ($isAdmin || $isStaff)],
+                    ['Expenses', 'index', 'fa-coins', 'Gastos', ($isAdmin || $isStaff)],
                 ];
 
                 foreach ($navItems as $item):
