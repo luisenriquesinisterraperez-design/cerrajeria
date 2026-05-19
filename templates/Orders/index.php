@@ -29,22 +29,14 @@ $isRepartidor = ($user->role === 'repartidor');
         <?= $this->Form->create(null, ['url' => ['action' => 'add'], 'id' => 'order-form']) ?>
             <!-- Datos del Cliente -->
             <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8 pb-8 border-b border-slate-50">
-                <div class="relative">
+                <div class="relative autocomplete-wrap" data-autocomplete="clients">
                     <label class="text-[10px] font-bold text-slate-400 ml-2 uppercase">Nombre del Cliente</label>
-                    <?= $this->Form->text('customer_name', [
-                        'placeholder' => 'Buscar o escribir nombre...',
-                        'class' => 'w-full p-4 bg-slate-50 border rounded-2xl outline-none focus:ring-2 focus:ring-blue-500',
-                        'list' => 'clients-list',
-                        'id' => 'customer-name',
-                        'autocomplete' => 'off',
-                        'required' => true
-                    ]) ?>
+                    <input type="text" name="customer_name" id="customer-name"
+                        placeholder="Buscar o escribir nombre..."
+                        class="w-full p-4 bg-slate-50 border rounded-2xl outline-none focus:ring-2 focus:ring-blue-500 autocomplete-input"
+                        autocomplete="off" required>
                     <i class="fa-solid fa-chevron-down absolute right-4 bottom-5 text-slate-300 pointer-events-none"></i>
-                    <datalist id="clients-list">
-                        <?php foreach ($clients as $c): ?>
-                            <option value="<?= h($c->full_name) ?>">
-                        <?php endforeach; ?>
-                    </datalist>
+                    <ul class="autocomplete-dropdown hidden"></ul>
                 </div>
                 <div class="relative">
                     <label class="text-[10px] font-bold text-slate-400 ml-2 uppercase">Celular</label>
@@ -81,15 +73,14 @@ $isRepartidor = ($user->role === 'repartidor');
             <!-- Selector de Productos (CARRITO) -->
             <div class="bg-slate-50 p-6 rounded-[2rem] mb-8">
                 <div class="grid grid-cols-1 md:grid-cols-12 gap-4 items-end">
-                    <div class="md:col-span-5 relative">
+                    <div class="md:col-span-5 relative autocomplete-wrap" data-autocomplete="products">
                         <label class="text-[10px] font-bold text-slate-400 ml-2 uppercase">Buscar Producto</label>
-                        <input type="text" id="cart-product-search" list="products-list" autocomplete="off" placeholder="Escriba para buscar..." class="w-full p-4 bg-white border rounded-2xl outline-none font-bold text-slate-700 focus:ring-2 focus:ring-blue-500">
+                        <input type="text" id="cart-product-search"
+                            placeholder="Buscar producto..."
+                            class="w-full p-4 bg-white border rounded-2xl outline-none font-bold text-slate-700 focus:ring-2 focus:ring-blue-500 autocomplete-input"
+                            autocomplete="off">
                         <i class="fa-solid fa-chevron-down absolute right-4 bottom-5 text-slate-300 pointer-events-none"></i>
-                        <datalist id="products-list">
-                            <?php foreach ($products as $id => $name): ?>
-                                <option value="<?= h($name) ?>">
-                            <?php endforeach; ?>
-                        </datalist>
+                        <ul class="autocomplete-dropdown hidden"></ul>
                         <input type="hidden" id="cart-product-id" value="">
                     </div>
                     <div class="md:col-span-2">
@@ -170,9 +161,8 @@ $isRepartidor = ($user->role === 'repartidor');
         const customerPhoneInput = document.getElementById('customer-phone');
         const customerAddressInput = document.getElementById('customer-address');
 
-        // Datos de clientes para búsqueda rápida
+        // Datos para autocompletado
         const clientsData = <?= json_encode($clients) ?>;
-        // Datos de productos para búsqueda rápida
         const productsData = <?= json_encode($products) ?>;
         let cartItems = [];
 
@@ -217,18 +207,107 @@ $isRepartidor = ($user->role === 'repartidor');
             });
         }
 
-        // Buscar producto por nombre al seleccionar en el datalist
-        prodSearch.addEventListener('input', function() {
-            const name = this.value;
-            // Buscar coincidencia exacta en productsData
-            for (const [id, prodName] of Object.entries(productsData)) {
-                if (prodName === name) {
-                    prodIdHidden.value = id;
+        // === AUTOCOMPLETADO GENÉRICO ===
+        function setupAutocomplete(wrapEl, items, onSelect) {
+            const input = wrapEl.querySelector('.autocomplete-input');
+            const dropdown = wrapEl.querySelector('.autocomplete-dropdown');
+            let selectedIndex = -1;
+            let filtered = [];
+
+            function render(filter) {
+                const q = filter.toLowerCase().trim();
+                if (!q) {
+                    filtered = items.slice(0, 100);
+                } else {
+                    filtered = items.filter(item => {
+                        const label = item.label || item;
+                        return label.toLowerCase().includes(q);
+                    }).slice(0, 100);
+                }
+                if (filtered.length === 0 || (filtered.length === 1 && filtered[0].label === input.value)) {
+                    dropdown.classList.add('hidden');
                     return;
                 }
+                dropdown.innerHTML = filtered.map((item, i) => {
+                    const label = item.label || item;
+                    const selected = i === selectedIndex ? 'bg-blue-100' : '';
+                    return `<li class="px-4 py-3 cursor-pointer hover:bg-blue-50 font-bold text-xs text-slate-700 border-b border-slate-100 ${selected}" data-index="${i}">${label}</li>`;
+                }).join('');
+                dropdown.classList.remove('hidden');
             }
-            prodIdHidden.value = '';
-        });
+
+            function select(index) {
+                const item = filtered[index];
+                if (!item) return;
+                const label = item.label || item;
+                input.value = label;
+                if (onSelect) onSelect(item);
+                dropdown.classList.add('hidden');
+            }
+
+            input.addEventListener('focus', function() {
+                selectedIndex = -1;
+                render(this.value);
+            });
+
+            input.addEventListener('input', function() {
+                selectedIndex = -1;
+                if (this.value) {
+                    if (onSelect) onSelect(null);
+                }
+                render(this.value);
+            });
+
+            input.addEventListener('keydown', function(e) {
+                if (dropdown.classList.contains('hidden')) return;
+                if (e.key === 'ArrowDown') {
+                    e.preventDefault();
+                    selectedIndex = Math.min(selectedIndex + 1, filtered.length - 1);
+                    render(input.value);
+                } else if (e.key === 'ArrowUp') {
+                    e.preventDefault();
+                    selectedIndex = Math.max(selectedIndex - 1, 0);
+                    render(input.value);
+                } else if (e.key === 'Enter') {
+                    e.preventDefault();
+                    if (selectedIndex >= 0) select(selectedIndex);
+                } else if (e.key === 'Escape') {
+                    dropdown.classList.add('hidden');
+                }
+            });
+
+            dropdown.addEventListener('click', function(e) {
+                const li = e.target.closest('li');
+                if (li) select(parseInt(li.dataset.index));
+            });
+
+            document.addEventListener('click', function(e) {
+                if (!wrapEl.contains(e.target)) {
+                    dropdown.classList.add('hidden');
+                }
+            });
+        }
+
+        // === AUTOCOMPLETADO DE CLIENTES ===
+        setupAutocomplete(
+            document.querySelector('[data-autocomplete="clients"]'),
+            clientsData.map(c => ({ label: c.full_name, phone: c.phone, address: c.address })),
+            function(item) {
+                if (item) {
+                    customerPhoneInput.value = item.phone || '';
+                    customerAddressInput.value = item.address || '';
+                }
+            }
+        );
+
+        // === AUTOCOMPLETADO DE PRODUCTOS ===
+        setupAutocomplete(
+            document.querySelector('[data-autocomplete="products"]'),
+            Object.entries(productsData).map(([id, name]) => ({ label: name, id: id })),
+            function(item) {
+                prodIdHidden.value = item ? item.id : '';
+            }
+        );
 
         btnAdd.addEventListener('click', function() {
             const productId = prodIdHidden.value;
@@ -242,7 +321,6 @@ $isRepartidor = ($user->role === 'repartidor');
                 return;
             }
 
-            // Evitar duplicados, sumar a la cantidad
             const existing = cartItems.find(i => i.productId === productId);
             if (existing) {
                 existing.quantity += quantity;
@@ -281,29 +359,34 @@ $isRepartidor = ($user->role === 'repartidor');
             }
         }
 
-        function fillFields(client) {
-            if (client) {
-                customerNameInput.value = client.full_name;
-                customerPhoneInput.value = client.phone;
-                customerAddressInput.value = client.address || '';
-            }
-        }
-
-        customerNameInput.addEventListener('input', function() {
-            const client = clientsData.find(c => c.full_name === this.value);
-            if (client) fillFields(client);
-        });
-
-        customerPhoneInput.addEventListener('input', function() {
-            const client = clientsData.find(c => c.phone === this.value);
-            if (client) fillFields(client);
-        });
-
         tipoSelect.addEventListener('change', toggleDomicilioFields);
         toggleDomicilioFields();
         renderCart();
     });
 </script>
+<style>
+.autocomplete-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    z-index: 50;
+    max-height: 220px;
+    overflow-y: auto;
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1);
+    margin-top: 4px;
+}
+.autocomplete-dropdown li:last-child {
+    border-bottom: none !important;
+}
+.autocomplete-dropdown li:hover,
+.autocomplete-dropdown li.bg-blue-100 {
+    background-color: #eff6ff !important;
+}
+</style>
 <?php else: ?>
     <header class="mb-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div>
