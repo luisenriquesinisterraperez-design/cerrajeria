@@ -31,8 +31,7 @@ class OrdersController extends AppController
             
         if ($isRepartidor) {
             $query->where(['Orders.delivery_driver_id' => $user->delivery_driver_id]);
-            $query->limit(5);
-            $orders = $query->all();
+            $this->paginate['limit'] = 5;
 
             $qEarned = $this->Orders->find();
             $driverEarnings = $qEarned->where(['Orders.delivery_driver_id' => $user->delivery_driver_id, 'Orders.status' => 'entregado'])
@@ -42,13 +41,11 @@ class OrdersController extends AppController
             
             $this->set('driverEarnings', (float)$driverEarnings);
         } elseif (!$isAdmin) {
-            $query->limit(10);
-            $orders = $query->all();
+            $this->paginate['limit'] = 10;
         } else {
-            // Obtenemos los pedidos directamente sin el paginador automático
-            // para evitar el error de ambigüedad en el campo 'id'
-            $orders = $query->limit(50)->all();
+            $this->paginate['limit'] = 50;
         }
+        $orders = $this->paginate($query);
         $products = $this->Orders->Products->find('list', limit: 200)->all();
         
         $driversTable = $this->fetchTable('DeliveryDrivers');

@@ -51,3 +51,13 @@
         </tbody>
     </table>
 </div>
+<div class="mt-10 flex items-center justify-center gap-2">
+    <?= $this->Paginator->prev('<i class="fa-solid fa-chevron-left"></i>', ['escape' => false, 'class' => 'bg-white px-4 py-3 rounded-xl border border-slate-200 hover:bg-slate-50 transition-all font-bold text-sm text-slate-700']) ?>
+    <div class="flex items-center gap-1">
+        <?= $this->Paginator->numbers(['class' => 'bg-white px-4 py-3 rounded-xl border border-slate-200 hover:bg-slate-50 transition-all font-bold text-xs text-slate-700']) ?>
+    </div>
+    <?= $this->Paginator->next('<i class="fa-solid fa-chevron-right"></i>', ['escape' => false, 'class' => 'bg-white px-4 py-3 rounded-xl border border-slate-200 hover:bg-slate-50 transition-all font-bold text-sm text-slate-700']) ?>
+</div>
+<div class="mt-4 text-center text-[10px] font-bold text-slate-400">
+    <?= $this->Paginator->counter(__('Página {{page}} de {{pages}}, mostrando {{current}} de {{count}} registros')) ?>
+</div>
