@@ -52,8 +52,8 @@ class DailyClosuresController extends AppController
         $totalAbonos = (float)($abonos->total ?? 0);
         $totalExpenses = (float)($expenses->total ?? 0);
 
-        // El ingreso esperado solo considera ventas + abonos (gastos no afectan cierre)
-        $netExpectedIncome = $totalSales + $totalAbonos;
+        // El ingreso REAL esperado es: (Ventas Directas + Abonos) - Gastos
+        $netExpectedIncome = ($totalSales + $totalAbonos) - $totalExpenses;
 
         if ($this->request->is('post')) {
             $dailyClosure = $this->DailyClosures->patchEntity($dailyClosure, $this->request->getData());

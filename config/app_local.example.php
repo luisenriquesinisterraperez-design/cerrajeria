@@ -45,7 +45,7 @@ return [
              * MySQL on MAMP uses port 8889, MAMP users will want to uncomment
              * the following line and set the port accordingly
              */
-            //'port' => 'non_standard_port_number',
+            'port' => env('DATABASE_PORT'),
 
             'username' => env('DATABASE_USER'),
             'password' => env('DATABASE_PASSWORD'),
