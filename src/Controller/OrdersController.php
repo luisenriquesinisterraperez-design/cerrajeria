@@ -19,7 +19,12 @@ class OrdersController extends AppController
 
         $query = $this->Orders->find()
             ->contain(['Products', 'DeliveryDrivers', 'OrderLogs'])
-            ->where(['Orders.payment_method !=' => 'Crédito'])
+            ->where(function ($exp) {
+                return $exp->or([
+                    'Orders.payment_method !=' => 'Crédito',
+                    'Orders.status' => 'pendiente',
+                ]);
+            })
             ->andWhere(['Orders.status !=' => 'cancelado']) // Exclude cancelled orders from default view
             ->orderBy([
                 'Orders.created' => 'DESC',
@@ -236,6 +241,92 @@ class OrdersController extends AppController
         }
 
         return $this->redirect($this->referer(['action' => 'index']));
+    }
+
+    public function approveRequest($id = null)
+    {
+        $this->request->allowMethod(['post', 'put']);
+
+        $identity = $this->request->getAttribute('identity');
+        $user = $identity ? $identity->getOriginalData() : null;
+        $isAdmin = ($user && ($user->role === 'admin' || !empty($user->is_superadmin) || $user->role === 'admin_empresa'));
+        $isStaff = ($user && $user->role === 'staff');
+
+        if (!$isAdmin && !$isStaff) {
+            $this->Flash->error(__('No tienes permiso.'));
+            return $this->redirect(['action' => 'index']);
+        }
+
+        $order = $this->Orders->get($id, contain: ['Products']);
+
+        if ($order->status !== 'pendiente') {
+            $this->Flash->warning(__('Esta solicitud ya fue procesada.'));
+            return $this->redirect(['action' => 'index']);
+        }
+
+        $order->status = 'recibido';
+
+        if ($this->Orders->save($order)) {
+            if ($order->payment_method === 'Crédito') {
+                $clientsTable = $this->fetchTable('Clients');
+                $client = $clientsTable->find()->where(['phone' => $order->customer_phone])->first();
+                if (!$client) {
+                    $client = $clientsTable->newEntity([
+                        'full_name' => $order->customer_name,
+                        'phone' => $order->customer_phone,
+                    ]);
+                    $clientsTable->save($client);
+                }
+
+                $accountsReceivableTable = $this->fetchTable('AccountsReceivable');
+                $account = $accountsReceivableTable->newEntity([
+                    'client_id' => $client->id,
+                    'order_id' => $order->id,
+                    'amount' => $order->total,
+                    'description' => 'Solicitud de catálogo: ' . ($order->hasValue('product') ? $order->product->name : 'Producto #' . $order->product_id),
+                    'status' => 'pendiente',
+                ]);
+                $accountsReceivableTable->save($account);
+            }
+
+            $this->Flash->success(__('Solicitud aprobada.' . ($order->payment_method === 'Crédito' ? ' Cargada a Cuentas por Cobrar.' : '')));
+        } else {
+            $this->Flash->error(__('No se pudo aprobar la solicitud.'));
+        }
+
+        return $this->redirect(['action' => 'index']);
+    }
+
+    public function rejectRequest($id = null)
+    {
+        $this->request->allowMethod(['post', 'put']);
+
+        $identity = $this->request->getAttribute('identity');
+        $user = $identity ? $identity->getOriginalData() : null;
+        $isAdmin = ($user && ($user->role === 'admin' || !empty($user->is_superadmin) || $user->role === 'admin_empresa'));
+        $isStaff = ($user && $user->role === 'staff');
+
+        if (!$isAdmin && !$isStaff) {
+            $this->Flash->error(__('No tienes permiso.'));
+            return $this->redirect(['action' => 'index']);
+        }
+
+        $order = $this->Orders->get($id);
+
+        if ($order->status !== 'pendiente') {
+            $this->Flash->warning(__('Esta solicitud ya fue procesada.'));
+            return $this->redirect(['action' => 'index']);
+        }
+
+        $order->status = 'cancelado';
+
+        if ($this->Orders->save($order)) {
+            $this->Flash->success(__('Solicitud rechazada.'));
+        } else {
+            $this->Flash->error(__('No se pudo rechazar la solicitud.'));
+        }
+
+        return $this->redirect(['action' => 'index']);
     }
 
     public function cancel($id = null)

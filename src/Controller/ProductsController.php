@@ -17,7 +17,7 @@ class ProductsController extends AppController
         $isCliente = ($user && !empty($user->role) && $user->role === 'cliente');
         $action = $this->request->getParam('action');
 
-        if ($isCliente && !in_array($action, ['catalog', 'index'])) {
+        if ($isCliente && !in_array($action, ['catalog', 'index', 'request'])) {
             $this->Flash->error(__('Acceso Denegado.'));
             return $this->redirect(['controller' => 'Dashboard', 'action' => 'index']);
         }
@@ -33,6 +33,46 @@ class ProductsController extends AppController
         $this->set('whatsappPhone', env('WHATSAPP_PHONE', '573170880796'));
 
         $this->set(compact('products'));
+    }
+
+    public function request()
+    {
+        $this->request->allowMethod(['post']);
+        $data = $this->request->getData();
+
+        $identity = $this->request->getAttribute('identity');
+        $user = $identity ? $identity->getOriginalData() : null;
+
+        $productId = $data['product_id'] ?? null;
+        $type = $data['type'] ?? 'compra';
+
+        if (!$productId) {
+            $this->Flash->error(__('Seleccione un producto.'));
+            return $this->redirect(['action' => 'catalog']);
+        }
+
+        $product = $this->Products->get($productId);
+
+        $ordersTable = $this->fetchTable('Orders');
+        $order = $ordersTable->newEntity([
+            'product_id' => $productId,
+            'quantity' => 1,
+            'type' => 'local',
+            'customer_name' => $user ? $user->username : ($data['customer_name'] ?? 'Cliente'),
+            'customer_phone' => $data['customer_phone'] ?? '',
+            'total' => $product->price,
+            'payment_method' => $type === 'credito' ? 'Crédito' : 'Efectivo',
+            'status' => 'pendiente',
+            'order_group_id' => uniqid('SOL-'),
+        ]);
+
+        if ($ordersTable->save($order)) {
+            $this->Flash->success(__('Solicitud enviada. Esperá la confirmación.'));
+        } else {
+            $this->Flash->error(__('No se pudo enviar la solicitud.'));
+        }
+
+        return $this->redirect(['action' => 'catalog']);
     }
 
     public function index()

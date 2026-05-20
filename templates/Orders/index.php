@@ -476,6 +476,7 @@ $isRepartidor = ($user->role === 'repartidor');
                             <?php 
                             $statusColors = [
                                 'recibido' => 'bg-slate-100 text-slate-600',
+                                'pendiente' => 'bg-yellow-100 text-yellow-700 border border-yellow-300',
                                 'en cocina' => 'bg-orange-100 text-orange-600',
                                 'en camino' => 'bg-blue-100 text-blue-600',
                                 'entregado' => 'bg-green-100 text-green-600'
@@ -524,18 +525,25 @@ $isRepartidor = ($user->role === 'repartidor');
                     <td class="p-4 text-[10px] text-slate-500 font-bold"><?= $mainOrder->created->format('d/m/Y h:i A') ?></td>
                     <td class="p-4 text-right flex justify-end gap-3 mt-1">
                         <?php if ($isAdmin || $isStaff): ?>
-                            <?= $this->Html->link('<i class="fa-solid fa-print"></i>', ['action' => 'printTicketGroup', $groupId], ['escape' => false, 'target' => '_blank', 'class' => 'p-2 inline-block text-blue-500 hover:text-blue-700', 'title' => 'Imprimir Ticket Grupo']) ?>
-                            <div class="flex flex-col gap-1">
-                                <?php foreach ($group['items'] as $item): ?>
-                                    <div class="flex gap-2 items-center justify-end">
-                                        <span class="text-[8px] text-slate-400 font-bold">Item #<?= $item->id ?></span>
-                                        <?php if ($isAdmin || $isStaff): ?>
-                                            <?= $this->Html->link('<i class="fa-solid fa-pen"></i>', ['action' => 'edit', $item->id], ['escape' => false, 'class' => 'p-2 inline-block text-slate-400 hover:text-slate-600 text-[10px]']) ?>
-                                            <?= $this->Form->postLink('<i class="fa-solid fa-trash"></i>', ['action' => 'delete', $item->id], ['confirm' => __('¿Eliminar item?'), 'escape' => false, 'class' => 'p-2 inline-block text-red-200 hover:text-red-500 text-[10px]']) ?>
-                                        <?php endif; ?>
-                                    </div>
-                                <?php endforeach; ?>
-                            </div>
+                            <?php if ($mainOrder->status === 'pendiente'): ?>
+                                <div class="flex gap-1">
+                                    <?= $this->Form->postLink('<i class="fa-solid fa-check text-sm"></i>', ['action' => 'approveRequest', $mainOrder->id], ['confirm' => '¿Aprobar solicitud?', 'escape' => false, 'class' => 'p-2 inline-block bg-green-100 text-green-600 rounded-lg hover:bg-green-200', 'title' => 'Aprobar']) ?>
+                                    <?= $this->Form->postLink('<i class="fa-solid fa-xmark text-sm"></i>', ['action' => 'rejectRequest', $mainOrder->id], ['confirm' => '¿Rechazar solicitud?', 'escape' => false, 'class' => 'p-2 inline-block bg-red-100 text-red-600 rounded-lg hover:bg-red-200', 'title' => 'Rechazar']) ?>
+                                </div>
+                            <?php else: ?>
+                                <?= $this->Html->link('<i class="fa-solid fa-print"></i>', ['action' => 'printTicketGroup', $groupId], ['escape' => false, 'target' => '_blank', 'class' => 'p-2 inline-block text-blue-500 hover:text-blue-700', 'title' => 'Imprimir Ticket Grupo']) ?>
+                                <div class="flex flex-col gap-1">
+                                    <?php foreach ($group['items'] as $item): ?>
+                                        <div class="flex gap-2 items-center justify-end">
+                                            <span class="text-[8px] text-slate-400 font-bold">Item #<?= $item->id ?></span>
+                                            <?php if ($isAdmin || $isStaff): ?>
+                                                <?= $this->Html->link('<i class="fa-solid fa-pen"></i>', ['action' => 'edit', $item->id], ['escape' => false, 'class' => 'p-2 inline-block text-slate-400 hover:text-slate-600 text-[10px]']) ?>
+                                                <?= $this->Form->postLink('<i class="fa-solid fa-trash"></i>', ['action' => 'delete', $item->id], ['confirm' => __('¿Eliminar item?'), 'escape' => false, 'class' => 'p-2 inline-block text-red-200 hover:text-red-500 text-[10px]']) ?>
+                                            <?php endif; ?>
+                                        </div>
+                                    <?php endforeach; ?>
+                                </div>
+                            <?php endif; ?>
                         <?php endif; ?>
                     </td>
                 </tr>
