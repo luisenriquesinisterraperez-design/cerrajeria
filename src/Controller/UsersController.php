@@ -133,8 +133,8 @@ class UsersController extends AppController
         $result = $this->Authentication->getResult();
         if ($result && $result->isValid()) {
             $this->Authentication->logout();
-            return $this->redirect(['controller' => 'Users', 'action' => 'login']);
         }
+        return $this->redirect(['controller' => 'Users', 'action' => 'login']);
     }
 
     public function delete($id = null)

@@ -53,13 +53,22 @@ class ProductsController extends AppController
 
         $product = $this->Products->get($productId);
 
+        $customerName = $user ? $user->username : 'Cliente';
+        $customerPhone = '';
+
+        if ($user && !empty($user->client_id)) {
+            $client = $this->fetchTable('Clients')->get($user->client_id);
+            $customerName = $client->full_name;
+            $customerPhone = $client->phone ?? '';
+        }
+
         $ordersTable = $this->fetchTable('Orders');
         $order = $ordersTable->newEntity([
             'product_id' => $productId,
             'quantity' => 1,
             'type' => 'local',
-            'customer_name' => $user ? $user->username : ($data['customer_name'] ?? 'Cliente'),
-            'customer_phone' => $data['customer_phone'] ?? '',
+            'customer_name' => $customerName,
+            'customer_phone' => $customerPhone,
             'total' => $product->price,
             'payment_method' => $type === 'credito' ? 'Crédito' : 'Efectivo',
             'status' => 'pendiente',

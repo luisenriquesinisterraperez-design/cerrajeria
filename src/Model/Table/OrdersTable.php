@@ -54,7 +54,7 @@ class OrdersTable extends Table
             ->scalar('status')
             ->notEmptyString('status')
             ->add('status', 'validValue', [
-                'rule' => ['inList', ['recibido', 'preparando', 'en camino', 'entregado', 'cancelado']],
+                'rule' => ['inList', ['recibido', 'preparando', 'en camino', 'entregado', 'cancelado', 'pendiente']],
                 'message' => 'El estado del pedido no es válido',
             ]);
 
