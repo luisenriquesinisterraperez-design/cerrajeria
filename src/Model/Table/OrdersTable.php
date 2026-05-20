@@ -126,7 +126,7 @@ class OrdersTable extends Table
         } else {
             // Marcar si necesitamos ajustar inventario en afterSave
             $needsUpdate = $entity->isNew() || $entity->isDirty('product_id') || $entity->isDirty('quantity');
-            $entity->set('inventory_needs_update', $needsUpdate && $entity->status !== 'cancelado');
+            $entity->set('inventory_needs_update', $needsUpdate && !in_array($entity->status, ['cancelado', 'pendiente']));
         }
 
         // --- MANEJO DE CAMBIOS DE ESTADO ---
@@ -143,6 +143,11 @@ class OrdersTable extends Table
             // 2. De Cancelado a Activo -> Restar stock
             elseif ($oldStatus === 'cancelado' && $newStatus !== 'cancelado') {
                 Log::info("Order status changed from cancelled to active. Subtracting inventory for Order ID: {$entity->id}");
+                $entity->set('inventory_needs_update', true);
+            }
+            // 3. De Pendiente a Recibido -> Restar stock (no se restó al crear)
+            elseif ($oldStatus === 'pendiente' && $newStatus === 'recibido') {
+                Log::info("Order approved (pendiente -> recibido). Subtracting inventory for Order ID: {$entity->id}");
                 $entity->set('inventory_needs_update', true);
             }
 
