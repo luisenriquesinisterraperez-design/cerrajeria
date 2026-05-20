@@ -76,7 +76,7 @@ class AppController extends Controller
                     } elseif ($isStaff) {
                         $allowed = ['Dashboard', 'Orders', 'Products', 'Ingredients', 'Clients', 'DeliveryDrivers', 'DailyClosures', 'AccountsReceivable', 'ProductIngredients', 'InventoryAdjustments', 'Expenses'];
                     } elseif ($isCliente) {
-                        $allowed = ['Dashboard', 'AccountsReceivable'];
+                        $allowed = ['Dashboard', 'AccountsReceivable', 'Products'];
                     }
                     
                     if (!in_array($controller, $allowed)) {

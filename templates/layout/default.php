@@ -178,10 +178,12 @@
             <nav class="flex-1 flex flex-col pb-8">
                 <div class="section-tag text-blue-400">Menú de Usuario</div>
                 <?php
+                $catalogAction = ($isAdmin || $isStaff) ? 'index' : 'catalog';
                 $navItems = [
                     ['Dashboard', 'index', 'fa-chart-pie', 'Resumen', true],
                     ['Orders', 'index', 'fa-receipt', 'Ventas', ($isAdmin || $isStaff || $isRepartidor)],
                     ['AccountsReceivable', 'index', 'fa-wallet', 'Mis Cuentas', true],
+                    ['Products', $catalogAction, 'fa-store', 'Catálogo', true],
                     ['DailyClosures', 'index', 'fa-vault', 'Caja', ($isAdmin || $isStaff)],
                     ['Expenses', 'index', 'fa-coins', 'Gastos', ($isAdmin || $isStaff)],
                 ];

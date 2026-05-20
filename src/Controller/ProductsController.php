@@ -3,11 +3,38 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use Cake\Event\EventInterface;
 use Cake\Utility\Text;
 use Exception;
 
 class ProductsController extends AppController
 {
+    public function beforeFilter(\Cake\Event\EventInterface $event)
+    {
+        parent::beforeFilter($event);
+        $identity = $this->request->getAttribute('identity');
+        $user = $identity ? $identity->getOriginalData() : null;
+        $isCliente = ($user && !empty($user->role) && $user->role === 'cliente');
+        $action = $this->request->getParam('action');
+
+        if ($isCliente && !in_array($action, ['catalog', 'index'])) {
+            $this->Flash->error(__('Acceso Denegado.'));
+            return $this->redirect(['controller' => 'Dashboard', 'action' => 'index']);
+        }
+    }
+
+    public function catalog()
+    {
+        $products = $this->Products->find()
+            ->where(['Products.status' => true])
+            ->orderBy(['Products.name' => 'ASC'])
+            ->all();
+
+        $this->set('whatsappPhone', env('WHATSAPP_PHONE', '573001234567'));
+
+        $this->set(compact('products'));
+    }
+
     public function index()
     {
         $query = $this->Products->find()
