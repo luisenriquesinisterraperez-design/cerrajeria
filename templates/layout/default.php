@@ -203,7 +203,6 @@
                     <div class="section-tag">Catálogo & Base</div>
                     <?php
                     $adminItems = [
-                        ['Products', 'index', 'fa-store', 'Catálogo'],
                         ['DeliveryDrivers', 'index', 'fa-truck-fast', 'Repartidores'],
                         ['Clients', 'index', 'fa-user-tag', 'Clientes'],
                         ['Ingredients', 'index', 'fa-microchip', 'Insumos'],
