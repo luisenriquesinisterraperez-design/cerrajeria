@@ -53,6 +53,10 @@ class RequestsController extends AppController
                     $existingAccount->amount = (float)$existingAccount->amount + (float)$order->total;
                     $existingAccount->description .= ' + ' . ($order->hasValue('product') ? $order->product->name : 'Producto #' . $order->product_id);
                     $accountsReceivableTable->save($existingAccount);
+
+                    // Vincular la nueva orden a la cuenta existente
+                    $order->accounts_receivable_id = $existingAccount->id;
+                    $this->fetchTable('Orders')->save($order);
                 } else {
                     // Crear nueva cuenta
                     $account = $accountsReceivableTable->newEntity([
@@ -63,6 +67,10 @@ class RequestsController extends AppController
                         'status' => 'pendiente',
                     ]);
                     $accountsReceivableTable->save($account);
+
+                    // Vincular la orden a la nueva cuenta
+                    $order->accounts_receivable_id = $account->id;
+                    $this->fetchTable('Orders')->save($order);
                 }
 
                 $this->Flash->success(__('Solicitud aprobada y acumulada a Cuentas por Cobrar.'));
