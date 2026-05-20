@@ -30,7 +30,7 @@ class ProductsController extends AppController
             ->orderBy(['Products.name' => 'ASC'])
             ->all();
 
-        $this->set('whatsappPhone', env('WHATSAPP_PHONE', '573001234567'));
+        $this->set('whatsappPhone', env('WHATSAPP_PHONE', '573170880796'));
 
         $this->set(compact('products'));
     }
