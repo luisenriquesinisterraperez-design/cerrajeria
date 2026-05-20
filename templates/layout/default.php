@@ -182,6 +182,7 @@
                 $navItems = [
                     ['Dashboard', 'index', 'fa-chart-pie', 'Resumen', true],
                     ['Orders', 'index', 'fa-receipt', 'Ventas', ($isAdmin || $isStaff || $isRepartidor)],
+                    ['Requests', 'index', 'fa-clock', 'Solicitudes', ($isAdmin || $isStaff)],
                     ['AccountsReceivable', 'index', 'fa-wallet', 'Mis Cuentas', true],
                     ['Products', $catalogAction, 'fa-store', 'Catálogo', true],
                     ['DailyClosures', 'index', 'fa-vault', 'Caja', ($isAdmin || $isStaff)],
