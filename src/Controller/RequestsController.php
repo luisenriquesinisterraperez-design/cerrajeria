@@ -42,16 +42,30 @@ class RequestsController extends AppController
                 }
 
                 $accountsReceivableTable = $this->fetchTable('AccountsReceivable');
-                $account = $accountsReceivableTable->newEntity([
-                    'client_id' => $client->id,
-                    'order_id' => $order->id,
-                    'amount' => $order->total,
-                    'description' => 'Solicitud de catálogo: ' . ($order->hasValue('product') ? $order->product->name : 'Producto #' . $order->product_id),
-                    'status' => 'pendiente',
-                ]);
-                $accountsReceivableTable->save($account);
 
-                $this->Flash->success(__('Solicitud aprobada y cargada a Cuentas por Cobrar.'));
+                // Buscar cuenta abierta del cliente para acumular
+                $existingAccount = $accountsReceivableTable->find()
+                    ->where(['client_id' => $client->id, 'status' => 'pendiente'])
+                    ->first();
+
+                if ($existingAccount) {
+                    // Acumular al saldo existente
+                    $existingAccount->amount = (float)$existingAccount->amount + (float)$order->total;
+                    $existingAccount->description .= ' + ' . ($order->hasValue('product') ? $order->product->name : 'Producto #' . $order->product_id);
+                    $accountsReceivableTable->save($existingAccount);
+                } else {
+                    // Crear nueva cuenta
+                    $account = $accountsReceivableTable->newEntity([
+                        'client_id' => $client->id,
+                        'order_id' => $order->id,
+                        'amount' => $order->total,
+                        'description' => 'Solicitud de catálogo: ' . ($order->hasValue('product') ? $order->product->name : 'Producto #' . $order->product_id),
+                        'status' => 'pendiente',
+                    ]);
+                    $accountsReceivableTable->save($account);
+                }
+
+                $this->Flash->success(__('Solicitud aprobada y acumulada a Cuentas por Cobrar.'));
             } else {
                 $this->Flash->success(__('Solicitud aprobada. Ventas actualizadas.'));
             }

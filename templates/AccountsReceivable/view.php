@@ -15,6 +15,7 @@ $balance = $account->amount - $totalPaid;
         <p class="text-blue-600 font-bold uppercase text-xs tracking-widest">
             Cliente: <?= h($account->client->full_name) ?> | Saldo: $<?= number_format($balance, 0) ?>
         </p>
+        <p class="text-[10px] text-slate-400 font-bold italic mt-1"><?= h($account->description) ?></p>
     </div>
     <div class="flex gap-2">
         <?= $this->Html->link('<i class="fa-solid fa-arrow-left mr-2"></i> Volver', ['action' => 'index'], ['escape' => false, 'class' => 'bg-slate-100 text-slate-600 px-6 py-3 rounded-2xl font-black text-xs uppercase hover:bg-slate-200 transition-all']) ?>
