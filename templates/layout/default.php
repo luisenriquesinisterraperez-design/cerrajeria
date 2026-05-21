@@ -223,6 +223,7 @@
                     <div class="section-tag">Configuración</div>
                     <?= $this->Html->link('<i class="fa-solid fa-user-shield"></i> Usuarios', ['controller' => 'Users', 'action' => 'index'], ['escape' => false, 'class' => 'nav-link ' . ($this->request->getParam('controller') == 'Users' ? 'active' : '')]) ?>
                     <?= $this->Html->link('<i class="fa-solid fa-sliders"></i> Ajustes', ['controller' => 'InventoryAdjustments', 'action' => 'index'], ['escape' => false, 'class' => 'nav-link ' . ($this->request->getParam('controller') == 'InventoryAdjustments' ? 'active' : '')]) ?>
+                    <?= $this->Html->link('<i class="fa-solid fa-calculator"></i> Sinc. Inventario', ['controller' => 'Dashboard', 'action' => 'syncInventory'], ['escape' => false, 'class' => 'nav-link ' . ($this->request->getParam('action') == 'syncInventory' ? 'active' : '')]) ?>
                 <?php endif; ?>
             </nav>
 
