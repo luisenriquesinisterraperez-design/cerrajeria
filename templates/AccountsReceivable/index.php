@@ -9,9 +9,21 @@
         <h1 class="text-3xl font-black text-slate-800 tracking-tight uppercase">Cuentas por Cobrar</h1>
         <p class="text-orange-500 font-bold uppercase text-xs tracking-widest">Gestión de deudas y créditos</p>
     </div>
-    <?php if (!$isCliente): ?>
-        <?= $this->Html->link('<i class="fa-solid fa-plus mr-2"></i> Nueva Deuda Manual', ['action' => 'add'], ['escape' => false, 'class' => 'bg-slate-900 text-white px-6 py-3 rounded-2xl font-black text-xs uppercase hover:bg-orange-600 transition-all shadow-lg']) ?>
-    <?php endif; ?>
+    <div class="flex gap-4 items-center">
+        <div class="hidden md:flex gap-4 mr-4">
+            <div class="bg-white px-6 py-2 rounded-2xl border border-orange-100 shadow-sm text-center">
+                <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest">Saldo Total</p>
+                <p class="text-lg font-black text-orange-600">$<?= number_format($totalOutstanding, 0) ?></p>
+            </div>
+            <div class="bg-white px-6 py-2 rounded-2xl border border-slate-100 shadow-sm text-center">
+                <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest">Pendientes</p>
+                <p class="text-lg font-black text-slate-800"><?= $pendingCount ?></p>
+            </div>
+        </div>
+        <?php if (!$isCliente): ?>
+            <?= $this->Html->link('<i class="fa-solid fa-plus mr-2"></i> Nueva Deuda Manual', ['action' => 'add'], ['escape' => false, 'class' => 'bg-slate-900 text-white px-6 py-3 rounded-2xl font-black text-xs uppercase hover:bg-orange-600 transition-all shadow-lg']) ?>
+        <?php endif; ?>
+    </div>
 </header>
 
 <div class="bg-white rounded-3xl border border-orange-100 overflow-x-auto shadow-sm">
@@ -28,9 +40,7 @@
         </thead>
         <tbody class="divide-y text-sm">
             <?php foreach ($accountsReceivable as $account): 
-                $totalPaid = 0;
-                foreach ($account->account_payments as $p) $totalPaid += (float)$p->amount;
-                $balance = $account->amount - $totalPaid;
+                $balance = $account->balance;
             ?>
             <tr class="hover:bg-slate-50 transition-colors <?= $account->status === 'pagado' ? 'opacity-60 bg-green-50/30' : '' ?>">
                 <td class="p-5">
@@ -39,7 +49,7 @@
                     </div>
                     <div class="text-[10px] text-slate-400 font-bold italic"><?= h($account->description) ?></div>
                 </td>
-                <td class="p-5 font-bold text-slate-400">$<?= number_format($account->amount, 0) ?></td>
+                <td class="p-5 font-bold text-slate-400">$<?= number_format((float)$account->amount, 0) ?></td>
                 <td class="p-5 font-black <?= $balance > 0 ? 'text-orange-600' : 'text-green-600' ?>">
                     $<?= number_format($balance, 0) ?>
                 </td>

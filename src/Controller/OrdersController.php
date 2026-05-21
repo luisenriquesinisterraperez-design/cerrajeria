@@ -154,6 +154,9 @@ class OrdersController extends AppController
             $data = $this->request->getData();
             $order = $this->Orders->patchEntity($order, $data);
             
+            // Detectar si el método de pago cambió a Crédito ANTES de guardar
+            $isChangingToCredit = $order->isDirty('payment_method') && $order->payment_method === 'Crédito';
+
             $fieldsToTrack = [
                 'product_id' => 'Producto',
                 'quantity' => 'Cantidad',
@@ -182,6 +185,34 @@ class OrdersController extends AppController
             }
 
             if ($this->Orders->save($order)) {
+                // Si el método de pago cambió a Crédito, crear AR
+                if ($isChangingToCredit) {
+                    $clientsTable = $this->fetchTable('Clients');
+                    $accountsReceivableTable = $this->fetchTable('AccountsReceivable');
+
+                    $client = $clientsTable->find()->where(['phone' => $order->customer_phone])->first();
+                    if (!$client) {
+                        $client = $clientsTable->newEntity([
+                            'full_name' => $order->customer_name,
+                            'phone' => $order->customer_phone,
+                            'address' => $order->customer_address ?? ''
+                        ]);
+                        $clientsTable->save($client);
+                    }
+
+                    $account = $accountsReceivableTable->newEntity([
+                        'client_id' => $client->id,
+                        'order_id' => $order->id,
+                        'amount' => $order->total,
+                        'description' => 'Pedido #' . ($order->order_group_id ?: $order->id) . ' (Editado)',
+                        'status' => 'pendiente'
+                    ]);
+                    if ($accountsReceivableTable->save($account)) {
+                        $order->accounts_receivable_id = $account->id;
+                        $this->Orders->save($order);
+                    }
+                }
+
                 if (!empty($changes)) {
                     $logsTable = $this->fetchTable('OrderLogs');
                     $identity = $this->request->getAttribute('identity');

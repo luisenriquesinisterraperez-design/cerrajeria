@@ -4,9 +4,8 @@
  * @var \App\Model\Entity\AccountsReceivable $account
  * @var \Cake\Collection\CollectionInterface $products
  */
-$totalPaid = 0;
-foreach ($account->account_payments as $p) $totalPaid += (float)$p->amount;
-$balance = $account->amount - $totalPaid;
+$totalPaid = $account->total_paid;
+$balance = $account->balance;
 ?>
 
 <div class="mb-8 flex flex-col md:flex-row md:items-center justify-between gap-4">

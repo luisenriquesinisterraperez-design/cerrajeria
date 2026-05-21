@@ -3,9 +3,8 @@
  * @var \App\View\AppView $this
  * @var \App\Model\Entity\AccountsReceivable $account
  */
-$totalPaid = 0;
-foreach ($account->account_payments as $p) $totalPaid += (float)$p->amount;
-$balance = $account->amount - $totalPaid;
+$totalPaid = $account->total_paid;
+$balance = $account->balance;
 ?>
 <header class="mb-8 flex items-center justify-between">
     <div>

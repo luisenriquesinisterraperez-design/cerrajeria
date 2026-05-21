@@ -20,18 +20,33 @@ class AccountsReceivableController extends AppController
             ->contain(['Clients', 'AccountPayments'])
             ->orderBy(['AccountsReceivable.status' => 'ASC', 'AccountsReceivable.created' => 'DESC']);
 
+        $where = [];
         if ($isCliente) {
             if ($user->client_id) {
-                $query->where(['AccountsReceivable.client_id' => $user->client_id]);
+                $where['AccountsReceivable.client_id'] = $user->client_id;
             } else {
-                // Si es cliente pero no tiene ID vinculado, no mostrar nada
-                $query->where(['AccountsReceivable.id' => 0]);
+                $where['AccountsReceivable.id'] = 0;
+            }
+        }
+        $query->where($where);
+
+        // Calcular resumen para el dashboard
+        $summaryQuery = $this->AccountsReceivable->find()
+            ->contain(['AccountPayments'])
+            ->where($where);
+        
+        $totalOutstanding = 0;
+        $pendingCount = 0;
+        foreach ($summaryQuery as $account) {
+            if ($account->status !== 'pagado') {
+                $totalOutstanding += $account->balance;
+                $pendingCount++;
             }
         }
 
         $accountsReceivable = $this->paginate($query);
 
-        $this->set(compact('accountsReceivable'));
+        $this->set(compact('accountsReceivable', 'totalOutstanding', 'pendingCount'));
     }
 
     public function view($id = null)
@@ -151,6 +166,11 @@ class AccountsReceivableController extends AppController
 
                 $this->AccountsReceivable->save($account);
 
+                $this->logAudit(
+                    $user ? $user->id : 1,
+                    'ABONO: El usuario ' . ($user ? $user->username : 'Sistema') . " registró un abono de $" . number_format((float)$data['amount'], 0) . " para la cuenta de " . $account->client->full_name . ". Saldo restante: $" . number_format($totalDebt - $totalPaid, 0)
+                );
+
                 $this->Flash->success(__('Abono registrado con éxito. Saldo actual: $' . number_format($totalDebt - $totalPaid, 0)));
 
                 return $this->redirect(['action' => 'index']);
@@ -171,9 +191,13 @@ class AccountsReceivableController extends AppController
 
             return $this->redirect(['action' => 'index']);
         }
-        $account = $this->AccountsReceivable->get($id);
+        $account = $this->AccountsReceivable->get($id, contain: ['Clients']);
         $account->status = 'pagado';
         if ($this->AccountsReceivable->save($account)) {
+            $this->logAudit(
+                $user ? $user->id : 1,
+                'PAGO TOTAL: El usuario ' . ($user ? $user->username : 'Sistema') . " marcó como pagada la deuda de " . $account->client->full_name
+            );
             $this->Flash->success(__('La deuda ha sido marcada como pagada.'));
         } else {
             $this->Flash->error(__('No se pudo actualizar la deuda.'));

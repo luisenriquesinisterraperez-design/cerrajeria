@@ -89,12 +89,24 @@ class AccountPaymentsController extends AppController
     {
         $this->request->allowMethod(['post', 'delete']);
         $accountPayment = $this->AccountPayments->get($id);
+        $arId = $accountPayment->accounts_receivable_id;
+
         if ($this->AccountPayments->delete($accountPayment)) {
-            $this->Flash->success(__('The account payment has been deleted.'));
+            // Sincronizar estado de la cuenta por cobrar
+            $arTable = $this->fetchTable('AccountsReceivable');
+            $account = $arTable->get($arId, contain: ['AccountPayments']);
+            
+            // Si el saldo es mayor a 0 y estaba pagado, volver a pendiente
+            if ($account->balance > 0 && $account->status === 'pagado') {
+                $account->status = 'pendiente';
+                $arTable->save($account);
+            }
+
+            $this->Flash->success(__('El abono ha sido eliminado y el saldo actualizado.'));
         } else {
-            $this->Flash->error(__('The account payment could not be deleted. Please, try again.'));
+            $this->Flash->error(__('No se pudo eliminar el abono. Por favor, intente de nuevo.'));
         }
 
-        return $this->redirect(['action' => 'index']);
+        return $this->redirect($this->referer(['controller' => 'AccountsReceivable', 'action' => 'index']));
     }
 }

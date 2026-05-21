@@ -19,6 +19,9 @@ use Cake\ORM\Entity;
  *
  * @property \App\Model\Entity\Client $client
  * @property \App\Model\Entity\Order $order
+ * @property \App\Model\Entity\AccountPayment[] $account_payments
+ * @property float $total_paid
+ * @property float $balance
  */
 class AccountsReceivable extends Entity
 {
@@ -41,5 +44,24 @@ class AccountsReceivable extends Entity
         'modified' => true,
         'client' => true,
         'order' => true,
+        'account_payments' => true,
     ];
+
+    protected function _getTotalPaid()
+    {
+        if (empty($this->account_payments)) {
+            return 0.0;
+        }
+        $total = 0;
+        foreach ($this->account_payments as $payment) {
+            $total += (float)$payment->amount;
+        }
+
+        return (float)$total;
+    }
+
+    protected function _getBalance()
+    {
+        return (float)$this->amount - $this->total_paid;
+    }
 }
