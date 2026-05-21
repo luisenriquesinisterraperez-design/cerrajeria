@@ -253,19 +253,4 @@ class AccountsReceivableController extends AppController
 
         return $this->redirect(['action' => 'index']);
     }
-
-        $accountsReceivable = $this->AccountsReceivable->get($id);
-        $arDescription = $accountsReceivable->description ?? "ID #{$id}";
-    if ($this->AccountsReceivable->delete($accountsReceivable)) {
-        $this->logAudit(
-            $user ? $user->id : 1,
-            'ELIMINACIÓN: El usuario ' . ($user ? $user->username : 'Sistema') . " eliminó la cuenta por cobrar \"{$arDescription}\"",
-        );
-        $this->Flash->success(__('La cuenta por cobrar ha sido eliminada.'));
-    } else {
-        $this->Flash->error(__('No se pudo eliminar la cuenta por cobrar. Por favor, intente de nuevo.'));
-    }
-
-        return $this->redirect(['action' => 'index']);
-}
 }
