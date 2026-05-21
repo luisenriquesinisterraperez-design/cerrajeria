@@ -3,11 +3,16 @@ declare(strict_types=1);
 
 namespace App\Model\Table;
 
+use ArrayObject;
+use Cake\Datasource\EntityInterface;
+use Cake\Event\EventInterface;
+use Cake\I18n\DateTime;
+use Cake\Log\Log;
+use Cake\ORM\Locator\LocatorAwareTrait;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
-use Cake\ORM\Locator\LocatorAwareTrait;
-use Cake\Log\Log;
+use Exception;
 
 class OrdersTable extends Table
 {
@@ -89,15 +94,15 @@ class OrdersTable extends Table
         return $validator;
     }
 
-    public function beforeSave(\Cake\Event\EventInterface $event, \Cake\Datasource\EntityInterface $entity, \ArrayObject $options)
+    public function beforeSave(EventInterface $event, EntityInterface $entity, ArrayObject $options): void
     {
         // 1. Calcular el total
         if ($entity->isNew() || $entity->isDirty('product_id') || $entity->isDirty('quantity') || $entity->isDirty('shipping_cost')) {
             try {
                 $product = $this->Products->get($entity->product_id);
-                $entity->total = ($product->price * $entity->quantity) + ((float)($entity->shipping_cost ?? 0));
-            } catch (\Exception $e) {
-                Log::error("Error calculando total para pedido: " . $e->getMessage());
+                $entity->total = ($product->price * $entity->quantity) + (float)($entity->shipping_cost ?? 0);
+            } catch (Exception $e) {
+                Log::error('Error calculando total para pedido: ' . $e->getMessage());
             }
         }
 
@@ -108,15 +113,15 @@ class OrdersTable extends Table
             if ($originalStatus !== 'cancelado') {
                 $oldProductId = $entity->getOriginal('product_id');
                 $oldQuantity = $entity->getOriginal('quantity');
-                
+
                 // Si getOriginal no devolvió nada (caso raro), usamos los valores actuales como fallback
                 $oldProductId = $oldProductId ?: $entity->product_id;
-                $oldQuantity = $oldQuantity !== null ? $oldQuantity : $entity->quantity;
+                $oldQuantity = $oldQuantity ?? $entity->quantity;
 
                 Log::info("Restoring OLD inventory due to edit (Order ID {$entity->id}): Product ID {$oldProductId}, Qty {$oldQuantity}");
                 $this->_adjustInventory($oldProductId, (int)$oldQuantity, 'add');
             }
-            
+
             // Si el nuevo estado no es cancelado, necesitamos restar lo nuevo en afterSave
             if ($entity->status !== 'cancelado') {
                 $entity->set('inventory_needs_update', true);
@@ -158,7 +163,7 @@ class OrdersTable extends Table
         }
     }
 
-    public function afterSave(\Cake\Event\EventInterface $event, \Cake\Datasource\EntityInterface $entity, \ArrayObject $options)
+    public function afterSave(EventInterface $event, EntityInterface $entity, ArrayObject $options): void
     {
         // Aplicar el descuento del inventario actual
         if ($entity->get('inventory_needs_update')) {
@@ -169,7 +174,7 @@ class OrdersTable extends Table
         }
     }
 
-    public function beforeDelete(\Cake\Event\EventInterface $event, \Cake\Datasource\EntityInterface $entity, \ArrayObject $options)
+    public function beforeDelete(EventInterface $event, EntityInterface $entity, ArrayObject $options): void
     {
         // Restore inventory if order was not cancelled
         if ($entity->status !== 'cancelado') {
@@ -188,47 +193,52 @@ class OrdersTable extends Table
     /**
      * Registra cambios significativos en el historial
      */
-    protected function logOrderChange($entity, $oldValue, $newValue, $field, $options = []) 
+    protected function logOrderChange($entity, $oldValue, $newValue, $field, $options = []): void
     {
         try {
             $logsTable = $this->getTableLocator()->get('OrderLogs');
-            
+
             // Obtener el usuario de las opciones (pasado desde el controller)
             $user = $options['user'] ?? null;
             $userId = $user ? $user->id : 1; // Default admin
             $username = $user ? $user->username : 'Sistema';
-            
-            $details = "Cambio de {$field}: de '{$oldValue}' a '{$newValue}' (vía " . $username . ")";
+
+            $details = "Cambio de {$field}: de '{$oldValue}' a '{$newValue}' (vía " . $username . ')';
             if ($field === 'status') {
-                $details = "Estado actualizado: de '{$oldValue}' a '{$newValue}' (por " . $username . ")";
+                $details = "Estado actualizado: de '{$oldValue}' a '{$newValue}' (por " . $username . ')';
             }
 
             $log = $logsTable->newEntity([
                 'order_id' => $entity->id,
                 'user_id' => $userId,
                 'modification_details' => $details,
-                'created' => new \Cake\I18n\DateTime()
+                'created' => new DateTime(),
             ]);
             $logsTable->save($log);
-        } catch (\Exception $e) {
-            Log::error("Error registrando huella en OrdersTable: " . $e->getMessage());
+        } catch (Exception $e) {
+            Log::error('Error registrando huella en OrdersTable: ' . $e->getMessage());
         }
     }
 
     /**
      * Método centralizado para ajustar inventario
      */
-    protected function _adjustInventory($productId, $quantity, $mode = 'subtract')
+    protected function _adjustInventory($productId, $quantity, $mode = 'subtract'): void
     {
         $productIngredientsTable = $this->getTableLocator()->get('ProductIngredients');
         $ingredientsTable = $this->getTableLocator()->get('Ingredients');
+
+        Log::info("_adjustInventory CALLED: product_id={$productId}, qty={$quantity}, mode={$mode}");
 
         $recipes = $productIngredientsTable->find()
             ->where(['product_id' => $productId])
             ->all();
 
+        Log::info('_adjustInventory: found ' . count($recipes) . " recipes for product {$productId}");
+
         if ($recipes->isEmpty()) {
             Log::debug("No hay receta configurada para el producto ID {$productId}");
+
             return;
         }
 
@@ -236,20 +246,20 @@ class OrdersTable extends Table
             try {
                 $ingredient = $ingredientsTable->get($recipe->ingredient_id);
                 $amount = (float)$recipe->quantity_required * $quantity;
-                
+
                 $oldStock = (float)$ingredient->stock;
                 if ($mode === 'subtract') {
                     $ingredient->stock = $oldStock - $amount;
                 } else {
                     $ingredient->stock = $oldStock + $amount;
                 }
-                
+
                 if (!$ingredientsTable->save($ingredient)) {
-                    Log::error("Error al guardar stock del insumo ID {$ingredient->id}");
+                    Log::error("Error al guardar stock del insumo ID {$ingredient->id}: " . json_encode($ingredient->getErrors()));
                 } else {
                     Log::info("STOCK ACTUALIZADO ({$mode}): {$ingredient->name} | Antes: {$oldStock} | Ahora: {$ingredient->stock} (Pedido: {$productId} x{$quantity})");
                 }
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 Log::error("Excepción ajustando inventario (Insumo ID {$recipe->ingredient_id}): " . $e->getMessage());
             }
         }
