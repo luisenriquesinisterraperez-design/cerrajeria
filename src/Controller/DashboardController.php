@@ -322,16 +322,24 @@ class DashboardController extends AppController
 
         $ingredientsTable = $this->fetchTable('Ingredients');
         $ordersTable = $this->fetchTable('Orders');
-        $productIngredientsTable = $this->fetchTable('ProductIngredients');
 
-        // Obtener todos los ingredientes con su stock actual
+        // Obtener todos los ingredientes
         $ingredients = $ingredientsTable->find()->all();
 
-        // Obtener todas las órdenes confirmadas (no cancelado, no pendiente) con sus productos
-        $confirmedOrders = $ordersTable->find()
-            ->contain(['Products'])
-            ->where(['Orders.status NOT IN' => ['cancelado', 'pendiente']])
-            ->all();
+        // Calcular uso total por ingrediente con SQL directo
+        $connection = $ordersTable->getConnection();
+        $usageQuery = $connection->execute('
+            SELECT pi.ingredient_id, SUM(pi.quantity_required * o.quantity) as total_used
+            FROM orders o
+            INNER JOIN product_ingredients pi ON pi.product_id = o.product_id
+            WHERE o.status NOT IN (\'cancelado\', \'pendiente\')
+            GROUP BY pi.ingredient_id
+        ');
+        $usageRows = $usageQuery->fetchAll('assoc');
+        $usageMap = [];
+        foreach ($usageRows as $row) {
+            $usageMap[(int)$row['ingredient_id']] = (float)$row['total_used'];
+        }
 
         // Valores iniciales conocidos de la migración
         $initialStocks = [
@@ -345,26 +353,7 @@ class DashboardController extends AppController
         $report = [];
 
         foreach ($ingredients as $ingredient) {
-            // Buscar todas las recetas que usan este ingrediente
-            $recipes = $productIngredientsTable->find()
-                ->where(['ingredient_id' => $ingredient->id])
-                ->all();
-
-            $totalUsed = 0;
-
-            foreach ($confirmedOrders as $order) {
-                if (!$order->hasValue('product')) {
-                    continue;
-                }
-
-                // Buscar si este producto usa el ingrediente
-                foreach ($recipes as $recipe) {
-                    if ($recipe->product_id == $order->product_id) {
-                        $totalUsed += (float)$recipe->quantity_required * (int)$order->quantity;
-                    }
-                }
-            }
-
+            $totalUsed = $usageMap[(int)$ingredient->id] ?? 0;
             $initialStock = $initialStocks[$ingredient->name] ?? (float)$ingredient->stock;
             $correctStock = $initialStock - $totalUsed;
             $diff = (float)$ingredient->stock - $correctStock;

@@ -12,7 +12,14 @@
     <?= $this->Html->link('<i class="fa-solid fa-arrow-left mr-2"></i> Volver al Dashboard', ['action' => 'index'], ['escape' => false, 'class' => 'bg-slate-100 text-slate-600 px-6 py-3 rounded-2xl font-black text-xs uppercase hover:bg-slate-200 transition-all']) ?>
 </header>
 
-<div class="bg-white rounded-3xl border border-slate-200 overflow-x-auto shadow-sm mb-8">
+<div class="bg-white rounded-3xl border border-slate-200 overflow-x-auto shadow-sm mb-6">
+    <div class="p-5 border-b border-slate-100 flex items-center gap-2 bg-slate-50">
+        <i class="fa-solid fa-circle-info text-blue-500"></i>
+        <p class="text-xs font-bold text-slate-600">
+            <span class="text-blue-600 font-black">Stock Correcto</span> = Stock Inicial − Usado en Pedidos.
+            Si la <span class="text-red-600 font-black">Diferencia</span> es positiva, hay stock de más (no se descontó).
+        </p>
+    </div>
     <table class="w-full text-left">
         <thead class="bg-slate-900 text-white text-[9px] uppercase font-bold tracking-[0.2em]">
             <tr>
@@ -86,4 +93,12 @@
             <p class="text-green-400 font-black"><i class="fa-solid fa-check-circle mr-2"></i> Inventario Cuadrado</p>
         <?php endif; ?>
     </div>
+
+    <!-- Debug info -->
+    <details class="mt-6 p-4 bg-slate-100 rounded-2xl text-xs font-mono">
+        <summary class="font-black text-slate-500 cursor-pointer">Ver datos crudos de la consulta SQL</summary>
+        <pre class="mt-4 text-slate-600 overflow-x-auto"><?php
+            echo htmlspecialchars(print_r($report, true));
+        ?></pre>
+    </details>
 <?php endif; ?>
