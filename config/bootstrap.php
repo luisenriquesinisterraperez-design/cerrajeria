@@ -27,6 +27,11 @@ declare(strict_types=1);
 require __DIR__ . DIRECTORY_SEPARATOR . 'paths.php';
 
 /*
+ * Set Colombian timezone (UTC-5)
+ */
+date_default_timezone_set('America/Bogota');
+
+/*
  * Bootstrap CakePHP
  * Currently all this does is initialize the router (without loading your routes)
  */
