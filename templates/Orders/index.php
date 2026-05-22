@@ -32,8 +32,9 @@ $isRepartidor = ($user->role === 'repartidor');
                 <div class="relative autocomplete-wrap" data-autocomplete="clients">
                     <label class="text-[10px] font-bold text-slate-400 ml-2 uppercase">Nombre del Cliente</label>
                     <input type="text" name="customer_name" id="customer-name"
+                        value="Consumidor Final"
                         placeholder="Buscar o escribir nombre..."
-                        class="w-full p-4 bg-slate-50 border rounded-2xl outline-none focus:ring-2 focus:ring-blue-500 autocomplete-input"
+                        class="w-full p-4 bg-slate-50 border rounded-2xl outline-none focus:ring-2 focus:ring-blue-500 autocomplete-input required-field"
                         autocomplete="off" required>
                     <i class="fa-solid fa-chevron-down absolute right-4 bottom-5 text-slate-300 pointer-events-none"></i>
                     <ul class="autocomplete-dropdown hidden"></ul>
@@ -41,12 +42,11 @@ $isRepartidor = ($user->role === 'repartidor');
                 <div class="relative">
                     <label class="text-[10px] font-bold text-slate-400 ml-2 uppercase">Celular</label>
                     <?= $this->Form->text('customer_phone', [
-                        'placeholder' => 'Ej: 3001234567',
+                        'placeholder' => 'Ej: 3001234567 (opcional)',
                         'class' => 'w-full p-4 bg-slate-50 border rounded-2xl outline-none focus:ring-2 focus:ring-blue-500',
                         'id' => 'customer-phone',
                         'list' => 'phones-list',
                         'autocomplete' => 'off',
-                        'required' => true
                     ]) ?>
                     <i class="fa-solid fa-chevron-down absolute right-4 bottom-5 text-slate-300 pointer-events-none"></i>
                     <datalist id="phones-list">
@@ -122,7 +122,7 @@ $isRepartidor = ($user->role === 'repartidor');
                 </div>
                 <div id="venta-envio-container">
                     <label class="text-[10px] font-bold text-slate-400 ml-2 uppercase">Costo de Envío ($)</label>
-                    <?= $this->Form->number('shipping_cost', ['class' => 'w-full p-4 bg-slate-50 border rounded-2xl outline-none focus:ring-2 focus:ring-blue-500', 'value' => 0, 'min' => 0]) ?>
+                    <?= $this->Form->number('shipping_cost', ['class' => 'w-full p-4 bg-slate-50 border rounded-2xl outline-none focus:ring-2 focus:ring-blue-500 zero-empty', 'placeholder' => '0', 'min' => 0]) ?>
                 </div>
                 <div id="venta-domiciliario-container">
                     <label class="text-[10px] font-bold text-slate-400 ml-2 uppercase">Asignar Repartidor</label>
@@ -340,8 +340,12 @@ $isRepartidor = ($user->role === 'repartidor');
                 alert('Agregue al menos un producto');
                 return;
             }
-            if (!customerNameInput.value || !customerPhoneInput.value) {
-                alert('Nombre y Celular son obligatorios');
+            if (!customerNameInput.value) {
+                alert('Nombre del cliente es obligatorio');
+                return;
+            }
+            if (customerNameInput.value !== 'Consumidor Final' && !customerPhoneInput.value) {
+                alert('Si el cliente no es Consumidor Final, el celular es obligatorio');
                 return;
             }
             orderForm.submit();
@@ -362,6 +366,20 @@ $isRepartidor = ($user->role === 'repartidor');
         tipoSelect.addEventListener('change', toggleDomicilioFields);
         toggleDomicilioFields();
         renderCart();
+
+        // === HIGHLIGHT CAMPOS REQUERIDOS ===
+        document.querySelectorAll('.required-field').forEach(function(field) {
+            function toggleHighlight() {
+                if (field.value.trim()) {
+                    field.classList.add('field-filled');
+                } else {
+                    field.classList.remove('field-filled');
+                }
+            }
+            toggleHighlight();
+            field.addEventListener('input', toggleHighlight);
+            field.addEventListener('change', toggleHighlight);
+        });
     });
 </script>
 <style>
@@ -385,6 +403,25 @@ $isRepartidor = ($user->role === 'repartidor');
 .autocomplete-dropdown li:hover,
 .autocomplete-dropdown li.bg-blue-100 {
     background-color: #eff6ff !important;
+}
+.required-field {
+    border-color: #f59e0b !important;
+    background-color: #fffbeb !important;
+    transition: all 0.3s ease;
+}
+.required-field.field-filled {
+    border-color: #10b981 !important;
+    background-color: #ecfdf5 !important;
+}
+.required-field:focus {
+    border-color: #3b82f6 !important;
+    background-color: #fff !important;
+}
+.zero-empty {
+    color: transparent !important;
+}
+.zero-empty:focus, .zero-empty:not(:placeholder-shown) {
+    color: inherit !important;
 }
 </style>
 <?php else: ?>

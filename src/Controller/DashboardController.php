@@ -9,6 +9,10 @@ class DashboardController extends AppController
     {
         $startDate = $this->request->getQuery('start_date');
         $endDate = $this->request->getQuery('end_date');
+        if (!$startDate && !$endDate) {
+            $startDate = date('Y-m-d');
+            $endDate = date('Y-m-d');
+        }
 
         $identity = $this->request->getAttribute('identity');
         $user = $identity ? $identity->getOriginalData() : null;
