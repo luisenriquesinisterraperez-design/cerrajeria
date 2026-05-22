@@ -241,13 +241,14 @@ $isRepartidor = ($user->role === 'repartidor');
                 if (!item) return;
                 const label = item.label || item;
                 input.value = label;
+                input.dispatchEvent(new Event('input', { bubbles: true }));
                 if (onSelect) onSelect(item);
                 dropdown.classList.add('hidden');
             }
 
             input.addEventListener('focus', function() {
                 selectedIndex = -1;
-                render(this.value);
+                render('');
             });
 
             input.addEventListener('input', function() {
@@ -296,6 +297,8 @@ $isRepartidor = ($user->role === 'repartidor');
                 if (item) {
                     customerPhoneInput.value = item.phone || '';
                     customerAddressInput.value = item.address || '';
+                    customerPhoneInput.dispatchEvent(new Event('input', { bubbles: true }));
+                    customerAddressInput.dispatchEvent(new Event('input', { bubbles: true }));
                 }
             }
         );
