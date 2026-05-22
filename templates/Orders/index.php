@@ -131,10 +131,9 @@ $isRepartidor = ($user->role === 'repartidor');
             </div>
 
             <div class="pt-6 border-t border-slate-100">
-                <?= $this->Form->button('<i class="fa-solid fa-check-circle mr-3"></i> CONFIRMAR Y FINALIZAR VENTA <i class="fa-solid fa-arrow-right ml-3"></i>', [
+                <?= $this->Form->button(' CONFIRMAR Y FINALIZAR VENTA ', [
                     'id' => 'btn-submit-order',
                     'type' => 'button',
-                    'escape' => false,
                     'class' => 'btn-finalize w-full bg-green-600 text-white font-black rounded-3xl py-6 uppercase shadow-2xl hover:bg-green-700 transition-all text-xl tracking-widest active:scale-95 disabled:opacity-50 disabled:pointer-events-none'
                 ]) ?>
             </div>
