@@ -77,7 +77,7 @@ $isRepartidor = ($user->role === 'repartidor');
                         <label class="text-[10px] font-bold text-slate-400 ml-2 uppercase">Buscar Producto</label>
                         <input type="text" id="cart-product-search"
                             placeholder="Buscar producto..."
-                            class="w-full p-4 bg-white border rounded-2xl outline-none font-bold text-slate-700 focus:ring-2 focus:ring-blue-500 autocomplete-input"
+                            class="w-full p-4 bg-white border rounded-2xl outline-none font-bold text-slate-700 focus:ring-2 focus:ring-blue-500 autocomplete-input required-field"
                             autocomplete="off">
                         <i class="fa-solid fa-chevron-down absolute right-4 bottom-5 text-slate-300 pointer-events-none"></i>
                         <ul class="autocomplete-dropdown hidden"></ul>
@@ -334,6 +334,7 @@ $isRepartidor = ($user->role === 'repartidor');
             qtyInput.value = 1;
             prodSearch.value = '';
             prodIdHidden.value = '';
+            prodSearch.dispatchEvent(new Event('input', { bubbles: true }));
             prodSearch.focus();
             renderCart();
         });
