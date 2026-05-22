@@ -131,10 +131,11 @@ $isRepartidor = ($user->role === 'repartidor');
             </div>
 
             <div class="pt-6 border-t border-slate-100">
-                <?= $this->Form->button(__('CONFIRMAR Y FINALIZAR VENTA'), [
+                <?= $this->Form->button('<i class="fa-solid fa-check-circle mr-3"></i> CONFIRMAR Y FINALIZAR VENTA <i class="fa-solid fa-arrow-right ml-3"></i>', [
                     'id' => 'btn-submit-order',
                     'type' => 'button',
-                    'class' => 'w-full bg-slate-950 text-white font-black rounded-3xl py-6 uppercase shadow-2xl hover:bg-emerald-600 transition-all text-xl tracking-widest active:scale-95 disabled:opacity-50 disabled:pointer-events-none'
+                    'escape' => false,
+                    'class' => 'btn-finalize w-full bg-gradient-to-r from-emerald-500 to-green-600 text-white font-black rounded-3xl py-6 uppercase shadow-2xl hover:from-emerald-600 hover:to-green-700 transition-all text-xl tracking-widest active:scale-95 disabled:opacity-50 disabled:pointer-events-none'
                 ]) ?>
             </div>
         <?= $this->Form->end() ?>
@@ -461,6 +462,18 @@ select.required-field.field-filled {
 }
 .zero-empty:focus, .zero-empty:not(:placeholder-shown) {
     color: inherit !important;
+}
+.btn-finalize:not(:disabled) {
+    animation: pulse-glow 2s ease-in-out infinite;
+    box-shadow: 0 0 25px -5px rgba(16, 185, 129, 0.5);
+}
+.btn-finalize:not(:disabled):hover {
+    animation: none;
+    box-shadow: 0 0 40px -5px rgba(16, 185, 129, 0.7);
+}
+@keyframes pulse-glow {
+    0%, 100% { box-shadow: 0 0 20px -5px rgba(16, 185, 129, 0.4); transform: scale(1); }
+    50% { box-shadow: 0 0 35px -5px rgba(16, 185, 129, 0.7); transform: scale(1.01); }
 }
 </style>
 <?php else: ?>
