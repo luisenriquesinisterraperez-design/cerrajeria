@@ -352,6 +352,9 @@ $isRepartidor = ($user->role === 'repartidor');
                 alert('Si el cliente no es Consumidor Final, el celular es obligatorio');
                 return;
             }
+            if (!customerPhoneInput.value) {
+                customerPhoneInput.value = 'N/A';
+            }
             orderForm.submit();
         };
 
