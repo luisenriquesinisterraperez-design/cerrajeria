@@ -92,7 +92,7 @@ class OrdersController extends AppController
             $orderData = array_merge($commonData, [
                 'product_id' => $item['product_id'],
                 'quantity' => $item['quantity'],
-                'shipping_cost' => ($index === 0) ? ($data['shipping_cost'] ?? 0) : 0
+                'shipping_cost' => ($index === 0) ? (($data['shipping_cost'] ?? '') !== '' ? $data['shipping_cost'] : 0) : 0
             ]);
 
             $order = $this->Orders->patchEntity($order, $orderData);
