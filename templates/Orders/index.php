@@ -43,7 +43,7 @@ $isRepartidor = ($user->role === 'repartidor');
                     <label class="text-[10px] font-bold text-slate-400 ml-2 uppercase">Celular</label>
                     <?= $this->Form->text('customer_phone', [
                         'placeholder' => 'Ej: 3001234567 (opcional)',
-                        'class' => 'w-full p-4 bg-slate-50 border rounded-2xl outline-none focus:ring-2 focus:ring-blue-500',
+                        'class' => 'w-full p-4 bg-slate-50 border rounded-2xl outline-none focus:ring-2 focus:ring-blue-500 required-field',
                         'id' => 'customer-phone',
                         'list' => 'phones-list',
                         'autocomplete' => 'off',
@@ -56,7 +56,7 @@ $isRepartidor = ($user->role === 'repartidor');
                     </datalist>
                 </div>
                 <div id="venta-direccion-container">                    <label class="text-[10px] font-bold text-slate-400 ml-2 uppercase">Dirección</label>
-                    <?= $this->Form->text('customer_address', ['placeholder' => 'Calle, Barrio...', 'class' => 'w-full p-4 bg-slate-50 border rounded-2xl outline-none focus:ring-2 focus:ring-blue-500', 'id' => 'customer-address']) ?>
+                    <?= $this->Form->text('customer_address', ['placeholder' => 'Calle, Barrio...', 'class' => 'w-full p-4 bg-slate-50 border rounded-2xl outline-none focus:ring-2 focus:ring-blue-500 required-field', 'id' => 'customer-address']) ?>
                 </div>
                 <div>
                     <label class="text-[10px] font-bold text-slate-400 ml-2 uppercase">Método de Pago</label>
@@ -71,7 +71,7 @@ $isRepartidor = ($user->role === 'repartidor');
             </div>
 
             <!-- Selector de Productos (CARRITO) -->
-            <div class="bg-slate-50 p-6 rounded-[2rem] mb-8">
+            <div class="bg-slate-50 p-6 rounded-[2rem] mb-8 cart-required">
                 <div class="grid grid-cols-1 md:grid-cols-12 gap-4 items-end">
                     <div class="md:col-span-5 relative autocomplete-wrap" data-autocomplete="products">
                         <label class="text-[10px] font-bold text-slate-400 ml-2 uppercase">Buscar Producto</label>
@@ -122,11 +122,11 @@ $isRepartidor = ($user->role === 'repartidor');
                 </div>
                 <div id="venta-envio-container">
                     <label class="text-[10px] font-bold text-slate-400 ml-2 uppercase">Costo de Envío ($)</label>
-                    <?= $this->Form->number('shipping_cost', ['class' => 'w-full p-4 bg-slate-50 border rounded-2xl outline-none focus:ring-2 focus:ring-blue-500 zero-empty', 'placeholder' => '0', 'min' => 0]) ?>
+                    <?= $this->Form->number('shipping_cost', ['class' => 'w-full p-4 bg-slate-50 border rounded-2xl outline-none focus:ring-2 focus:ring-blue-500 zero-empty required-field', 'placeholder' => '0', 'min' => 0]) ?>
                 </div>
                 <div id="venta-domiciliario-container">
                     <label class="text-[10px] font-bold text-slate-400 ml-2 uppercase">Asignar Repartidor</label>
-                    <?= $this->Form->select('delivery_driver_id', $deliveryDrivers, ['empty' => 'Seleccionar Repartidor...', 'class' => 'w-full p-4 bg-slate-50 border rounded-2xl outline-none font-bold text-slate-700 focus:ring-2 focus:ring-blue-500']) ?>
+                    <?= $this->Form->select('delivery_driver_id', $deliveryDrivers, ['empty' => 'Seleccionar Repartidor...', 'class' => 'w-full p-4 bg-slate-50 border rounded-2xl outline-none font-bold text-slate-700 focus:ring-2 focus:ring-blue-500 required-field', 'id' => 'delivery-driver']) ?>
                 </div>
             </div>
 
@@ -361,6 +361,13 @@ $isRepartidor = ($user->role === 'repartidor');
                 envioContainer.classList.remove('hidden');
                 direccionContainer.classList.remove('hidden');
             }
+            document.querySelectorAll('.required-field').forEach(function(field) {
+                if (field.value && field.value.toString().trim()) {
+                    field.classList.add('field-filled');
+                } else {
+                    field.classList.remove('field-filled');
+                }
+            });
         }
 
         tipoSelect.addEventListener('change', toggleDomicilioFields);
@@ -370,7 +377,7 @@ $isRepartidor = ($user->role === 'repartidor');
         // === HIGHLIGHT CAMPOS REQUERIDOS ===
         document.querySelectorAll('.required-field').forEach(function(field) {
             function toggleHighlight() {
-                if (field.value.trim()) {
+                if (field.value && field.value.toString().trim()) {
                     field.classList.add('field-filled');
                 } else {
                     field.classList.remove('field-filled');
@@ -380,6 +387,23 @@ $isRepartidor = ($user->role === 'repartidor');
             field.addEventListener('input', toggleHighlight);
             field.addEventListener('change', toggleHighlight);
         });
+        // Highlight carrito: al cambiar cartItems
+        function highlightCart() {
+            const cartArea = document.querySelector('.cart-required');
+            if (cartArea) {
+                if (cartItems.length > 0) {
+                    cartArea.classList.add('field-filled');
+                } else {
+                    cartArea.classList.remove('field-filled');
+                }
+            }
+        }
+        const origRender = renderCart;
+        renderCart = function() {
+            origRender();
+            highlightCart();
+        };
+        highlightCart();
     });
 </script>
 <style>
@@ -416,6 +440,17 @@ $isRepartidor = ($user->role === 'repartidor');
 .required-field:focus {
     border-color: #3b82f6 !important;
     background-color: #fff !important;
+}
+select.required-field.field-filled {
+    border-color: #10b981 !important;
+    background-color: #ecfdf5 !important;
+}
+.cart-required {
+    border: 2px solid #f59e0b;
+    transition: all 0.3s ease;
+}
+.cart-required.field-filled {
+    border-color: #10b981;
 }
 .zero-empty {
     color: transparent !important;
