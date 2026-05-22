@@ -135,7 +135,7 @@ $isRepartidor = ($user->role === 'repartidor');
                     'id' => 'btn-submit-order',
                     'type' => 'button',
                     'escape' => false,
-                    'class' => 'btn-finalize w-full bg-gradient-to-r from-emerald-500 to-green-600 text-white font-black rounded-3xl py-6 uppercase shadow-2xl hover:from-emerald-600 hover:to-green-700 transition-all text-xl tracking-widest active:scale-95 disabled:opacity-50 disabled:pointer-events-none'
+                    'class' => 'btn-finalize w-full bg-green-600 text-white font-black rounded-3xl py-6 uppercase shadow-2xl hover:bg-green-700 transition-all text-xl tracking-widest active:scale-95 disabled:opacity-50 disabled:pointer-events-none'
                 ]) ?>
             </div>
         <?= $this->Form->end() ?>
