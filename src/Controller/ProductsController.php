@@ -94,20 +94,47 @@ class ProductsController extends AppController
         $this->set(compact('products'));
     }
 
+    private function handleUpload(array $data): array
+    {
+        $image = $this->request->getData('image_file');
+        if (!$image || $image->getError() !== UPLOAD_ERR_OK) {
+            return $data;
+        }
+
+        $allowed = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
+        $extension = strtolower(pathinfo((string)$image->getClientFilename(), PATHINFO_EXTENSION));
+        if (!in_array($extension, $allowed, true)) {
+            $this->Flash->error(__('Formato de imagen no permitido. Usa JPG, PNG, GIF o WEBP.'));
+            return $data;
+        }
+
+        $base = Text::slug((string)($data['name'] ?? 'product'));
+        if ($base === '') {
+            $base = 'product';
+        }
+        $filename = $base . '-' . time() . '.' . $extension;
+        $targetDir = WWW_ROOT . 'img' . DS . 'products';
+        $targetPath = $targetDir . DS . $filename;
+
+        if (!is_dir($targetDir)) {
+            mkdir($targetDir, 0775, true);
+        }
+
+        try {
+            $image->moveTo($targetPath);
+            $data['image'] = $filename;
+        } catch (\Exception $e) {
+            $this->Flash->error(__('No se pudo guardar la imagen. Verifica los permisos de la carpeta.'));
+        }
+
+        return $data;
+    }
+
     public function add()
     {
         $product = $this->Products->newEmptyEntity();
         if ($this->request->is('post')) {
-            $data = $this->request->getData();
-            
-            $image = $this->request->getData('image_file');
-            if ($image && $image->getError() === 0) {
-                $extension = pathinfo($image->getClientFilename(), PATHINFO_EXTENSION);
-                $filename = Text::slug($data['name']) . '-' . time() . '.' . $extension;
-                $targetPath = WWW_ROOT . 'img' . DS . 'products' . DS . $filename;
-                $image->moveTo($targetPath);
-                $data['image'] = $filename;
-            }
+            $data = $this->handleUpload($this->request->getData());
 
             $product = $this->Products->patchEntity($product, $data);
             if ($this->Products->save($product)) {
@@ -123,16 +150,7 @@ class ProductsController extends AppController
     {
         $product = $this->Products->get($id);
         if ($this->request->is(['patch', 'post', 'put'])) {
-            $data = $this->request->getData();
-            
-            $image = $this->request->getData('image_file');
-            if ($image && $image->getError() === 0) {
-                $extension = pathinfo($image->getClientFilename(), PATHINFO_EXTENSION);
-                $filename = Text::slug($data['name']) . '-' . time() . '.' . $extension;
-                $targetPath = WWW_ROOT . 'img' . DS . 'products' . DS . $filename;
-                $image->moveTo($targetPath);
-                $data['image'] = $filename;
-            }
+            $data = $this->handleUpload($this->request->getData());
 
             $product = $this->Products->patchEntity($product, $data);
             if ($this->Products->save($product)) {
